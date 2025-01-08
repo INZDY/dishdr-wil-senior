@@ -1,24 +1,23 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  FormData,
-  Step1,
-  Step2,
-  Step3,
-  Step4,
-  Step5,
-} from "./components/Forms";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { FormData } from "@/types/formTypes";
+import PersonalInfo from "./components/PersonalInfo";
+import SymptomSelection from "./components/SymptomSelection";
+import SymptomInquiry from "./components/SymptomInquiry";
+import ResultBooking from "./components/ResultBooking";
+import Summary from "./components/Summary";
 
 export default function MakeAppointment() {
   const router = useRouter();
 
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState<"next" | "back">("next");
-  // const [isPredicted, setIsPredicted] = useState(false);
   const [formData, setFormData] = useState<FormData>({
+    // sessionId = userId
+    sessionId: "JohnDoeId",
     name: "",
     dateOfBirth: "",
     height: 0,
@@ -61,10 +60,14 @@ export default function MakeAppointment() {
 
   return (
     <div className="max-w-lg mx-auto my-12 p-4 bg-white shadow rounded">
-      {step === 1 && <Step1 formData={formData} setFormData={setFormData} />}
-      {step === 2 && <Step2 formData={formData} setFormData={setFormData} />}
+      {step === 1 && (
+        <PersonalInfo formData={formData} setFormData={setFormData} />
+      )}
+      {step === 2 && (
+        <SymptomSelection formData={formData} setFormData={setFormData} />
+      )}
       {step === 3 && (
-        <Step3
+        <SymptomInquiry
           formData={formData}
           setFormData={setFormData}
           handleNext={handleNext}
@@ -72,8 +75,10 @@ export default function MakeAppointment() {
           direction={direction}
         />
       )}
-      {step === 4 && <Step4 formData={formData} setFormData={setFormData} />}
-      {step === 5 && <Step5 formData={formData} />}
+      {step === 4 && (
+        <ResultBooking formData={formData} setFormData={setFormData} />
+      )}
+      {step === 5 && <Summary formData={formData} />}
 
       {/* bottom section */}
       <div className="flex mt-6 items-center">
