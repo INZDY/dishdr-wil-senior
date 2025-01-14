@@ -65,7 +65,8 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
       {/* Make Appointment Section */}
       <div className="bg-gray-100 p-4 rounded shadow mt-4">
         <h3 className="text-lg font-semibold">Make Appointment</h3>
-        <div className="mt-2">
+        {/* department selection: disabled */}
+        {/* <div className="mt-2">
           <label className="block text-sm font-medium text-gray-700">
             Department
           </label>
@@ -81,7 +82,7 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
             ))}
             <option value="General Purpose">General Purpose</option>
           </select>
-        </div>
+        </div> */}
         <div className="mt-2">
           <label className="block text-sm font-medium text-gray-700">
             Date

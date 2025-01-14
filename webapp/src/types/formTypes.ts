@@ -8,6 +8,8 @@ export interface FormData {
   email: string;
   phone: string;
   // patientId: string;
+  chronicDiseases: string;
+  allergies: string;
 
   department: string;
   date: string;

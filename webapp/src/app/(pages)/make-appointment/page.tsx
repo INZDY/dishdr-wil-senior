@@ -24,6 +24,9 @@ export default function MakeAppointment() {
     weight: 0,
     email: "",
     phone: "",
+    chronicDiseases: "",
+    allergies: "",
+
     department: "",
     date: "",
     time: "",
@@ -32,6 +35,7 @@ export default function MakeAppointment() {
     inquiries: [],
     predicted: false,
     prediction: "",
+    
     notes: "",
   });
 
@@ -59,7 +63,7 @@ export default function MakeAppointment() {
   };
 
   return (
-    <div className="max-w-lg mx-auto my-12 p-4 bg-white shadow rounded">
+    <div className="max-w-screen-lg mx-auto my-12 p-4 bg-white shadow rounded">
       {step === 1 && (
         <PersonalInfo formData={formData} setFormData={setFormData} />
       )}

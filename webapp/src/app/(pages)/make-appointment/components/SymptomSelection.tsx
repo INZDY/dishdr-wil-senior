@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StepProps } from "@/types/formTypes";
 import {
   Popover,
@@ -16,34 +16,38 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import { symptomList } from "@/types/dataTypes";
 
 export default function SymptomSelection({ formData, setFormData }: StepProps) {
   const [query, setQuery] = useState("");
-  const [customSymptom, setCustomSymptom] = useState("");
+  // const [customSymptom, setCustomSymptom] = useState("");
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
-
-  const allSymptoms = [
-    { value: "Headache", label: "Headache" },
-    { value: "Fever", label: "Fever" },
-    { value: "Cough", label: "Cough" },
-    { value: "Sore Throat", label: "Sore Throat" },
-    { value: "Fatigue", label: "Fatigue" },
-    { value: "Shortness of Breath", label: "Shortness of Breath" },
-    { value: "Chest Pain", label: "Chest Pain" },
-    { value: "Nausea", label: "Nausea" },
-    { value: "Vomiting", label: "Vomiting" },
-    { value: "Diarrhea", label: "Diarrhea" },
-  ];
+  const [symptomList, setSymptomList] = useState<
+    { value: string; label: string }[]
+  >([]);
 
   const commonSymptoms = ["Headache", "Fever", "Cough", "Sore Throat"];
 
-  // const filteredSymptoms =
-  //   query === ""
-  //     ? allSymptoms
-  //     : allSymptoms.filter((symptom) =>
-  //         symptom.toLowerCase().includes(query.toLowerCase())
-  //       );
+  useEffect(() => {
+    async function fetchSymptoms() {
+      const response = await fetch("/api/actions/symptom-list");
+
+      if (!response.ok) {
+        throw new Error("Failed to get symptom list from server");
+      }
+
+      const data: symptomList = await response.json();
+
+      setSymptomList(
+        data.map((symptom) => ({
+          value: symptom.name,
+          label: symptom.name,
+        }))
+      );
+    }
+    fetchSymptoms();
+  }, []);
 
   const handleSymptomSelect = (symptom: string) => {
     if (!formData.symptoms.includes(symptom)) {
@@ -58,15 +62,15 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
     });
   };
 
-  const handleCustomSymptomAdd = () => {
-    if (customSymptom && !formData.symptoms.includes(customSymptom)) {
-      setFormData({
-        ...formData,
-        symptoms: [...formData.symptoms, customSymptom],
-      });
-      setCustomSymptom("");
-    }
-  };
+  // const handleCustomSymptomAdd = () => {
+  //   if (customSymptom && !formData.symptoms.includes(customSymptom)) {
+  //     setFormData({
+  //       ...formData,
+  //       symptoms: [...formData.symptoms, customSymptom],
+  //     });
+  //     setCustomSymptom("");
+  //   }
+  // };
 
   return (
     <div className="flex flex-col gap-4">
@@ -83,7 +87,7 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
             className="w-[200px] justify-between"
           >
             {value
-              ? allSymptoms.find((symptom) => symptom.value === value)?.label
+              ? symptomList.find((symptom) => symptom.value === value)?.label
               : "Select symptoms..."}
             <FaChevronDown className="opacity-50" />
           </Button>
@@ -94,7 +98,7 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
             <CommandList>
               <CommandEmpty>No framework found.</CommandEmpty>
               <CommandGroup>
-                {allSymptoms.map((symptom) => (
+                {symptomList.map((symptom) => (
                   <CommandItem
                     key={symptom.value}
                     value={symptom.value}
@@ -153,7 +157,7 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
       </div>
 
       {/* Custom symptom input */}
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <h3 className="text-lg font-semibold">Add Custom Symptom</h3>
         <input
           type="text"
@@ -165,7 +169,7 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
         <Button onClick={handleCustomSymptomAdd} className="mt-2">
           Add Symptom
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -22,6 +22,7 @@ export default function SymptomInquiry({
   const predicted = formData.predicted;
 
   // dummy
+  // actual questions(+number of question) should be fetched from the server
   const totalQuestion = 5;
   const questions = [
     "Have you recently experienced any unintended weight loss?",
@@ -69,6 +70,7 @@ export default function SymptomInquiry({
 
       const data = await response.json();
       console.log(data);
+      // add question/prediction to the form data
       // setFormData({
       //   ...formData,
       //   sessionId: data.sessionId,

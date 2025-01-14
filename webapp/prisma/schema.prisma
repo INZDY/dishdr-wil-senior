@@ -25,7 +25,7 @@ model User {
   phone       String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  Appointmnet Appointment[]
+  Appointments Appointment[]
 }
 
 model Appointment {
