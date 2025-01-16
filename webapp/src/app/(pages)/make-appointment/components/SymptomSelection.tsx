@@ -6,7 +6,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { FaCheck, FaChevronDown } from "react-icons/fa6";
+import { FaCheck, FaChevronDown, FaRegTrashCan } from "react-icons/fa6";
 import {
   Command,
   CommandEmpty,
@@ -106,16 +106,6 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
     setSymptomDetails({ symptom, duration: 0, unit: "days" });
   };
 
-  // const handleCustomSymptomAdd = () => {
-  //   if (customSymptom && !formData.symptoms.includes(customSymptom)) {
-  //     setFormData({
-  //       ...formData,
-  //       symptoms: [...formData.symptoms, customSymptom],
-  //     });
-  //     setCustomSymptom("");
-  //   }
-  // };
-
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -126,84 +116,84 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
         <div className="flex flex-col gap-2">
           <h3 className="mb-1 font-semibold">Chief complaint</h3>
           <p className="text-sm text-gray-500">
-            Symptom that makes you seek medical attention.
+            Symptom that makes you seek medical attention. (only 1)
           </p>
 
           {/* symptom selection list with dropdown menu */}
-          <div className="flex gap-4 items-center">
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={open}
-                  className="w-[200px] justify-between"
-                >
-                  {value
-                    ? value == "other"
-                      ? "Other..."
-                      : symptomList.find((symptom) => symptom.value === value)
-                          ?.label
-                    : "Select symptoms..."}
-                  <FaChevronDown className="opacity-50" />
-                </Button>
-              </PopoverTrigger>
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-[200px] justify-between"
+              >
+                {value
+                  ? value == "other"
+                    ? "Other..."
+                    : symptomList.find((symptom) => symptom.value === value)
+                        ?.label
+                  : "Select symptoms..."}
+                <FaChevronDown className="opacity-50" />
+              </Button>
+            </PopoverTrigger>
 
-              <PopoverContent className="w-[200px] p-0">
-                <Command>
-                  <CommandInput
-                    placeholder="Search symptom..."
-                    className="h-9"
-                  />
-                  <CommandList>
-                    <CommandEmpty>No symptom found.</CommandEmpty>
-                    <CommandGroup>
+            <PopoverContent className="w-[200px] p-0">
+              <Command>
+                <CommandInput placeholder="Search symptom..." className="h-9" />
+                <CommandList>
+                  <CommandEmpty>No symptom found.</CommandEmpty>
+                  <CommandGroup>
+                    <CommandItem
+                      key="other"
+                      value="other"
+                      onSelect={(currentValue: string) => {
+                        setValue(currentValue === value ? "" : currentValue);
+                        handleDropdownSelect(currentValue);
+                      }}
+                    >
+                      {"Other..."}
+                      <FaCheck
+                        className={cn(
+                          "ml-auto",
+                          value === "other" ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+
+                    {symptomList.map((symptom) => (
                       <CommandItem
-                        key="other"
-                        value="other"
+                        key={symptom.value}
+                        value={symptom.value}
                         onSelect={(currentValue: string) => {
                           setValue(currentValue === value ? "" : currentValue);
                           handleDropdownSelect(currentValue);
                         }}
                       >
-                        {"Other..."}
+                        {symptom.label}
                         <FaCheck
                           className={cn(
                             "ml-auto",
-                            value === "other" ? "opacity-100" : "opacity-0"
+                            value === symptom.value
+                              ? "opacity-100"
+                              : "opacity-0"
                           )}
                         />
                       </CommandItem>
-
-                      {symptomList.map((symptom) => (
-                        <CommandItem
-                          key={symptom.value}
-                          value={symptom.value}
-                          onSelect={(currentValue: string) => {
-                            setValue(
-                              currentValue === value ? "" : currentValue
-                            );
-                            handleDropdownSelect(currentValue);
-                          }}
-                        >
-                          {symptom.label}
-                          <FaCheck
-                            className={cn(
-                              "ml-auto",
-                              value === symptom.value
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-            <p>2</p>
-            <p>day(s)</p>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+          <div className="flex">
+            <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-red-200 shadow-sm">
+              <p className="flex gap-2">
+                <span>{symptomDetails?.symptom}:</span>
+                <span>{symptomDetails?.duration}</span>
+                <span>{symptomDetails?.unit}</span>
+              </p>
+            </div>
           </div>
         </div>
 
@@ -213,41 +203,95 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
           <p className="text-sm text-gray-500">
             Other symptoms that you are experiencing.
           </p>
-        </div>
 
-        {/* Display selected symptoms as tags */}
-        {/* <div className="flex flex-wrap gap-2 mt-2">
-          {formData.symptoms.map((symptom, index) => (
-            <div
-              key={index}
-              className="flex items-center bg-gray-200 p-2 rounded-md"
-            >
-              {symptom}
-              <button
-                onClick={() => handleSymptomRemove(symptom)}
-                className="ml-1 px-1 rounded-md text-red-500 hover:bg-neutral-300 transition-all"
-              >
-                &times;
-              </button>
-            </div>
-          ))}
-        </div> */}
-
-        {/* Common symptoms selection */}
-        {/* <div className="mt-4">
-          <h3 className="text-sm font-semibold">Common Symptoms</h3>
-          <div className="flex flex-wrap gap-4 mt-2">
-            {commonSymptoms.map((symptom, index) => (
+          <Popover open={false} onOpenChange={() => {}}>
+            <PopoverTrigger asChild>
               <Button
-                key={index}
-                // onClick={() => handleSymptomSelect(symptom)}
-                className="text-black bg-gray-200 p-2 rounded-md"
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-[200px] justify-between"
               >
-                {symptom}
+                {value
+                  ? value == "other"
+                    ? "Other..."
+                    : symptomList.find((symptom) => symptom.value === value)
+                        ?.label
+                  : "Select symptoms..."}
+                <FaChevronDown className="opacity-50" />
               </Button>
-            ))}
+            </PopoverTrigger>
+
+            <PopoverContent className="w-[200px] p-0">
+              <Command>
+                <CommandInput placeholder="Search symptom..." className="h-9" />
+                <CommandList>
+                  <CommandEmpty>No symptom found.</CommandEmpty>
+                  <CommandGroup>
+                    <CommandItem
+                      key="other"
+                      value="other"
+                      onSelect={(currentValue: string) => {
+                        setValue(currentValue === value ? "" : currentValue);
+                        handleDropdownSelect(currentValue);
+                      }}
+                    >
+                      {"Other..."}
+                      <FaCheck
+                        className={cn(
+                          "ml-auto",
+                          value === "other" ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+
+                    {symptomList.map((symptom) => (
+                      <CommandItem
+                        key={symptom.value}
+                        value={symptom.value}
+                        onSelect={(currentValue: string) => {
+                          setValue(currentValue === value ? "" : currentValue);
+                          handleDropdownSelect(currentValue);
+                        }}
+                      >
+                        {symptom.label}
+                        <FaCheck
+                          className={cn(
+                            "ml-auto",
+                            value === symptom.value
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+
+          <div className="flex gap-4 items-center">
+            <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-green-200 shadow-sm">
+              <p>Fatigue: 2 days</p>
+              <Button className="bg-transparent px-1 hover:bg-neutral-200 shadow-none">
+                <FaRegTrashCan color="red" />
+              </Button>
+            </div>
+            <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-blue-200 shadow-sm">
+              <p>Chills: 10 hours</p>
+              <Button className="bg-transparent px-1 hover:bg-neutral-200 shadow-none">
+                <FaRegTrashCan color="red" />
+              </Button>
+            </div>
+            <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-teal-200 shadow-sm">
+              <p>Vomiting: 5 hours</p>
+              <Button className="bg-transparent px-1 hover:bg-neutral-200 shadow-none">
+                <FaRegTrashCan color="red" />
+              </Button>
+            </div>
           </div>
-        </div> */}
+        </div>
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -266,7 +310,15 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
               <Input
                 id="symptom"
                 defaultValue={symptomDetails?.symptom}
-                disabled={symptomDetails?.symptom !== "other"}
+                disabled={value !== "other"}
+                onChange={(e) => {
+                  symptomDetails != undefined
+                    ? setSymptomDetails({
+                        ...symptomDetails,
+                        symptom: e.target.value,
+                      })
+                    : null;
+                }}
                 className="col-span-3"
               />
             </div>
@@ -274,8 +326,25 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
               <Label htmlFor="duration" className="text-right">
                 Duration
               </Label>
-              <Input id="duration" defaultValue={symptomDetails?.duration} />
-              <Select>
+              <Input
+                id="duration"
+                defaultValue={symptomDetails?.duration}
+                onChange={(e) => {
+                  symptomDetails != undefined
+                    ? setSymptomDetails({
+                        ...symptomDetails,
+                        duration: parseInt(e.target.value),
+                      })
+                    : null;
+                }}
+              />
+              <Select
+                onValueChange={(unit) => {
+                  symptomDetails != undefined
+                    ? setSymptomDetails({ ...symptomDetails, unit: unit })
+                    : null;
+                }}
+              >
                 <SelectTrigger className="">
                   <SelectValue placeholder="day" />
                 </SelectTrigger>
@@ -288,7 +357,9 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit" onClick={() => setDialogOpen(false)}>
+              Save changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
