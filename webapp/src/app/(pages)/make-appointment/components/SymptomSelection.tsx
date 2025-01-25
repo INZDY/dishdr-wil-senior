@@ -16,7 +16,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
-import { symptomList } from "@/types/dataTypes";
+import { SymptomAnswer, SymptomList } from "@/types/dataTypes";
 import {
   Dialog,
   DialogContent,
@@ -35,34 +35,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { sortPresentIllness, valueToLabel } from "@/utils/utils";
 
 export default function SymptomSelection({ formData, setFormData }: StepProps) {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [chiefOpen, setChiefOpen] = useState(false);
+  const [presentOpen, setPresentOpen] = useState(false);
+  const [chiefValue, setChiefValue] = useState("");
+  const [presentValue, setPresentValue] = useState("");
+  const [selectionType, setSelectionType] = useState<"chief" | "present">(
+    "chief"
+  );
+
   const [dialogOpen, setDialogOpen] = useState(false);
+
   const [symptomList, setSymptomList] = useState<
     { value: string; label: string }[]
   >([]);
 
-  const [symptomDetails, setSymptomDetails] = useState<{
-    symptom: string;
-    duration: number;
-    unit: string;
-  }>();
+  const [symptomDetails, setSymptomDetails] = useState<SymptomAnswer>();
 
-  const [chiefComplaint, setChiefComplaint] = useState<{
-    symptom: string;
-    duration: number;
-    unit: string;
-  }>();
+  const [chiefComplaint, setChiefComplaint] = useState<SymptomAnswer>();
 
-  const [presentIllness, setPresentIllness] = useState<
-    {
-      symptom: string;
-      duration: number;
-      unit: string;
-    }[]
-  >();
+  const [presentIllness, setPresentIllness] = useState<SymptomAnswer[]>([]);
 
   const commonSymptoms = ["Headache", "Fever", "Cough", "Sore Throat"];
 
@@ -74,36 +68,51 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
         throw new Error("Failed to get symptom list from server");
       }
 
-      const data: symptomList = await response.json();
+      const data: SymptomList = await response.json();
 
       // need to transform label format
-      setSymptomList(
-        data.map((symptom) => ({
-          value: symptom.name,
-          label: symptom.name,
-        }))
-      );
+      const symptoms = valueToLabel(data);
+      setSymptomList(symptoms);
     }
     fetchSymptoms();
   }, []);
 
-  const handleSymptomSelect = (symptom: string) => {
-    if (!formData.symptoms.includes(symptom)) {
-      setFormData({ ...formData, symptoms: [...formData.symptoms, symptom] });
-    }
-  };
-
-  const handleSymptomRemove = (symptom: string) => {
-    setFormData({
-      ...formData,
-      symptoms: formData.symptoms.filter((s) => s !== symptom),
-    });
-  };
-
-  const handleDropdownSelect = (symptom: string) => {
-    setOpen(false);
-    setDialogOpen(true);
+  const handleDropdownSelect = (symptom: string, type: "chief" | "present") => {
+    setSelectionType(type);
     setSymptomDetails({ symptom, duration: 0, unit: "days" });
+    setChiefOpen(false);
+    setPresentOpen(false);
+    setDialogOpen(true);
+  };
+
+  const handleSaveChanges = () => {
+    if (selectionType === "chief") {
+      setChiefComplaint(symptomDetails);
+    } else {
+      const existingIndex = presentIllness.findIndex(
+        (symptom) => symptom.symptom === symptomDetails?.symptom
+      );
+
+      if (existingIndex !== -1) {
+        // Replace the existing symptom
+        const updatedPresentIllness = [...presentIllness];
+        updatedPresentIllness[existingIndex] = symptomDetails!;
+        setPresentIllness(updatedPresentIllness.sort(sortPresentIllness));
+      } else {
+        // Add new symptom
+        setPresentIllness(
+          [...presentIllness, symptomDetails!].sort(sortPresentIllness)
+        );
+      }
+    }
+    setChiefValue("");
+    setPresentValue("");
+    setSymptomDetails(undefined);
+    setDialogOpen(false);
+  };
+
+  const handleDeletePresentIllness = (index: number) => {
+    setPresentIllness(presentIllness.filter((_, i) => i !== index));
   };
 
   return (
@@ -120,19 +129,20 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
           </p>
 
           {/* symptom selection list with dropdown menu */}
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={chiefOpen} onOpenChange={setChiefOpen}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
-                aria-expanded={open}
+                aria-expanded={chiefOpen}
                 className="w-[200px] justify-between"
               >
-                {value
-                  ? value == "other"
+                {chiefValue
+                  ? chiefValue == "other"
                     ? "Other..."
-                    : symptomList.find((symptom) => symptom.value === value)
-                        ?.label
+                    : symptomList.find(
+                        (symptom) => symptom.value === chiefValue
+                      )?.label
                   : "Select symptoms..."}
                 <FaChevronDown className="opacity-50" />
               </Button>
@@ -148,15 +158,17 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
                       key="other"
                       value="other"
                       onSelect={(currentValue: string) => {
-                        setValue(currentValue === value ? "" : currentValue);
-                        handleDropdownSelect(currentValue);
+                        setChiefValue(
+                          currentValue === chiefValue ? "" : currentValue
+                        );
+                        handleDropdownSelect(currentValue, "chief");
                       }}
                     >
                       {"Other..."}
                       <FaCheck
                         className={cn(
                           "ml-auto",
-                          value === "other" ? "opacity-100" : "opacity-0"
+                          chiefValue === "other" ? "opacity-100" : "opacity-0"
                         )}
                       />
                     </CommandItem>
@@ -166,15 +178,17 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
                         key={symptom.value}
                         value={symptom.value}
                         onSelect={(currentValue: string) => {
-                          setValue(currentValue === value ? "" : currentValue);
-                          handleDropdownSelect(currentValue);
+                          setChiefValue(
+                            currentValue === chiefValue ? "" : currentValue
+                          );
+                          handleDropdownSelect(currentValue, "chief");
                         }}
                       >
                         {symptom.label}
                         <FaCheck
                           className={cn(
                             "ml-auto",
-                            value === symptom.value
+                            chiefValue === symptom.value
                               ? "opacity-100"
                               : "opacity-0"
                           )}
@@ -186,14 +200,17 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
               </Command>
             </PopoverContent>
           </Popover>
+
           <div className="flex">
-            <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-red-200 shadow-sm">
-              <p className="flex gap-2">
-                <span>{symptomDetails?.symptom}:</span>
-                <span>{symptomDetails?.duration}</span>
-                <span>{symptomDetails?.unit}</span>
-              </p>
-            </div>
+            {chiefComplaint ? (
+              <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-red-200 shadow-sm">
+                <p className="flex gap-2">
+                  <span>{chiefComplaint?.symptom}:</span>
+                  <span>{chiefComplaint?.duration}</span>
+                  <span>{chiefComplaint?.unit}</span>
+                </p>
+              </div>
+            ) : null}
           </div>
         </div>
 
@@ -204,19 +221,20 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
             Other symptoms that you are experiencing.
           </p>
 
-          <Popover open={false} onOpenChange={() => {}}>
+          <Popover open={presentOpen} onOpenChange={setPresentOpen}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
-                aria-expanded={open}
+                aria-expanded={presentOpen}
                 className="w-[200px] justify-between"
               >
-                {value
-                  ? value == "other"
+                {presentValue
+                  ? presentValue == "other"
                     ? "Other..."
-                    : symptomList.find((symptom) => symptom.value === value)
-                        ?.label
+                    : symptomList.find(
+                        (symptom) => symptom.value === presentValue
+                      )?.label
                   : "Select symptoms..."}
                 <FaChevronDown className="opacity-50" />
               </Button>
@@ -232,15 +250,17 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
                       key="other"
                       value="other"
                       onSelect={(currentValue: string) => {
-                        setValue(currentValue === value ? "" : currentValue);
-                        handleDropdownSelect(currentValue);
+                        setPresentValue(
+                          currentValue === presentValue ? "" : currentValue
+                        );
+                        handleDropdownSelect(currentValue, "present");
                       }}
                     >
                       {"Other..."}
                       <FaCheck
                         className={cn(
                           "ml-auto",
-                          value === "other" ? "opacity-100" : "opacity-0"
+                          presentValue === "other" ? "opacity-100" : "opacity-0"
                         )}
                       />
                     </CommandItem>
@@ -250,15 +270,17 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
                         key={symptom.value}
                         value={symptom.value}
                         onSelect={(currentValue: string) => {
-                          setValue(currentValue === value ? "" : currentValue);
-                          handleDropdownSelect(currentValue);
+                          setPresentValue(
+                            currentValue === presentValue ? "" : currentValue
+                          );
+                          handleDropdownSelect(currentValue, "present");
                         }}
                       >
                         {symptom.label}
                         <FaCheck
                           className={cn(
                             "ml-auto",
-                            value === symptom.value
+                            presentValue === symptom.value
                               ? "opacity-100"
                               : "opacity-0"
                           )}
@@ -271,24 +293,26 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
             </PopoverContent>
           </Popover>
 
-          <div className="flex gap-4 items-center">
-            <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-green-200 shadow-sm">
-              <p>Fatigue: 2 days</p>
-              <Button className="bg-transparent px-1 hover:bg-neutral-200 shadow-none">
-                <FaRegTrashCan color="red" />
-              </Button>
-            </div>
-            <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-blue-200 shadow-sm">
-              <p>Chills: 10 hours</p>
-              <Button className="bg-transparent px-1 hover:bg-neutral-200 shadow-none">
-                <FaRegTrashCan color="red" />
-              </Button>
-            </div>
-            <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-teal-200 shadow-sm">
-              <p>Vomiting: 5 hours</p>
-              <Button className="bg-transparent px-1 hover:bg-neutral-200 shadow-none">
-                <FaRegTrashCan color="red" />
-              </Button>
+          <div className="flex">
+            <div className="flex flex-col gap-2 justify-center">
+              {presentIllness.map((symptom, index) => (
+                <div
+                  key={index}
+                  className="flex gap-2 h-10 p-2 items-center justify-between rounded-md bg-green-200 shadow-sm"
+                >
+                  <p className="flex gap-2">
+                    <span>{symptom.symptom}:</span>
+                    <span>{symptom.duration}</span>
+                    <span>{symptom.unit}</span>
+                  </p>
+                  <Button
+                    onClick={() => handleDeletePresentIllness(index)}
+                    className="bg-transparent px-1 hover:bg-neutral-200 shadow-none"
+                  >
+                    <FaRegTrashCan color="red" />
+                  </Button>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -310,7 +334,11 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
               <Input
                 id="symptom"
                 defaultValue={symptomDetails?.symptom}
-                disabled={value !== "other"}
+                disabled={
+                  selectionType === "chief"
+                    ? chiefValue !== "other"
+                    : presentValue !== "other"
+                }
                 onChange={(e) => {
                   symptomDetails != undefined
                     ? setSymptomDetails({
@@ -357,7 +385,7 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" onClick={() => setDialogOpen(false)}>
+            <Button type="submit" onClick={handleSaveChanges}>
               Save changes
             </Button>
           </DialogFooter>

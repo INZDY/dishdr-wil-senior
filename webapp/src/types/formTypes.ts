@@ -1,3 +1,5 @@
+import { SymptomAnswer } from "./dataTypes";
+
 // inquiries: should be list of {question, answer}
 export interface FormData {
   sessionId: string;
@@ -17,6 +19,8 @@ export interface FormData {
   status: string | null;
 
   symptoms: string[];
+  chiefComplaint: SymptomAnswer;
+  presentIllness: SymptomAnswer[];
   inquiries: string[];
   predicted: boolean;
   prediction: string;

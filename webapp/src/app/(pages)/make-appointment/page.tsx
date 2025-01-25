@@ -31,11 +31,14 @@ export default function MakeAppointment() {
     date: "",
     time: "",
     status: null,
+
     symptoms: [],
+    chiefComplaint: { symptom: "", duration: 0, unit: "" },
+    presentIllness: [],
     inquiries: [],
     predicted: false,
     prediction: "",
-    
+
     notes: "",
   });
 
@@ -98,7 +101,7 @@ export default function MakeAppointment() {
 
         {/* navigation */}
         <div className="flex flex-grow justify-end gap-4">
-          {step > 1 && step < 5 && step !== 3 && (
+          {(step == 2 || step == 4) && (
             <Button
               onClick={handleBack}
               variant={"secondary"}
@@ -107,7 +110,7 @@ export default function MakeAppointment() {
               Back
             </Button>
           )}
-          {step < 4 && step !== 3 && (
+          {step < 3 && (
             <Button onClick={handleNext} className="px-4 py-2 text-base">
               Next
             </Button>

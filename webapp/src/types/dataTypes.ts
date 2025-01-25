@@ -3,4 +3,10 @@ export type Symptom = {
   name: string;
 };
 
-export type symptomList = Symptom[];
+export type SymptomList = Symptom[];
+
+export type SymptomAnswer = {
+  symptom: string;
+  duration: number;
+  unit: string;
+}
