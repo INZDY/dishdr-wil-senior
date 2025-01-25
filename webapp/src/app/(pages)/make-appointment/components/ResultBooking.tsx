@@ -45,8 +45,8 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
       <div className="bg-gray-100 p-4 rounded shadow">
         <h3 className="text-lg font-semibold">Prediction Result</h3>
         <p>
-          Top Prediction: {topPrediction.department} ({topPrediction.percentage}
-          %)
+          Top Prediction: {topPrediction.department}{" "}
+          {/* ({topPrediction.percentage}%) */}
         </p>
         <Button onClick={handleExpandResults} className="mt-2">
           {showFullResults ? "Hide Full Results" : "Show Full Results"}
@@ -55,7 +55,8 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
           <ul className="mt-2">
             {predictionResults.map((result, index) => (
               <li key={index}>
-                {result.department}: {result.percentage}%
+                {index + 1}. {result.department}
+                {/* {result.department}: {result.percentage}% */}
               </li>
             ))}
           </ul>

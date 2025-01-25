@@ -20,14 +20,14 @@ export default function Summary({ formData }: { formData: FormData }) {
       <div className="flex border-t-2 border-gray-400 rounded" />
       {/* Summary Section */}
       <div className="flex flex-col gap-4 bg-gray-100 p-4 rounded shadow">
-        <p className="flex p-4 justify-center bg-teal-300 border-2 border-black rounded-md text-2xl font-bold">
+        {/* <p className="flex p-4 justify-center bg-teal-300 border-2 border-black rounded-md text-2xl font-bold">
           {appointmentInfo.department}
-        </p>
-        <p>Name: {appointmentInfo.name}</p>
-        <p>Date: {appointmentInfo.date}</p>
-        <p>Time: {appointmentInfo.time}</p>
-        <p>Notes: {appointmentInfo.notes}</p>
-        <p>Status: {appointmentInfo.status}</p>
+        </p> */}
+        <p>Name: {formData.name}</p>
+        <p>Date: {formData.date}</p>
+        <p>Time: {formData.time}</p>
+        <p>Notes: {formData.notes}</p>
+        <p>Status: {formData.status}</p>
       </div>
     </div>
   );

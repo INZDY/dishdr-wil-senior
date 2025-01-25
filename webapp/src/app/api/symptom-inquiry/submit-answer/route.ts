@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     // const data = await flaskResponse.json();
 
     // Simulate server wait time
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 700));
     // dummy data
     const data = {
       sessionId: "JohnDoeId",
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       department: data.department,
     });
   } catch (error) {
-    console.error(error);
+    console.log(error, "ERROR_SUBMITANSWER");
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

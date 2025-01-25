@@ -35,15 +35,23 @@ model Appointment {
   patient    User     @relation(fields: [patientId], references: [id])
   patientId  String
   department String?
-  date       DateTime
-  time       DateTime
+  dateTime   DateTime
   notes      String?
 
-  status         String
-  chiefComplaint String?
-  presentIllness String?
-  otherSymptoms  String?
-  prediction     String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  status        String
+  otherSymptoms String?
+  prediction    String?
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  symptoms      AppointmentSymptoms[]
+}
+
+model AppointmentSymptoms {
+  id            Int         @id @default(autoincrement())
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  appointmentId String
+  type          String
+  symptom       String
+  duration      Int
+  unit          String
 }

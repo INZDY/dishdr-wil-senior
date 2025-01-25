@@ -12,6 +12,7 @@ import Summary from "./components/Summary";
 
 export default function MakeAppointment() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState<"next" | "back">("next");
@@ -30,7 +31,7 @@ export default function MakeAppointment() {
     department: "",
     date: "",
     time: "",
-    status: null,
+    status: "pending",
 
     symptoms: [],
     chiefComplaint: { symptom: "", duration: 0, unit: "" },
@@ -63,9 +64,31 @@ export default function MakeAppointment() {
     setStep((prevStep) => prevStep - 1);
   };
 
-  const handleSubmitAppointment = () => {
-    console.log("Appointment submitted");
-    handleNext();
+  const handleConfirmAppointment = async () => {
+    setLoading(true);
+    console.log("Confirming appointment", formData);
+    // send appointment data to the server
+    try {
+      const response = await fetch("/api/new-appointment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to confirm appointment");
+      }
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error confirming appointment:", error);
+    } finally {
+      setLoading(false);
+      handleNext();
+    }
   };
 
   const handleNavigate = () => router.push("/activity");
@@ -126,7 +149,7 @@ export default function MakeAppointment() {
           )}
           {step == 4 && (
             <Button
-              onClick={handleSubmitAppointment}
+              onClick={handleConfirmAppointment}
               className="px-4 py-2 text-base"
             >
               Confirm
