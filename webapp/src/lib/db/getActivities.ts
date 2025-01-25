@@ -13,9 +13,13 @@ export default async function getActivities() {
       where: {
         patientId: currentUser.id,
       },
+      include: {
+        symptoms: true,
+        patient: true,
+      },
     });
 
-    if(!activities) {
+    if (!activities) {
       return [];
     }
 

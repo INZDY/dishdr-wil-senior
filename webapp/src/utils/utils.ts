@@ -1,6 +1,6 @@
-import { SymptomList } from "@/types/dataTypes";
+import { Symptom } from "@/types/dataTypes";
 
-export const valueToLabel = (symptomList: SymptomList) => {
+export const valueToLabel = (symptomList: Symptom[]) => {
   const valueLabel = symptomList.map((symptom) => {
     const readable = symptom.name
       .replace(/_/g, " ")

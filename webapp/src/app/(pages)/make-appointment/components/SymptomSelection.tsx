@@ -16,7 +16,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
-import { SymptomAnswer, SymptomList } from "@/types/dataTypes";
+import { Symptom, SymptomAnswer } from "@/types/dataTypes";
 import {
   Dialog,
   DialogContent,
@@ -62,7 +62,7 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
         throw new Error("Failed to get symptom list from server");
       }
 
-      const data: SymptomList = await response.json();
+      const data: Symptom[] = await response.json();
 
       // need to transform label format
       const symptoms = valueToLabel(data);
