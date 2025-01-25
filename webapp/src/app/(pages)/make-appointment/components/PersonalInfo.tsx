@@ -81,7 +81,7 @@ export default function PersonalInfo({ formData, setFormData }: StepProps) {
           <p className="mb-1 font-semibold">Chronic diseases</p>
           <Input
             type="text"
-            value={formData.name}
+            value={formData.chronicDiseases}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="w-full px-3 py-2 border rounded"
           />
@@ -91,7 +91,7 @@ export default function PersonalInfo({ formData, setFormData }: StepProps) {
           <p className="mb-1 font-semibold">Allergies</p>
           <Input
             type="text"
-            value={formData.name}
+            value={formData.allergies}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="w-full px-3 py-2 border rounded"
           />
