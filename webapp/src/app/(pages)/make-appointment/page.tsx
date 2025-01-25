@@ -51,7 +51,6 @@ export default function MakeAppointment() {
           ...formData.presentIllness.map((illness) => illness.symptom),
         ],
       });
-      console.log(formData);
     }
     if (step === 3) {
       setFormData({ ...formData, predicted: true });
