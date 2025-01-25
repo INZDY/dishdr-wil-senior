@@ -54,12 +54,6 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
 
   const [symptomDetails, setSymptomDetails] = useState<SymptomAnswer>();
 
-  const [chiefComplaint, setChiefComplaint] = useState<SymptomAnswer>();
-
-  const [presentIllness, setPresentIllness] = useState<SymptomAnswer[]>([]);
-
-  const commonSymptoms = ["Headache", "Fever", "Cough", "Sore Throat"];
-
   useEffect(() => {
     async function fetchSymptoms() {
       const response = await fetch("/api/actions/symptom-list");
@@ -87,22 +81,28 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
 
   const handleSaveChanges = () => {
     if (selectionType === "chief") {
-      setChiefComplaint(symptomDetails);
+      setFormData({ ...formData, chiefComplaint: symptomDetails! });
     } else {
-      const existingIndex = presentIllness.findIndex(
+      const existingIndex = formData.presentIllness.findIndex(
         (symptom) => symptom.symptom === symptomDetails?.symptom
       );
 
       if (existingIndex !== -1) {
         // Replace the existing symptom
-        const updatedPresentIllness = [...presentIllness];
+        const updatedPresentIllness = [...formData.presentIllness];
         updatedPresentIllness[existingIndex] = symptomDetails!;
-        setPresentIllness(updatedPresentIllness.sort(sortPresentIllness));
+        setFormData({
+          ...formData,
+          presentIllness: updatedPresentIllness.sort(sortPresentIllness),
+        });
       } else {
         // Add new symptom
-        setPresentIllness(
-          [...presentIllness, symptomDetails!].sort(sortPresentIllness)
-        );
+        setFormData({
+          ...formData,
+          presentIllness: [...formData.presentIllness, symptomDetails!].sort(
+            sortPresentIllness
+          ),
+        });
       }
     }
     setChiefValue("");
@@ -112,7 +112,10 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
   };
 
   const handleDeletePresentIllness = (index: number) => {
-    setPresentIllness(presentIllness.filter((_, i) => i !== index));
+    setFormData({
+      ...formData,
+      presentIllness: formData.presentIllness.filter((_, i) => i !== index),
+    });
   };
 
   return (
@@ -202,12 +205,12 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
           </Popover>
 
           <div className="flex">
-            {chiefComplaint ? (
+            {formData.chiefComplaint.unit !== "" ? (
               <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-red-200 shadow-sm">
                 <p className="flex gap-2">
-                  <span>{chiefComplaint?.symptom}:</span>
-                  <span>{chiefComplaint?.duration}</span>
-                  <span>{chiefComplaint?.unit}</span>
+                  <span>{formData.chiefComplaint?.symptom}:</span>
+                  <span>{formData.chiefComplaint?.duration}</span>
+                  <span>{formData.chiefComplaint?.unit}</span>
                 </p>
               </div>
             ) : null}
@@ -295,7 +298,7 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
 
           <div className="flex">
             <div className="flex flex-col gap-2 justify-center">
-              {presentIllness.map((symptom, index) => (
+              {formData.presentIllness.map((symptom, index) => (
                 <div
                   key={index}
                   className="flex gap-2 h-10 p-2 items-center justify-between rounded-md bg-green-200 shadow-sm"
@@ -373,13 +376,13 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
                     : null;
                 }}
               >
-                <SelectTrigger className="">
-                  <SelectValue placeholder="day" />
+                <SelectTrigger>
+                  <SelectValue placeholder="days" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="day">day</SelectItem>
-                  <SelectItem value="hour">hour</SelectItem>
-                  <SelectItem value="minute">minute</SelectItem>
+                  <SelectItem value="days">days</SelectItem>
+                  <SelectItem value="hours">hours</SelectItem>
+                  <SelectItem value="minutes">minutes</SelectItem>
                 </SelectContent>
               </Select>
             </div>
