@@ -16,28 +16,42 @@ model Symptom {
 }
 
 model User {
-  id          String        @id @default(cuid(2))
-  name        String?
-  DOB         DateTime?
-  height      Float?
-  weight      Float?
-  email       String        @unique
-  phone       String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  Appointments Appointment[]
+  id             String        @id @default(cuid(2))
+  name           String?
+  DOB            DateTime?
+  height         Float?
+  weight         Float?
+  email          String        @unique
+  phone          String?
+  chronicDisease String?
+  allergies      String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  Appointments   Appointment[]
 }
 
 model Appointment {
   id         String   @id @default(cuid(2))
   patient    User     @relation(fields: [patientId], references: [id])
   patientId  String
-  department String
-  date       DateTime
-  time       DateTime
+  department String?
+  dateTime   DateTime
   notes      String?
 
-  status    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  status        String
+  otherSymptoms String?
+  prediction    String?
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  symptoms      AppointmentSymptoms[]
+}
+
+model AppointmentSymptoms {
+  id            Int         @id @default(autoincrement())
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  appointmentId String
+  type          String
+  symptom       String
+  duration      Int
+  unit          String
 }
