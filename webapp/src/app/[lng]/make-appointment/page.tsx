@@ -10,7 +10,11 @@ import SymptomInquiry from "./components/SymptomInquiry";
 import ResultBooking from "./components/ResultBooking";
 import Summary from "./components/Summary";
 
-export default function MakeAppointment() {
+import { useTranslation } from "@/app/i18n/client";
+
+export default function MakeAppointment({ params }: { params: any }) {
+  const { lng } = React.use<{ lng: string }>(params);
+  const { t } = useTranslation(lng, "make-appointment");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -139,12 +143,13 @@ export default function MakeAppointment() {
               variant={"secondary"}
               className="px-4 py-2 bg-gray-300 text-base"
             >
-              Back
+              {t("back")}
             </Button>
           )}
           {step < 3 && (
             <Button onClick={handleNext} className="px-4 py-2 text-base">
-              Next
+              {t("next")}
+              {/* Next */}
             </Button>
           )}
           {step == 4 && (

@@ -1,0 +1,17 @@
+{
+  "title": "Make Appointment",
+  "subtitle": "Please fill in the form below to make an appointment.",
+  "name": "Name",
+  "email": "Email",
+  "phone": "Phone",
+  "date": "Date",
+  "time": "Time",
+  "service": "Service",
+  "message": "Message",
+  "submit": "Submit",
+  "success": "Appointment has been made successfully.",
+  "error": "Failed to make an appointment. Please try again later.",
+  "patient-information": "Patient Information",
+  "next": "Next",
+  "back": "Back"
+}
