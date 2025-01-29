@@ -1,17 +1,26 @@
 {
   "title": "Make Appointment",
   "subtitle": "Please fill in the form below to make an appointment.",
+  "next": "Next",
+  "back": "Back",
+  "submit": "Submit",
+  "confirm": "Confirm",
+  "patient-information": "Patient Information",
+  "date-of-birth": "Date of Birth",
   "name": "Name",
+  "height": "Height (cm)",
+  "weight": "Weight (kg)",
   "email": "Email",
-  "phone": "Phone",
+  "phone": "Phone Number",
+  "chronic-disease": "Chronic Disease",
+  "allergy": "Allergy",
   "date": "Date",
   "time": "Time",
+
+  "save-to-device": "Save to Device",
+
   "service": "Service",
   "message": "Message",
-  "submit": "Submit",
   "success": "Appointment has been made successfully.",
-  "error": "Failed to make an appointment. Please try again later.",
-  "patient-information": "Patient Information",
-  "next": "Next",
-  "back": "Back"
+  "error": "Failed to make an appointment. Please try again later."
 }

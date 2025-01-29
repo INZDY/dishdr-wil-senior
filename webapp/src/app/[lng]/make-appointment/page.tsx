@@ -104,7 +104,7 @@ export default function MakeAppointment({ params }: { params: any }) {
   return (
     <div className="max-w-screen-lg mx-auto my-12 p-4 bg-white shadow rounded">
       {step === 1 && (
-        <PersonalInfo formData={formData} setFormData={setFormData} />
+        <PersonalInfo formData={formData} setFormData={setFormData} lng={lng}/>
       )}
       {step === 2 && (
         <SymptomSelection formData={formData} setFormData={setFormData} />
@@ -131,7 +131,8 @@ export default function MakeAppointment({ params }: { params: any }) {
               handleSaveToDevice;
             }}
           >
-            Save to device
+            {t("save-to-device")}
+            {/* Save to device */}
           </Button>
         )}
 
@@ -157,12 +158,14 @@ export default function MakeAppointment({ params }: { params: any }) {
               onClick={handleConfirmAppointment}
               className="px-4 py-2 text-base"
             >
-              Confirm
+              {t("confirm")}
+              {/* Confirm */}
             </Button>
           )}
           {step == 5 && (
             <Button onClick={handleNavigate} className="px-4 py-2 text-base">
-              Confirm
+              {t("confirm")}
+              {/* Confirm */}
             </Button>
           )}
         </div>

@@ -12,6 +12,7 @@ export const config = {
 };
 
 export function middleware(req: NextRequest) {
+  console.log("middleware");
   if (
     req.nextUrl.pathname.indexOf("icon") > -1 ||
     req.nextUrl.pathname.indexOf("chrome") > -1

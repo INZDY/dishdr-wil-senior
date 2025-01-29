@@ -1,3 +1,8 @@
 {
-  "title": "Dishdr"
+  "title": "Dishdr",
+  "home": "หน้าแรก",
+  "activity": "กิจกรรม",
+  "profile": "โปรไฟล์",
+  "login": "เข้าสู่ระบบ",
+  "signup": "ลงทะเบียน"
 }
