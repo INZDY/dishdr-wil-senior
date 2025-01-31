@@ -10,7 +10,11 @@ import SymptomInquiry from "./components/SymptomInquiry";
 import ResultBooking from "./components/ResultBooking";
 import Summary from "./components/Summary";
 
-export default function MakeAppointment() {
+import { useTranslation } from "@/app/i18n/client";
+
+export default function MakeAppointment({ params }: { params: any }) {
+  const { lng } = React.use<{ lng: string }>(params);
+  const { t } = useTranslation(lng, "make-appointment");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -100,7 +104,7 @@ export default function MakeAppointment() {
   return (
     <div className="max-w-screen-lg mx-auto my-12 p-4 bg-white shadow rounded">
       {step === 1 && (
-        <PersonalInfo formData={formData} setFormData={setFormData} />
+        <PersonalInfo formData={formData} setFormData={setFormData} lng={lng}/>
       )}
       {step === 2 && (
         <SymptomSelection formData={formData} setFormData={setFormData} />
@@ -127,7 +131,8 @@ export default function MakeAppointment() {
               handleSaveToDevice;
             }}
           >
-            Save to device
+            {t("save-to-device")}
+            {/* Save to device */}
           </Button>
         )}
 
@@ -139,12 +144,13 @@ export default function MakeAppointment() {
               variant={"secondary"}
               className="px-4 py-2 bg-gray-300 text-base"
             >
-              Back
+              {t("back")}
             </Button>
           )}
           {step < 3 && (
             <Button onClick={handleNext} className="px-4 py-2 text-base">
-              Next
+              {t("next")}
+              {/* Next */}
             </Button>
           )}
           {step == 4 && (
@@ -152,12 +158,14 @@ export default function MakeAppointment() {
               onClick={handleConfirmAppointment}
               className="px-4 py-2 text-base"
             >
-              Confirm
+              {t("confirm")}
+              {/* Confirm */}
             </Button>
           )}
           {step == 5 && (
             <Button onClick={handleNavigate} className="px-4 py-2 text-base">
-              Confirm
+              {t("confirm")}
+              {/* Confirm */}
             </Button>
           )}
         </div>

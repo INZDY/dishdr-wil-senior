@@ -1,17 +1,20 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useTranslation } from "@/app/i18n/client";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useState } from "react";
 
-export default function Header() {
+export default function Header({ lng }: { lng: string }) {
+  const { t } = useTranslation(lng, "make-appointment");
   const router = useRouter();
+  const currentPath = usePathname().substring(3);
   const [loggedIn, setLoggedIn] = useState(false);
 
   return (
     <header className="flex px-4 py-2 gap-4 overflow-auto bg-transaprent text-white">
       {/* logo */}
       <div
-        onClick={() => router.push("/")}
+        onClick={() => router.push(`/${lng}`)}
         className="size-12 border-2 hover:cursor-pointer"
       >
         logo
@@ -20,22 +23,22 @@ export default function Header() {
       {/* nav links */}
       <div className="hidden md:flex flex-grow px-8 py-2 justify-end gap-8">
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.push(`/${lng}`)}
           className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black transition-all"
         >
-          Home
+          {t("home")}
         </button>
         <button
-          onClick={() => router.push("/activity")}
+          onClick={() => router.push(`/${lng}/activity`)}
           className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black transition-all"
         >
-          Activity
+          {t("activity")}
         </button>
         <button
-          onClick={() => router.push("/profile")}
+          onClick={() => router.push(`/${lng}/profile`)}
           className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black transition-all"
         >
-          Profile
+          {t("profile")}
         </button>
         {/* <button
           onClick={() => router.push("/support")}
@@ -53,19 +56,37 @@ export default function Header() {
         ) : (
           <div className="flex gap-4 py-2">
             <button
-              onClick={() => router.push("/login")}
+              onClick={() => router.push(`/${lng}/login`)}
               className="px-2 rounded-md font-semibold bg-black hover:bg-gray-300 hover:text-black transition-all"
             >
-              Login
+              {t("login")}
             </button>
             <button
-              onClick={() => router.push("/login")}
+              onClick={() => router.push(`/${lng}/login`)}
               className="px-2 rounded-md font-semibold bg-white hover:bg-gray-300 text-black transition-all"
             >
-              Signup
+              {t("signup")}
             </button>
           </div>
         )}
+      </div>
+      <div className="border-l-2 border-white" />
+
+      {/* language switcher */}
+      <div className="flex gap-4 py-2">
+        <button
+          onClick={() => {
+            lng === "en"
+              ? router.push(`/th/${currentPath}`)
+              : router.push(`/en/${currentPath}`);
+          }}
+          className="px-2 rounded-md font-semibold bg-white hover:bg-gray-300 text-black transition-all"
+        >
+          <p>
+            {lng === "en" ? "Language:" : "ภาษา:"}
+            <span className="ml-1">{lng.toUpperCase()}</span>
+          </p>
+        </button>
       </div>
 
       {/* hamburger */}
