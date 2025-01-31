@@ -26,22 +26,6 @@ export const metadata: Metadata = {
   description: "Dynamic Inquiry System for Hospital Department Recommendation",
 };
 
-// export async function generateMetadata({ params }: {
-//   params: {
-//     lng: string;
-//   };
-// }) {
-//   let { lng } = params
-//   if (languages.indexOf(lng) < 0) lng = fallbackLng
-//   // eslint-disable-next-line react-hooks/rules-of-hooks
-//   // const { t } = await useTranslation(lng)
-//   return {
-//     title: "Dishdr",
-//     // title: t('title'),
-//     content: 'A playground to explore new Next.js 13/14 app directory features such as nested layouts, instant loading states, streaming, and component level data fetching.'
-//   }
-// }
-
 export default async function RootLayout({
   children,
   params,
