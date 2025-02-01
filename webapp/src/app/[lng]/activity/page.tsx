@@ -20,8 +20,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
+import { useCurrentSession } from "@/hooks/use-session";
 
 export default function Activity() {
+  const router = useRouter();
+  const session = useCurrentSession();
+
   const [appointmentList, setAppointmentList] = useState<Activity[]>([]);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -43,8 +48,12 @@ export default function Activity() {
       console.log(data);
       setAppointmentList(data);
     }
-    fetchActivities();
-  }, []);
+    if (session.status === "unauthenticated") {
+      router.push("/");
+    } else if (session.status === "authenticated") {
+      fetchActivities();
+    }
+  }, [session.status]);
 
   const filteredAppointments = appointmentList
     .filter(
