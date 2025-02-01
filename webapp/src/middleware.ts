@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { NextResponse, NextRequest } from "next/server";
 import acceptLanguage from "accept-language";
 import { fallbackLng, languages, cookieName } from "@/app/i18n/settings";
@@ -12,7 +13,11 @@ export const config = {
 };
 
 export function middleware(req: NextRequest) {
-  console.log("middleware");
+  // Call the auth middleware
+  // const authResponse = auth(req);
+  // if (authResponse) return authResponse;
+
+  // Language detection
   if (
     req.nextUrl.pathname.indexOf("icon") > -1 ||
     req.nextUrl.pathname.indexOf("chrome") > -1

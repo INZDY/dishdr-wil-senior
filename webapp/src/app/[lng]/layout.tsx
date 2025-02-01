@@ -4,6 +4,9 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+import { SessionProvider } from "next-auth/react";
+import { Toaster } from "react-hot-toast";
+
 import { dir } from "i18next";
 import { fallbackLng, languages } from "../i18n/settings";
 
@@ -38,13 +41,16 @@ export default async function RootLayout({
   const { lng } = await params;
   return (
     <html lang={lng} dir={dir(lng)}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-gray-500`}
-      >
-        <Header lng={lng} />
-        <main className="flex-grow container mx-auto p-4">{children}</main>
-        <Footer />
-      </body>
+      <SessionProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-gray-500`}
+        >
+          <Header lng={lng} />
+          <main className="flex-grow container mx-auto p-4">{children}</main>
+          <Footer />
+          <Toaster position="bottom-right"/>
+        </body>
+      </SessionProvider>
     </html>
   );
 }
