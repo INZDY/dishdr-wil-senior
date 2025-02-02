@@ -2,17 +2,6 @@ import { FormData } from "@/types/formTypes";
 import React from "react";
 
 export default function Summary({ formData }: { formData: FormData }) {
-  console.log("formData", formData);
-  const appointmentInfo = {
-    appointmentId: "1234567890",
-    name: "Jonh Doe",
-    department: "Cardiology",
-    departmentDesc: "Floor xx, yy Building",
-    date: "2022-01-01",
-    time: "10:00",
-    status: "confirmed",
-    notes: "I have past medical records.",
-  };
 
   return (
     <div className="flex flex-col gap-4">

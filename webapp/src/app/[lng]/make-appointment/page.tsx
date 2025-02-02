@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { FormData } from "@/types/formTypes";
@@ -49,6 +49,10 @@ export default function MakeAppointment({ params }: { params: any }) {
 
     notes: "",
   });
+
+  // useEffect(() => {
+  //   setFormData({ ...formData, sessionId: session?.user?.id as string });
+  // }, [session]);
 
   const handleNext = () => {
     if (step === 2) {

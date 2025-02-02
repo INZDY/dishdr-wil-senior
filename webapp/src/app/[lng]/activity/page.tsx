@@ -221,7 +221,7 @@ export default function Activity() {
             <div className="grid gap-4 py-2">
               <p>
                 <span className="font-semibold mr-2">Name:</span>
-                {appointmentList[selectedAppointment]?.patient.name}
+                {appointmentList[selectedAppointment]?.user.profile.name}
               </p>
               <p>
                 <span className="font-semibold mr-2">Date of Birth:</span>
@@ -232,19 +232,22 @@ export default function Activity() {
               </p>
               <p>
                 <span className="font-semibold mr-2">Height:</span>
-                {appointmentList[selectedAppointment]?.patient.height}
+                {appointmentList[selectedAppointment]?.user.profile.height}
               </p>
               <p>
                 <span className="font-semibold mr-2">Weight:</span>
-                {appointmentList[selectedAppointment]?.patient.weight}
+                {appointmentList[selectedAppointment]?.user.profile.weight}
               </p>
               <p>
                 <span className="font-semibold mr-2">Chronic Disease:</span>
-                {appointmentList[selectedAppointment]?.patient.chronicDisease}
+                {
+                  appointmentList[selectedAppointment]?.user.profile
+                    .chronicDisease
+                }
               </p>
               <p>
                 <span className="font-semibold mr-2">Allergies:</span>
-                {appointmentList[selectedAppointment]?.patient.allergies}
+                {appointmentList[selectedAppointment]?.user.profile.allergies}
               </p>
               <p className="flex">
                 <span className="font-semibold mr-2">Chief Complaint:</span>

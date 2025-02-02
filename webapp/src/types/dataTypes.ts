@@ -14,7 +14,7 @@ export type SymptomAnswer = {
 
 export type Activity = Appointment & {
   symptoms: ({ type: string } & Omit<SymptomAnswer, "isOther">)[];
-  patient: Omit<Profile, "id" | "userId" | "createdAt" | "updatedAt">;
+  user: { profile: Omit<Profile, "id" | "userId" | "createdAt" | "updatedAt"> };
   // id: string;
   // appointmentName: string;
   // patientId: string;

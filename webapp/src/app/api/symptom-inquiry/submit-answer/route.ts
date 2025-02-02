@@ -1,8 +1,9 @@
+import getCurrentUser from "@/lib/db/getCurrentUser";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const currentUser = { id: "m5xvlaj522ldwmn3q3rr0m8l" };
+    const currentUser = await getCurrentUser();
     const body = await request.json();
     const { session_id, symptoms } = body;
 
@@ -11,12 +12,14 @@ export async function POST(request: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    const userId = currentUser.id;
+
     const flaskResponse = await fetch("http://127.0.0.1:5000/predict", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ session_id, symptoms }),
+      body: JSON.stringify({ session_id: userId, symptoms }),
     });
 
     if (!flaskResponse.ok) {
