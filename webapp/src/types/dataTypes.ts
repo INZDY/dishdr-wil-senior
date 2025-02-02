@@ -1,3 +1,5 @@
+import { User } from "@prisma/client";
+
 export type Symptom = {
   id: number;
   name: string;
@@ -7,6 +9,7 @@ export type SymptomAnswer = {
   symptom: string;
   duration: number;
   unit: string;
+  isOther: boolean;
 };
 
 export type Activity = {
@@ -16,15 +19,16 @@ export type Activity = {
   prediction: string;
   status: string;
   notes: string;
-  symptoms: ({ type: string } & SymptomAnswer)[];
-  patient: {
-    name: string;
-    dateOfBirth: string;
-    height: number;
-    weight: number;
-    email: string;
-    phone: string;
-    chronicDisease: string;
-    allergies: string;
-  };
+  symptoms: ({ type: string } & Omit<SymptomAnswer, "isOther">)[];
+  patient: Omit<User, "id" | "createdAt" | "updatedAt">;
+  // patient: {
+  //   name: string;
+  //   dateOfBirth: string;
+  //   height: number;
+  //   weight: number;
+  //   email: string;
+  //   phone: string;
+  //   chronicDisease: string;
+  //   allergies: string;
+  // };
 };

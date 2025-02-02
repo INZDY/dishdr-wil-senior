@@ -184,7 +184,9 @@ export default function Activity() {
             </p>
             <p>
               <span className="font-semibold mr-2">Date of Birth:</span>
-              {appointmentList[selectedAppointment]?.patient.dateOfBirth}
+              {appointmentList[
+                selectedAppointment
+              ]?.patient.DOB!.toDateString()}
             </p>
             <p>
               <span className="font-semibold mr-2">Height:</span>
