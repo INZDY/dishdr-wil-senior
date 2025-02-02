@@ -55,7 +55,31 @@ export default function Activity() {
     } else if (session.status === "authenticated") {
       fetchActivities();
     }
-  }, [session.status]);
+  }, [session]);
+
+  // create profile
+  useEffect(() => {
+    async function createProfile() {
+      try {
+        const response = await fetch("/api/profile-creation", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(session.data?.user),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create profile");
+        }
+      } catch (error) {
+        console.log("Error creating profile", error);
+      }
+    }
+    if (session.data?.user) {
+      createProfile();
+    }
+  }, [session]);
 
   // conflicts with Dialog
   const filteredAppointments = appointmentList.filter(
@@ -192,76 +216,79 @@ export default function Activity() {
               Review the details of your appointment
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-2">
-            <p>
-              <span className="font-semibold mr-2">Name:</span>
-              {appointmentList[selectedAppointment]?.patient.name}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Date of Birth:</span>
-              {/* {appointmentList[
+
+          {appointmentList.length && (
+            <div className="grid gap-4 py-2">
+              <p>
+                <span className="font-semibold mr-2">Name:</span>
+                {appointmentList[selectedAppointment]?.patient.name}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">Date of Birth:</span>
+                {/* {appointmentList[
                 selectedAppointment
               ]?.patient.DOB!.toDateString()} */}
-              {"DOB"}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Height:</span>
-              {appointmentList[selectedAppointment]?.patient.height}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Weight:</span>
-              {appointmentList[selectedAppointment]?.patient.weight}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Chronic Disease:</span>
-              {appointmentList[selectedAppointment]?.patient.chronicDisease}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Allergies:</span>
-              {appointmentList[selectedAppointment]?.patient.allergies}
-            </p>
-            <p className="flex">
-              <span className="font-semibold mr-2">Chief Complaint:</span>
-              {appointmentList[selectedAppointment]?.symptoms.map(
-                (s, index) => {
-                  if (s.type === "chief") {
-                    return (
-                      <span key={index}>
-                        {s.symptom}, {s.duration} {s.unit}
-                      </span>
-                    );
-                  }
-                }
-              )}
-            </p>
-            <div className="flex">
-              <span className="font-semibold mr-2">Present Illness:</span>
-              <div className="flex flex-col gap-1">
+                {"DOB"}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">Height:</span>
+                {appointmentList[selectedAppointment]?.patient.height}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">Weight:</span>
+                {appointmentList[selectedAppointment]?.patient.weight}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">Chronic Disease:</span>
+                {appointmentList[selectedAppointment]?.patient.chronicDisease}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">Allergies:</span>
+                {appointmentList[selectedAppointment]?.patient.allergies}
+              </p>
+              <p className="flex">
+                <span className="font-semibold mr-2">Chief Complaint:</span>
                 {appointmentList[selectedAppointment]?.symptoms.map(
                   (s, index) => {
-                    if (s.type === "present") {
+                    if (s.type === "chief") {
                       return (
-                        <p key={index}>
+                        <span key={index}>
                           {s.symptom}, {s.duration} {s.unit}
-                        </p>
+                        </span>
                       );
                     }
                   }
                 )}
+              </p>
+              <div className="flex">
+                <span className="font-semibold mr-2">Present Illness:</span>
+                <div className="flex flex-col gap-1">
+                  {appointmentList[selectedAppointment]?.symptoms.map(
+                    (s, index) => {
+                      if (s.type === "present") {
+                        return (
+                          <p key={index}>
+                            {s.symptom}, {s.duration} {s.unit}
+                          </p>
+                        );
+                      }
+                    }
+                  )}
+                </div>
               </div>
+              <p>
+                <span className="font-semibold mr-2">Appointment Date:</span>
+                {format(
+                  new Date(appointmentList[selectedAppointment]?.dateTime),
+                  "MM/dd/yyyy HH:mm"
+                )}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">Status:</span>
+                {appointmentList[selectedAppointment]?.status}
+              </p>
             </div>
-            <p>
-              <span className="font-semibold mr-2">Appointment Date:</span>
-              {format(
-                new Date(appointmentList[selectedAppointment]?.dateTime),
-                "MM/dd/yyyy HH:mm"
-              )}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Status:</span>
-              {appointmentList[selectedAppointment]?.status}
-            </p>
-          </div>
+          )}
           <DialogFooter>
             <Button
               type="submit"

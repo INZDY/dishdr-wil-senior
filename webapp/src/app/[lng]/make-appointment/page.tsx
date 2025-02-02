@@ -11,8 +11,10 @@ import ResultBooking from "./components/ResultBooking";
 import Summary from "./components/Summary";
 
 import { useTranslation } from "@/app/i18n/client";
+import { useSession } from "next-auth/react";
 
 export default function MakeAppointment({ params }: { params: any }) {
+  const { data: session } = useSession();
   const { lng } = React.use<{ lng: string }>(params);
   const { t } = useTranslation(lng, "make-appointment");
   const router = useRouter();
@@ -23,7 +25,7 @@ export default function MakeAppointment({ params }: { params: any }) {
   const [formData, setFormData] = useState<FormData>({
     // sessionId = userId
     // current dummy - John Doe ID
-    sessionId: "m5xvlaj522ldwmn3q3rr0m8l",
+    sessionId: session?.user?.id as string,
     name: "",
     dateOfBirth: "",
     height: 0,
@@ -160,6 +162,7 @@ export default function MakeAppointment({ params }: { params: any }) {
       <div className="flex mt-6 items-center">
         {step === 5 && (
           <Button
+            disabled
             onClick={() => {
               handleSaveToDevice;
             }}

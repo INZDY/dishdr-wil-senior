@@ -11,11 +11,11 @@ export default async function getActivities() {
 
     const activities = await prisma.appointment.findMany({
       where: {
-        patientId: currentUser.id,
+        userId: currentUser.id,
       },
       include: {
         symptoms: true,
-        patient: true,
+        user: { include: { profile: true } },
       },
       orderBy: { dateTime: "desc" },
     });

@@ -1,12 +1,12 @@
+import getCurrentUser from "@/lib/db/getCurrentUser";
 import { prisma } from "@/lib/prisma";
-import { SymptomAnswer } from "@/types/dataTypes";
 import { AppointmentSymptoms } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
     // John Doe is the current user
-    const currentUser = { id: "m5xvlaj522ldwmn3q3rr0m8l" };
+    const currentUser = await getCurrentUser();
     const body = await request.json();
     const {
       name,
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     const newAppointment = await prisma.appointment.create({
       data: {
         appointmentName: `Appointment on ${date} ${time}`,
-        patientId: currentUser.id,
+        userId: currentUser.id,
         department,
         dateTime: appointmentDateTime,
         notes,
