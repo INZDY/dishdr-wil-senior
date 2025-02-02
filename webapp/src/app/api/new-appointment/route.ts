@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { SymptomAnswer } from "@/types/dataTypes";
+import { AppointmentSymptoms } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -20,9 +21,9 @@ export async function POST(request: Request) {
       date,
       time,
       status,
-      symptoms,
       chiefComplaint,
       presentIllness,
+      inquiries,
       prediction,
       notes,
     } = body;
@@ -36,6 +37,7 @@ export async function POST(request: Request) {
     //create new appointment
     const newAppointment = await prisma.appointment.create({
       data: {
+        appointmentName: `Appointment on ${date} ${time}`,
         patientId: currentUser.id,
         department,
         dateTime: appointmentDateTime,
@@ -46,18 +48,18 @@ export async function POST(request: Request) {
         symptoms: {
           createMany: {
             data: [
-              {
-                type: "chief",
-                symptom: chiefComplaint.symptom,
-                duration: chiefComplaint.duration,
-                unit: chiefComplaint.unit,
-              },
-              ...presentIllness.map((illness: SymptomAnswer) => ({
-                type: "present",
-                symptom: illness.symptom,
-                duration: illness.duration,
-                unit: illness.unit,
-              })),
+              ...inquiries.map(
+                (
+                  illness: Omit<AppointmentSymptoms, "id" | "appointmentId">
+                ) => ({
+                  type: illness.type,
+                  symptom: illness.symptom,
+                  duration: illness.duration,
+                  unit: illness.unit,
+                  hasSymptom: illness.hasSymptom,
+                  isOther: illness.isOther,
+                })
+              ),
             ],
           },
         },

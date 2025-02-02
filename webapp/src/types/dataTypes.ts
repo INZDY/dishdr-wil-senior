@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Appointment, User } from "@prisma/client";
 
 export type Symptom = {
   id: number;
@@ -12,15 +12,18 @@ export type SymptomAnswer = {
   isOther: boolean;
 };
 
-export type Activity = {
-  id: string;
-  patientId: string;
-  dateTime: string;
-  prediction: string;
-  status: string;
-  notes: string;
+export type Activity = Appointment & {
   symptoms: ({ type: string } & Omit<SymptomAnswer, "isOther">)[];
   patient: Omit<User, "id" | "createdAt" | "updatedAt">;
+  // id: string;
+  // appointmentName: string;
+  // patientId: string;
+  // dateTime: string;
+  // department: string;
+  // prediction: string;
+  // status: string;
+  // notes: string;
+
   // patient: {
   //   name: string;
   //   dateOfBirth: string;

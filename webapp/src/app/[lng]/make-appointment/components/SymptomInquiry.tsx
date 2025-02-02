@@ -151,19 +151,23 @@ export default function SymptomInquiry({
 
       const data = await response.json();
       // console.log(data);
-      
+
       if ("question" in data.response) {
         setInquiryQuestions([
           ...inquiryQuestions,
           { symptom: data.response.question, answer: null },
         ]);
         setQuestionsUpdated(true);
-      } else {
+      } else if ("result 1" in data.response) {
         const responses = Object.keys(data.response)
           .filter((key) => key.startsWith("result"))
           .map((key) => data.response[key])
           .join(", ");
         setFormData({ ...formData, prediction: responses });
+        setQuestionsUpdated(true);
+      } else {
+        // default suggestion for UX
+        setFormData({ ...formData, prediction: "General Medicine" });
         setQuestionsUpdated(true);
       }
     } catch (error) {

@@ -17,6 +17,7 @@ export default async function getActivities() {
         symptoms: true,
         patient: true,
       },
+      orderBy: { dateTime: "desc" },
     });
 
     if (!activities) {

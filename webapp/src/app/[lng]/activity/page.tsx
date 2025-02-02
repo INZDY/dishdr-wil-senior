@@ -19,9 +19,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useCurrentSession } from "@/hooks/use-session";
+import { format } from "date-fns";
 
 export default function Activity() {
   const router = useRouter();
@@ -35,6 +35,7 @@ export default function Activity() {
 
   const [selectedAppointment, setSelectedAppointment] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchActivities() {
@@ -47,6 +48,7 @@ export default function Activity() {
       const data: Activity[] = await response.json();
       console.log(data);
       setAppointmentList(data);
+      setLoading(false);
     }
     if (session.status === "unauthenticated") {
       router.push("/");
@@ -55,25 +57,38 @@ export default function Activity() {
     }
   }, [session.status]);
 
-  const filteredAppointments = appointmentList
-    .filter(
-      (appointment) =>
-        filterStatus === "all" || appointment.status === filterStatus
-      // &&
-      // appointment.description.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (sortOption === "date") {
-        return new Date(a.dateTime) > new Date(b.dateTime) ? 1 : -1;
-      }
-      return 0;
-    });
+  // conflicts with Dialog
+  const filteredAppointments = appointmentList.filter(
+    (appointment) =>
+      filterStatus === "all" ||
+      (appointment.status === filterStatus &&
+        appointment.appointmentName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()))
+  );
+  // already pre-sorted from db
+  // .sort((a, b) => {
+  //   if (sortOption === "date") {
+  //     return new Date(a.dateTime) > new Date(b.dateTime) ? -1 : 1;
+  //   }
+  //   return 0;
+  // });
 
-  const handleViewClick = (index: number) => {
-    console.log(appointmentList[index], selectedAppointment);
-    setSelectedAppointment(index);
+  const handleViewClick = (id: string) => {
+    const realIndex = appointmentList.findIndex(
+      (appointment) => appointment.id === id
+    );
+    setSelectedAppointment(realIndex);
     setDialogOpen(true);
   };
+
+  if (loading) {
+    return (
+      <p className="flex justify-center font-lg text-bold text-white">
+        Loading...
+      </p>
+    );
+  }
 
   return (
     <>
@@ -125,10 +140,10 @@ export default function Activity() {
                 key={appointment.id}
                 className="p-4 border rounded flex justify-between items-center bg-neutral-100"
               >
-                <div>
-                  <div className="font-bold">Appointment {index + 1}</div>
+                <div className="flex flex-col gap-2">
+                  <div className="font-bold">{appointment.appointmentName}</div>
                   <div className="text-sm text-gray-500">
-                    {appointment.dateTime}
+                    Department: {appointment.department}
                   </div>
                   <div
                     className={`text-sm ${
@@ -147,7 +162,7 @@ export default function Activity() {
                     <>
                       <Button
                         variant="secondary"
-                        onClick={() => handleViewClick(index)}
+                        onClick={() => handleViewClick(appointment.id)}
                       >
                         Edit
                       </Button>
@@ -157,7 +172,7 @@ export default function Activity() {
                   {appointment.status === "completed" && (
                     <Button
                       variant="secondary"
-                      onClick={() => handleViewClick(index)}
+                      onClick={() => handleViewClick(appointment.id)}
                     >
                       View
                     </Button>
@@ -184,9 +199,10 @@ export default function Activity() {
             </p>
             <p>
               <span className="font-semibold mr-2">Date of Birth:</span>
-              {appointmentList[
+              {/* {appointmentList[
                 selectedAppointment
-              ]?.patient.DOB!.toDateString()}
+              ]?.patient.DOB!.toDateString()} */}
+              {"DOB"}
             </p>
             <p>
               <span className="font-semibold mr-2">Height:</span>
@@ -204,31 +220,42 @@ export default function Activity() {
               <span className="font-semibold mr-2">Allergies:</span>
               {appointmentList[selectedAppointment]?.patient.allergies}
             </p>
-            <p>
+            <p className="flex">
               <span className="font-semibold mr-2">Chief Complaint:</span>
-              {appointmentList[selectedAppointment]?.symptoms.map((s) => {
-                if (s.type === "chief") {
-                  return `${s.symptom}, ${s.duration} ${s.unit}`;
+              {appointmentList[selectedAppointment]?.symptoms.map(
+                (s, index) => {
+                  if (s.type === "chief") {
+                    return (
+                      <span key={index}>
+                        {s.symptom}, {s.duration} {s.unit}
+                      </span>
+                    );
+                  }
                 }
-              })}
+              )}
             </p>
             <div className="flex">
               <span className="font-semibold mr-2">Present Illness:</span>
               <div className="flex flex-col gap-1">
-                {appointmentList[selectedAppointment]?.symptoms.map((s) => {
-                  if (s.type === "present") {
-                    return (
-                      <p>
-                        {s.symptom}, {s.duration} {s.unit}
-                      </p>
-                    );
+                {appointmentList[selectedAppointment]?.symptoms.map(
+                  (s, index) => {
+                    if (s.type === "present") {
+                      return (
+                        <p key={index}>
+                          {s.symptom}, {s.duration} {s.unit}
+                        </p>
+                      );
+                    }
                   }
-                })}
+                )}
               </div>
             </div>
             <p>
               <span className="font-semibold mr-2">Appointment Date:</span>
-              {appointmentList[selectedAppointment]?.dateTime}
+              {format(
+                new Date(appointmentList[selectedAppointment]?.dateTime),
+                "MM/dd/yyyy HH:mm"
+              )}
             </p>
             <p>
               <span className="font-semibold mr-2">Status:</span>
