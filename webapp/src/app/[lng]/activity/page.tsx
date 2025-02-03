@@ -174,7 +174,7 @@ export default function Activity() {
         <h1 className="text-2xl font-bold mb-4">Activity</h1>
 
         {/* toolbar */}
-        <div className="flex gap-4 mb-4">
+        <div className="flex flex-col sm:flex-row gap-4 mb-4">
           <Input
             placeholder="Search appointments..."
             value={searchTerm}
