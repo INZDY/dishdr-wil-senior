@@ -73,7 +73,15 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
 
   const handleDropdownSelect = (symptom: string, type: "chief" | "present") => {
     setSelectionType(type);
-    setSymptomDetails({ symptom, duration: 0, unit: "days" });
+
+    // if user select 'other', dont dount
+    setSymptomDetails({
+      symptom,
+      duration: 0,
+      unit: "days",
+      isOther: symptom === "other",
+    });
+    
     setChiefOpen(false);
     setPresentOpen(false);
     setDialogOpen(true);

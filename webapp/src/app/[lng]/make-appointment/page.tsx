@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { FormData } from "@/types/formTypes";
@@ -11,8 +11,10 @@ import ResultBooking from "./components/ResultBooking";
 import Summary from "./components/Summary";
 
 import { useTranslation } from "@/app/i18n/client";
+import { useSession } from "next-auth/react";
 
 export default function MakeAppointment({ params }: { params: any }) {
+  const { data: session } = useSession();
   const { lng } = React.use<{ lng: string }>(params);
   const { t } = useTranslation(lng, "make-appointment");
   const router = useRouter();
@@ -22,7 +24,8 @@ export default function MakeAppointment({ params }: { params: any }) {
   const [direction, setDirection] = useState<"next" | "back">("next");
   const [formData, setFormData] = useState<FormData>({
     // sessionId = userId
-    sessionId: "JohnDoeId",
+    // current dummy - John Doe ID
+    sessionId: session?.user?.id as string,
     name: "",
     dateOfBirth: "",
     height: 0,
@@ -37,8 +40,8 @@ export default function MakeAppointment({ params }: { params: any }) {
     time: "",
     status: "pending",
 
-    symptoms: [],
-    chiefComplaint: { symptom: "", duration: 0, unit: "" },
+    // symptoms: [],
+    chiefComplaint: { symptom: "", duration: 0, unit: "", isOther: false },
     presentIllness: [],
     inquiries: [],
     predicted: false,
@@ -47,15 +50,43 @@ export default function MakeAppointment({ params }: { params: any }) {
     notes: "",
   });
 
+  // useEffect(() => {
+  //   setFormData({ ...formData, sessionId: session?.user?.id as string });
+  // }, [session]);
+
   const handleNext = () => {
     if (step === 2) {
+      // TODO: should be able to do this in symptom selection
       setFormData({
         ...formData,
-        symptoms: [
-          formData.chiefComplaint.symptom,
-          ...formData.presentIllness.map((illness) => illness.symptom),
+        inquiries: [
+          {
+            type: "chief",
+            symptom: formData.chiefComplaint.symptom,
+            duration: formData.chiefComplaint.duration,
+            unit: formData.chiefComplaint.unit,
+            hasSymptom: true,
+            isOther: formData.chiefComplaint.isOther,
+          },
+          ...formData.presentIllness.map((illness) => {
+            return {
+              type: "present",
+              symptom: illness.symptom,
+              duration: illness.duration,
+              unit: illness.unit,
+              hasSymptom: true,
+              isOther: illness.isOther,
+            };
+          }),
         ],
       });
+      if (
+        formData.chiefComplaint.isOther &&
+        formData.presentIllness.every((illness) => illness.isOther)
+      ) {
+        // skip to step 4
+        setStep((prevStep) => prevStep + 1);
+      }
     }
     if (step === 3) {
       setFormData({ ...formData, predicted: true });
@@ -64,6 +95,14 @@ export default function MakeAppointment({ params }: { params: any }) {
     setStep((prevStep) => prevStep + 1);
   };
   const handleBack = () => {
+    if (
+      step == 4 &&
+      formData.chiefComplaint.isOther &&
+      formData.presentIllness.every((illness) => illness.isOther)
+    ) {
+      // skip to 2
+      setStep((prevStep) => prevStep - 1);
+    }
     setDirection("back");
     setStep((prevStep) => prevStep - 1);
   };
@@ -104,7 +143,7 @@ export default function MakeAppointment({ params }: { params: any }) {
   return (
     <div className="max-w-screen-lg mx-auto my-12 p-4 bg-white shadow rounded">
       {step === 1 && (
-        <PersonalInfo formData={formData} setFormData={setFormData} lng={lng}/>
+        <PersonalInfo formData={formData} setFormData={setFormData} lng={lng} />
       )}
       {step === 2 && (
         <SymptomSelection formData={formData} setFormData={setFormData} />
@@ -127,6 +166,7 @@ export default function MakeAppointment({ params }: { params: any }) {
       <div className="flex mt-6 items-center">
         {step === 5 && (
           <Button
+            disabled
             onClick={() => {
               handleSaveToDevice;
             }}

@@ -19,9 +19,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
+import { useCurrentSession } from "@/hooks/use-session";
+import { format } from "date-fns";
 
 export default function Activity() {
+  const router = useRouter();
+  const session = useCurrentSession();
+
   const [appointmentList, setAppointmentList] = useState<Activity[]>([]);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,6 +35,7 @@ export default function Activity() {
 
   const [selectedAppointment, setSelectedAppointment] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchActivities() {
@@ -42,29 +48,71 @@ export default function Activity() {
       const data: Activity[] = await response.json();
       console.log(data);
       setAppointmentList(data);
+      setLoading(false);
     }
-    fetchActivities();
-  }, []);
+    if (session.status === "unauthenticated") {
+      router.push("/");
+    } else if (session.status === "authenticated") {
+      fetchActivities();
+    }
+  }, [session]);
 
-  const filteredAppointments = appointmentList
-    .filter(
-      (appointment) =>
-        filterStatus === "all" || appointment.status === filterStatus
-      // &&
-      // appointment.description.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (sortOption === "date") {
-        return new Date(a.dateTime) > new Date(b.dateTime) ? 1 : -1;
+  // create profile
+  useEffect(() => {
+    async function createProfile() {
+      try {
+        const response = await fetch("/api/profile-creation", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(session.data?.user),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create profile");
+        }
+      } catch (error) {
+        console.log("Error creating profile", error);
       }
-      return 0;
-    });
+    }
+    if (session.data?.user) {
+      createProfile();
+    }
+  }, [session]);
 
-  const handleViewClick = (index: number) => {
-    console.log(appointmentList[index], selectedAppointment);
-    setSelectedAppointment(index);
+  // conflicts with Dialog
+  const filteredAppointments = appointmentList.filter(
+    (appointment) =>
+      filterStatus === "all" ||
+      (appointment.status === filterStatus &&
+        appointment.appointmentName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()))
+  );
+  // already pre-sorted from db
+  // .sort((a, b) => {
+  //   if (sortOption === "date") {
+  //     return new Date(a.dateTime) > new Date(b.dateTime) ? -1 : 1;
+  //   }
+  //   return 0;
+  // });
+
+  const handleViewClick = (id: string) => {
+    const realIndex = appointmentList.findIndex(
+      (appointment) => appointment.id === id
+    );
+    setSelectedAppointment(realIndex);
     setDialogOpen(true);
   };
+
+  if (loading) {
+    return (
+      <p className="flex justify-center font-lg text-bold text-white">
+        Loading...
+      </p>
+    );
+  }
 
   return (
     <>
@@ -116,10 +164,10 @@ export default function Activity() {
                 key={appointment.id}
                 className="p-4 border rounded flex justify-between items-center bg-neutral-100"
               >
-                <div>
-                  <div className="font-bold">Appointment {index + 1}</div>
+                <div className="flex flex-col gap-2">
+                  <div className="font-bold">{appointment.appointmentName}</div>
                   <div className="text-sm text-gray-500">
-                    {appointment.dateTime}
+                    Department: {appointment.department}
                   </div>
                   <div
                     className={`text-sm ${
@@ -138,7 +186,7 @@ export default function Activity() {
                     <>
                       <Button
                         variant="secondary"
-                        onClick={() => handleViewClick(index)}
+                        onClick={() => handleViewClick(appointment.id)}
                       >
                         Edit
                       </Button>
@@ -148,7 +196,7 @@ export default function Activity() {
                   {appointment.status === "completed" && (
                     <Button
                       variant="secondary"
-                      onClick={() => handleViewClick(index)}
+                      onClick={() => handleViewClick(appointment.id)}
                     >
                       View
                     </Button>
@@ -168,62 +216,82 @@ export default function Activity() {
               Review the details of your appointment
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-2">
-            <p>
-              <span className="font-semibold mr-2">Name:</span>
-              {appointmentList[selectedAppointment]?.patient.name}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Date of Birth:</span>
-              {appointmentList[selectedAppointment]?.patient.dateOfBirth}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Height:</span>
-              {appointmentList[selectedAppointment]?.patient.height}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Weight:</span>
-              {appointmentList[selectedAppointment]?.patient.weight}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Chronic Disease:</span>
-              {appointmentList[selectedAppointment]?.patient.chronicDisease}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Allergies:</span>
-              {appointmentList[selectedAppointment]?.patient.allergies}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Chief Complaint:</span>
-              {appointmentList[selectedAppointment]?.symptoms.map((s) => {
-                if (s.type === "chief") {
-                  return `${s.symptom}, ${s.duration} ${s.unit}`;
+
+          {appointmentList.length && (
+            <div className="grid gap-4 py-2">
+              <p>
+                <span className="font-semibold mr-2">Name:</span>
+                {appointmentList[selectedAppointment]?.user.profile.name}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">Date of Birth:</span>
+                {/* {appointmentList[
+                selectedAppointment
+              ]?.patient.DOB!.toDateString()} */}
+                {"DOB"}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">Height:</span>
+                {appointmentList[selectedAppointment]?.user.profile.height}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">Weight:</span>
+                {appointmentList[selectedAppointment]?.user.profile.weight}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">Chronic Disease:</span>
+                {
+                  appointmentList[selectedAppointment]?.user.profile
+                    .chronicDisease
                 }
-              })}
-            </p>
-            <div className="flex">
-              <span className="font-semibold mr-2">Present Illness:</span>
-              <div className="flex flex-col gap-1">
-                {appointmentList[selectedAppointment]?.symptoms.map((s) => {
-                  if (s.type === "present") {
-                    return (
-                      <p>
-                        {s.symptom}, {s.duration} {s.unit}
-                      </p>
-                    );
+              </p>
+              <p>
+                <span className="font-semibold mr-2">Allergies:</span>
+                {appointmentList[selectedAppointment]?.user.profile.allergies}
+              </p>
+              <p className="flex">
+                <span className="font-semibold mr-2">Chief Complaint:</span>
+                {appointmentList[selectedAppointment]?.symptoms.map(
+                  (s, index) => {
+                    if (s.type === "chief") {
+                      return (
+                        <span key={index}>
+                          {s.symptom}, {s.duration} {s.unit}
+                        </span>
+                      );
+                    }
                   }
-                })}
+                )}
+              </p>
+              <div className="flex">
+                <span className="font-semibold mr-2">Present Illness:</span>
+                <div className="flex flex-col gap-1">
+                  {appointmentList[selectedAppointment]?.symptoms.map(
+                    (s, index) => {
+                      if (s.type === "present") {
+                        return (
+                          <p key={index}>
+                            {s.symptom}, {s.duration} {s.unit}
+                          </p>
+                        );
+                      }
+                    }
+                  )}
+                </div>
               </div>
+              <p>
+                <span className="font-semibold mr-2">Appointment Date:</span>
+                {format(
+                  new Date(appointmentList[selectedAppointment]?.dateTime),
+                  "MM/dd/yyyy HH:mm"
+                )}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">Status:</span>
+                {appointmentList[selectedAppointment]?.status}
+              </p>
             </div>
-            <p>
-              <span className="font-semibold mr-2">Appointment Date:</span>
-              {appointmentList[selectedAppointment]?.dateTime}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">Status:</span>
-              {appointmentList[selectedAppointment]?.status}
-            </p>
-          </div>
+          )}
           <DialogFooter>
             <Button
               type="submit"

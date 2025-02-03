@@ -1,3 +1,4 @@
+import { AppointmentSymptoms } from "@prisma/client";
 import { SymptomAnswer } from "./dataTypes";
 
 // inquiries: should be list of {question, answer}
@@ -18,10 +19,10 @@ export interface FormData {
   time: string;
   status: string | null;
 
-  symptoms: string[];
+  // symptoms: string[];
   chiefComplaint: SymptomAnswer;
   presentIllness: SymptomAnswer[];
-  inquiries: string[];
+  inquiries: Omit<AppointmentSymptoms, 'id' | 'appointmentId'>[];
   predicted: boolean;
   prediction: string;
 

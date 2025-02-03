@@ -5,12 +5,7 @@ import React, { useState } from "react";
 export default function ResultBooking({ formData, setFormData }: StepProps) {
   const [showFullResults, setShowFullResults] = useState(false);
 
-  const predictionResults = [
-    { department: "Cardiology", percentage: 80 },
-    { department: "Neurology", percentage: 70 },
-    { department: "Orthopedics", percentage: 60 },
-    { department: "General Purpose", percentage: 50 },
-  ];
+  const predictionResults = formData.prediction.split(",");
 
   const topPrediction = predictionResults[0];
 
@@ -45,8 +40,7 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
       <div className="bg-gray-100 p-4 rounded shadow">
         <h3 className="text-lg font-semibold">Prediction Result</h3>
         <p>
-          Top Prediction: {topPrediction.department}{" "}
-          {/* ({topPrediction.percentage}%) */}
+          Top Prediction: {topPrediction} {/* ({topPrediction.percentage}%) */}
         </p>
         <Button onClick={handleExpandResults} className="mt-2">
           {showFullResults ? "Hide Full Results" : "Show Full Results"}
@@ -55,7 +49,7 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
           <ul className="mt-2">
             {predictionResults.map((result, index) => (
               <li key={index}>
-                {index + 1}. {result.department}
+                Rank {index + 1}. {result}
                 {/* {result.department}: {result.percentage}% */}
               </li>
             ))}
