@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  webapp:
+    build: ./webapp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - ml-service
+    environment:
+      - DATABASE_URL=file:./prisma/dev.db # Adjust if needed for SQLite
+
+  model:
+    build: ./server/model
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
