@@ -17,19 +17,18 @@ model Symptom {
 }
 
 model User {
-  id            String    @id @default(cuid(2))
+  id            String        @id @default(cuid(2))
   name          String?
-  email         String?   @unique
+  email         String?       @unique
   emailVerified DateTime?
   image         String?
   account       Account[]
   sessions      Session[]
-
-  role         String        @default("patient")
-  profile      Profile[]
-  appointments Appointment[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  role          String        @default("patient")
+  profile       Profile[]
+  appointments  Appointment[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 
 model Profile {
@@ -37,7 +36,7 @@ model Profile {
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String
   name           String?
-  DOB            DateTime?
+  dob            DateTime?
   height         Float?
   weight         Float?
   email          String?
@@ -92,6 +91,14 @@ model Appointment {
   appointmentName String
   user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
+  name            String?
+  dob             DateTime?
+  height          Float?
+  weight          Float?
+  email           String?
+  phone           String?
+  chronicDisease  String?
+  allergies       String?
   department      String                @default("-")
   dateTime        DateTime
   notes           String?

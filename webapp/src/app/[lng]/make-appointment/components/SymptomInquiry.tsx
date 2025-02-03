@@ -248,14 +248,14 @@ export default function SymptomInquiry({
       )}
 
       <div className="flex justify-end gap-4 mt-6">
-        <Button
+        {/* <Button
           onClick={handleBackQuestion}
           variant={"secondary"}
           className="px-4 py-2 bg-gray-300 text-base"
           disabled={loading}
         >
           Back
-        </Button>
+        </Button> */}
         <Button
           onClick={handleNextQuestion}
           className="px-4 py-2 text-base"

@@ -12,6 +12,7 @@ import Summary from "./components/Summary";
 
 import { useTranslation } from "@/app/i18n/client";
 import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 export default function MakeAppointment({ params }: { params: any }) {
   const { data: session } = useSession();
@@ -130,6 +131,7 @@ export default function MakeAppointment({ params }: { params: any }) {
       console.error("Error confirming appointment:", error);
     } finally {
       setLoading(false);
+      toast.success("New appointment is created");
       handleNext();
     }
   };
@@ -182,7 +184,7 @@ export default function MakeAppointment({ params }: { params: any }) {
 
         {/* navigation */}
         <div className="flex flex-grow justify-end gap-4">
-          {(step == 2 || step == 4) && (
+          {step == 2 && (
             <Button
               onClick={handleBack}
               variant={"secondary"}

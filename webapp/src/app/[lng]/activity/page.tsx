@@ -279,37 +279,40 @@ export default function Activity({ params }: { params: any }) {
             <div className="grid gap-4 py-2">
               <p>
                 <span className="font-semibold mr-2">{t("name")}:</span>
-                {appointmentList[selectedAppointment]?.user.profile.name}
+                {appointmentList[selectedAppointment]?.name}
               </p>
               <p>
                 <span className="font-semibold mr-2">{t("dob")}:</span>
-                {/* {format(
-                  new Date(
-                    appointmentList[selectedAppointment]?.user.profile.DOB
-                  ),
-                  "dd/MM/yyyy HH:mm"
-                )} */}
+                {format(
+                  new Date(appointmentList[selectedAppointment]?.dob as Date),
+                  "dd/MM/yyyy"
+                )}
               </p>
               <p>
                 <span className="font-semibold mr-2">{t("height")}:</span>
-                {appointmentList[selectedAppointment]?.user.profile.height}
+                {appointmentList[selectedAppointment]?.height}
               </p>
               <p>
                 <span className="font-semibold mr-2">{t("weight")}:</span>
-                {appointmentList[selectedAppointment]?.user.profile.weight}
+                {appointmentList[selectedAppointment]?.weight}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">{t("email")}:</span>
+                {appointmentList[selectedAppointment]?.email}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">{t("phone")}:</span>
+                {appointmentList[selectedAppointment]?.phone}
               </p>
               <p>
                 <span className="font-semibold mr-2">
                   {t("chronic-disease")}:
                 </span>
-                {
-                  appointmentList[selectedAppointment]?.user.profile
-                    .chronicDisease
-                }
+                {appointmentList[selectedAppointment]?.chronicDisease}
               </p>
               <p>
                 <span className="font-semibold mr-2">{t("allergy")}:</span>
-                {appointmentList[selectedAppointment]?.user.profile.allergies}
+                {appointmentList[selectedAppointment]?.allergies}
               </p>
               <p className="flex">
                 <span className="font-semibold mr-2">{t("chief")}:</span>
