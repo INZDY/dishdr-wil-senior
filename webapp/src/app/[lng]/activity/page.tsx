@@ -114,6 +114,10 @@ export default function Activity() {
     );
   }
 
+  if (!session) {
+    router.push('/');
+  }
+
   return (
     <>
       <div className="flex flex-col max-w-screen-xl mx-auto my-12 p-4 gap-4 bg-white shadow rounded">
