@@ -9,7 +9,11 @@ export default async function getSymptoms() {
       return [];
     }
 
-    const symptoms = await prisma.symptom.findMany();
+    const symptoms = await prisma.symptom.findMany({
+      where: {
+        enabled: true,
+      },
+    });
 
     if (!symptoms) {
       return [];

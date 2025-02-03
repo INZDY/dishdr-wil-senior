@@ -92,7 +92,7 @@ export default function Header({ lng }: { lng: string }) {
                 onClick={() => signOut()}
                 className="bg-red-600 font-bold hover:bg-neutral-500"
               >
-                Log out
+                {t("logout")}
               </Button>
             </PopoverContent>
           </Popover>

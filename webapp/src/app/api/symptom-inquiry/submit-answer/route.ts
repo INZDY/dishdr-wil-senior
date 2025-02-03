@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
+    const flaskAPI = process.env.NEXT_PUBLIC_FLASK_API;
     const currentUser = await getCurrentUser();
     const body = await request.json();
     const { session_id, symptoms } = body;
@@ -14,7 +15,7 @@ export async function POST(request: Request) {
 
     const userId = currentUser.id;
 
-    const flaskResponse = await fetch("http://127.0.0.1:5000/predict", {
+    const flaskResponse = await fetch(`${flaskAPI}/predict`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

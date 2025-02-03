@@ -24,8 +24,11 @@ import { useSession } from "next-auth/react";
 import { format } from "date-fns";
 import { User } from "@prisma/client";
 import toast from "react-hot-toast";
+import { useTranslation } from "@/app/i18n/client";
 
-export default function Activity() {
+export default function Activity({ params }: { params: any }) {
+  const { lng } = React.use<{ lng: string }>(params);
+  const { t } = useTranslation(lng, "activity");
   const router = useRouter();
   const session = useSession();
 
@@ -129,7 +132,7 @@ export default function Activity() {
     oriDept: string,
     oriStatus: string
   ) => {
-    console.log(department, status)
+    console.log(department, status);
     try {
       if (!department.length && !status.length) {
         return;
@@ -171,19 +174,19 @@ export default function Activity() {
   return (
     <>
       <div className="flex flex-col max-w-screen-lg max-h-svh overflow-y-scroll mx-auto my-12 p-4 gap-4 bg-white shadow rounded">
-        <h1 className="text-2xl font-bold mb-4">Activity</h1>
+        <h1 className="text-2xl font-bold mb-4">{t("activity")}</h1>
 
         {/* toolbar */}
         <div className="flex flex-col sm:flex-row gap-4 mb-4">
           <Input
-            placeholder="Search appointments..."
+            placeholder={t("search-appointments")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Select value={filterStatus} onValueChange={setFilterStatus}>
             <SelectTrigger>
               <SelectValue placeholder="Filter by...">
-                Filter: {filterStatus}
+                {t("filter")}: {filterStatus}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -196,7 +199,7 @@ export default function Activity() {
           <Select value={sortOption} onValueChange={setSortOption}>
             <SelectTrigger>
               <SelectValue placeholder="Filter by...">
-                Sort: {sortOption}
+                {t("sort")}: {sortOption}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -204,10 +207,8 @@ export default function Activity() {
             </SelectContent>
           </Select>
           {currentUser?.role === "patient" && (
-            <Button
-              onClick={() => (window.location.href = "/make-appointment")}
-            >
-              Make Appointment
+            <Button onClick={() => router.push(`/${lng}/make-appointment`)}>
+              {t("new-appointment")}
             </Button>
           )}
         </div>
@@ -247,7 +248,7 @@ export default function Activity() {
                         // variant="secondary"
                         onClick={() => handleViewClick(appointment.id)}
                       >
-                        View
+                        {t("view")}
                       </Button>
                       {/* <Button variant="destructive">Cancel</Button> */}
                     </>
@@ -258,7 +259,7 @@ export default function Activity() {
                       // variant="secondary"
                       onClick={() => handleViewClick(appointment.id)}
                     >
-                      Edit
+                      {t("edit")}
                     </Button>
                   )}
                 </div>
@@ -271,46 +272,50 @@ export default function Activity() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Appointment Details</DialogTitle>
-            <DialogDescription>
-              Review the details of your appointment
-            </DialogDescription>
+            <DialogTitle>{t("dialog-title")}</DialogTitle>
           </DialogHeader>
 
           {appointmentList.length && (
             <div className="grid gap-4 py-2">
               <p>
-                <span className="font-semibold mr-2">Name:</span>
-                {appointmentList[selectedAppointment]?.user.profile.name}
+                <span className="font-semibold mr-2">{t("name")}:</span>
+                {appointmentList[selectedAppointment]?.name}
               </p>
               <p>
-                <span className="font-semibold mr-2">Date of Birth:</span>
-                {/* {appointmentList[
-                selectedAppointment
-              ]?.patient.DOB!.toDateString()} */}
-                {"DOB"}
+                <span className="font-semibold mr-2">{t("dob")}:</span>
+                {format(
+                  new Date(appointmentList[selectedAppointment]?.dob as Date),
+                  "dd/MM/yyyy"
+                )}
               </p>
               <p>
-                <span className="font-semibold mr-2">Height:</span>
-                {appointmentList[selectedAppointment]?.user.profile.height}
+                <span className="font-semibold mr-2">{t("height")}:</span>
+                {appointmentList[selectedAppointment]?.height}
               </p>
               <p>
-                <span className="font-semibold mr-2">Weight:</span>
-                {appointmentList[selectedAppointment]?.user.profile.weight}
+                <span className="font-semibold mr-2">{t("weight")}:</span>
+                {appointmentList[selectedAppointment]?.weight}
               </p>
               <p>
-                <span className="font-semibold mr-2">Chronic Disease:</span>
-                {
-                  appointmentList[selectedAppointment]?.user.profile
-                    .chronicDisease
-                }
+                <span className="font-semibold mr-2">{t("email")}:</span>
+                {appointmentList[selectedAppointment]?.email}
               </p>
               <p>
-                <span className="font-semibold mr-2">Allergies:</span>
-                {appointmentList[selectedAppointment]?.user.profile.allergies}
+                <span className="font-semibold mr-2">{t("phone")}:</span>
+                {appointmentList[selectedAppointment]?.phone}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">
+                  {t("chronic-disease")}:
+                </span>
+                {appointmentList[selectedAppointment]?.chronicDisease}
+              </p>
+              <p>
+                <span className="font-semibold mr-2">{t("allergy")}:</span>
+                {appointmentList[selectedAppointment]?.allergies}
               </p>
               <p className="flex">
-                <span className="font-semibold mr-2">Chief Complaint:</span>
+                <span className="font-semibold mr-2">{t("chief")}:</span>
                 {appointmentList[selectedAppointment]?.symptoms.map(
                   (s, index) => {
                     if (s.type === "chief") {
@@ -324,7 +329,7 @@ export default function Activity() {
                 )}
               </p>
               <div className="flex">
-                <span className="font-semibold mr-2">Present Illness:</span>
+                <span className="font-semibold mr-2">{t("illness")}:</span>
                 <div className="flex flex-col gap-1">
                   {appointmentList[selectedAppointment]?.symptoms.map(
                     (s, index) => {
@@ -340,14 +345,14 @@ export default function Activity() {
                 </div>
               </div>
               <p>
-                <span className="font-semibold mr-2">Appointment Date:</span>
+                <span className="font-semibold mr-2">{t("app-date")}:</span>
                 {format(
                   new Date(appointmentList[selectedAppointment]?.dateTime),
-                  "MM/dd/yyyy HH:mm"
+                  "dd/MM/yyyy HH:mm"
                 )}
               </p>
               <p>
-                <span className="font-semibold mr-2">Department:</span>
+                <span className="font-semibold mr-2">{t("dept")}:</span>
                 {currentUser?.role === "patient" ? (
                   <span>{appointmentList[selectedAppointment].department}</span>
                 ) : (
@@ -372,7 +377,7 @@ export default function Activity() {
                 )}
               </p>
               <p>
-                <span className="font-semibold mr-2">Status:</span>
+                <span className="font-semibold mr-2">{t("status")}:</span>
                 {currentUser?.role === "patient" ? (
                   <span>{appointmentList[selectedAppointment].status}</span>
                 ) : (
@@ -408,7 +413,7 @@ export default function Activity() {
                 setDialogOpen(false);
               }}
             >
-              Save Changes
+              {t("save")}
             </Button>
             <Button
               type="submit"
@@ -416,7 +421,7 @@ export default function Activity() {
                 setDialogOpen(false);
               }}
             >
-              Close
+              {t("close")}
             </Button>
           </DialogFooter>
         </DialogContent>
