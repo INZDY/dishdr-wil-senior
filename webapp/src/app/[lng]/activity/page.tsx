@@ -20,14 +20,17 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
-import { useCurrentSession } from "@/hooks/use-session";
+import { useSession } from "next-auth/react";
 import { format } from "date-fns";
+import { User } from "@prisma/client";
+import toast from "react-hot-toast";
 
 export default function Activity() {
   const router = useRouter();
-  const session = useCurrentSession();
+  const session = useSession();
 
   const [appointmentList, setAppointmentList] = useState<Activity[]>([]);
+  const [currentUser, setCurrentUser] = useState<User>();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -35,25 +38,40 @@ export default function Activity() {
 
   const [selectedAppointment, setSelectedAppointment] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [department, setDepartment] = useState("");
+  const [status, setStatus] = useState("");
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchActivities() {
-      const response = await fetch("/api/actions/activity-list");
+    async function fetchData() {
+      try {
+        // user
+        const userRes = await fetch("/api/actions/user");
+        if (!userRes.ok) {
+          throw new Error("Failed to fetch activities");
+        }
+        const userData: User = await userRes.json();
+        setCurrentUser(userData);
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch activities");
+        // appointments
+        const appointmentRes = await fetch("/api/actions/activity-list");
+        if (!appointmentRes.ok) {
+          throw new Error("Failed to fetch activities");
+        }
+        const appoitmentData: Activity[] = await appointmentRes.json();
+        setAppointmentList(appoitmentData);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      } finally {
+        setLoading(false);
       }
-
-      const data: Activity[] = await response.json();
-      console.log(data);
-      setAppointmentList(data);
-      setLoading(false);
     }
+
     if (session.status === "unauthenticated") {
       router.push("/");
     } else if (session.status === "authenticated") {
-      fetchActivities();
+      fetchData();
     }
   }, [session]);
 
@@ -106,6 +124,38 @@ export default function Activity() {
     setDialogOpen(true);
   };
 
+  const handleEdit = async (
+    appointmentId: string,
+    oriDept: string,
+    oriStatus: string
+  ) => {
+    console.log(department, status)
+    try {
+      if (!department.length && !status.length) {
+        return;
+      }
+
+      const formattedData = {
+        appointmentId,
+        department: department.length ? department : oriDept,
+        status: status.length ? status : oriStatus,
+      };
+
+      await fetch("/api/activity-management", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formattedData),
+      });
+    } catch (error) {
+      console.error("Error handling appointment edit");
+    } finally {
+      router.refresh();
+      toast.success("Appointment edited successfully!");
+    }
+  };
+
   if (loading) {
     return (
       <p className="flex justify-center font-lg text-bold text-white">
@@ -115,12 +165,12 @@ export default function Activity() {
   }
 
   if (!session) {
-    router.push('/');
+    router.push("/");
   }
 
   return (
     <>
-      <div className="flex flex-col max-w-screen-xl mx-auto my-12 p-4 gap-4 bg-white shadow rounded">
+      <div className="flex flex-col max-w-screen-lg max-h-svh overflow-y-scroll mx-auto my-12 p-4 gap-4 bg-white shadow rounded">
         <h1 className="text-2xl font-bold mb-4">Activity</h1>
 
         {/* toolbar */}
@@ -153,9 +203,13 @@ export default function Activity() {
               <SelectItem value="date">Date</SelectItem>
             </SelectContent>
           </Select>
-          <Button onClick={() => (window.location.href = "/make-appointment")}>
-            Make Appointment
-          </Button>
+          {currentUser?.role === "patient" && (
+            <Button
+              onClick={() => (window.location.href = "/make-appointment")}
+            >
+              Make Appointment
+            </Button>
+          )}
         </div>
 
         {/* appointments */}
@@ -186,23 +240,25 @@ export default function Activity() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  {appointment.status === "pending" && (
+                  {currentUser?.role === "patient" && (
                     <>
                       <Button
-                        variant="secondary"
+                        className="bg-white text-black hover:bg-neutral-300"
+                        // variant="secondary"
                         onClick={() => handleViewClick(appointment.id)}
                       >
-                        Edit
+                        View
                       </Button>
-                      <Button variant="destructive">Cancel</Button>
+                      {/* <Button variant="destructive">Cancel</Button> */}
                     </>
                   )}
-                  {appointment.status === "completed" && (
+                  {currentUser?.role === "staff" && (
                     <Button
-                      variant="secondary"
+                      className="bg-white text-black hover:bg-neutral-300"
+                      // variant="secondary"
                       onClick={() => handleViewClick(appointment.id)}
                     >
-                      View
+                      Edit
                     </Button>
                   )}
                 </div>
@@ -291,12 +347,69 @@ export default function Activity() {
                 )}
               </p>
               <p>
+                <span className="font-semibold mr-2">Department:</span>
+                {currentUser?.role === "patient" ? (
+                  <span>{appointmentList[selectedAppointment].department}</span>
+                ) : (
+                  <Select
+                    value={
+                      department.length
+                        ? department
+                        : appointmentList[selectedAppointment].department
+                    }
+                    onValueChange={(value) => setDepartment(value)}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="-">-</SelectItem>
+                      <SelectItem value="general medicine">
+                        General Medicine
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              </p>
+              <p>
                 <span className="font-semibold mr-2">Status:</span>
-                {appointmentList[selectedAppointment]?.status}
+                {currentUser?.role === "patient" ? (
+                  <span>{appointmentList[selectedAppointment].status}</span>
+                ) : (
+                  <Select
+                    value={
+                      status.length
+                        ? status
+                        : appointmentList[selectedAppointment].status
+                    }
+                    onValueChange={(value) => setStatus(value)}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="approved">Approved</SelectItem>
+                      <SelectItem value="canceled">canceled</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
               </p>
             </div>
           )}
           <DialogFooter>
+            <Button
+              onClick={() => {
+                handleEdit(
+                  appointmentList[selectedAppointment].id,
+                  appointmentList[selectedAppointment].department,
+                  appointmentList[selectedAppointment].status
+                );
+                setDialogOpen(false);
+              }}
+            >
+              Save Changes
+            </Button>
             <Button
               type="submit"
               onClick={() => {
