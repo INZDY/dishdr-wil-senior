@@ -140,6 +140,10 @@ export default function MakeAppointment({ params }: { params: any }) {
     console.log("Save to device");
   };
 
+  if (!session) {
+    router.push("/");
+  }
+
   return (
     <div className="max-w-screen-lg mx-auto my-12 p-4 bg-white shadow rounded">
       {step === 1 && (
