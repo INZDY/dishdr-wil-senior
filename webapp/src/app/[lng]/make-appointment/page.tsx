@@ -51,10 +51,6 @@ export default function MakeAppointment({ params }: { params: any }) {
     notes: "",
   });
 
-  // useEffect(() => {
-  //   setFormData({ ...formData, sessionId: session?.user?.id as string });
-  // }, [session]);
-
   const handleNext = () => {
     if (step === 2) {
       // TODO: should be able to do this in symptom selection
@@ -95,6 +91,7 @@ export default function MakeAppointment({ params }: { params: any }) {
     setDirection("next");
     setStep((prevStep) => prevStep + 1);
   };
+
   const handleBack = () => {
     if (
       step == 4 &&
