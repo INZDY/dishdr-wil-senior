@@ -1,4 +1,10 @@
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -6,9 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import { StepProps } from "@/types/formTypes";
 import { valueToLabel } from "@/utils/utils";
 import { Department } from "@prisma/client";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 export default function ResultBooking({ formData, setFormData }: StepProps) {
@@ -19,10 +28,15 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
       label: string;
     }[]
   >([]);
+
   const [showFullResults, setShowFullResults] = useState(false);
+  const [department, setDepartment] = useState("");
+  const [date, setDate] = useState<Date>();
+  const [unavailableDates, setUnavailableDates] = useState<
+    { _count: number; dateTime: Date }[]
+  >([]);
 
   const predictionResults = formData.prediction.split(",");
-
   const topPrediction = predictionResults[0];
 
   useEffect(() => {
@@ -42,14 +56,36 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
     fetchDepartments();
   }, []);
 
+  useEffect(() => {
+    if (department === "") return;
+    async function fetchAvailableDates() {
+      const response = await fetch("/api/actions/unavailable-dates", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ department }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get available dates from server");
+      }
+
+      const data = await response.json();
+
+      setUnavailableDates(data);
+    }
+    fetchAvailableDates();
+  }, [department]);
+
   const handleExpandResults = () => {
     setShowFullResults(!showFullResults);
   };
 
-  const handleDepartmentChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setFormData({ ...formData, department: event.target.value });
+  const handleDepartmentChange = (value: string) => {
+    setDepartment(value);
+    setDate(undefined);
+    // setFormData({ ...formData, department: value });
   };
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,10 +136,10 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
               <label className="block text-sm font-medium text-gray-700">
                 Department
               </label>
-
               <Select
-                onValueChange={(value) =>
-                  setFormData({ ...formData, department: value })
+                onValueChange={
+                  (value) => handleDepartmentChange(value)
+                  // setFormData({ ...formData, department: value })
                 }
               >
                 <SelectTrigger className="bg-white mt-1">
@@ -119,16 +155,52 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
               </Select>
             </div>
           )}
+          {/* date picker */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Date
             </label>
-            <input
-              type="date"
-              value={formData.date}
-              onChange={handleDateChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "w-[280px] justify-start text-left font-normal",
+                    !date && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date ? format(date, "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  disabled={(date) => {
+                    // console.log(date.toISOString().split("T")[0]);
+                    // console.log(
+                    //   date.getDate(),
+                    //   date.getMonth(),
+                    //   date.getFullYear()
+                    // );
+                    return (
+                      date < new Date()
+                      // ||
+                      // unavailableDates.some(
+                      //   (match) =>
+                      //     date.getDate() === match.dateTime.getDate() &&
+                      //     date.getMonth() === match.dateTime.getMonth() &&
+                      //     date.getFullYear() === match.dateTime.getFullYear()
+                      // )
+                    );
+                    // return date.toISOString().split("T")[0] === "2025-02-15";
+                  }}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
