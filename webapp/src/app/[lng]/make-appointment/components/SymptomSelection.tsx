@@ -1,43 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { StepProps } from "@/types/formTypes";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { FaCheck, FaChevronDown, FaRegTrashCan } from "react-icons/fa6";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { cn } from "@/lib/utils";
 import { Symptom, SymptomAnswer } from "@/types/dataTypes";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { sortPresentIllness, valueToLabel } from "@/utils/utils";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import SymptomDialog from "./symptom-select/SymptomDialog";
+import SymptomSelect from "./symptom-select/SymptomSelect";
 
 export default function SymptomSelection({ formData, setFormData }: StepProps) {
+  // const [reason, setReason] = useState("");
   const [chiefOpen, setChiefOpen] = useState(false);
   const [presentOpen, setPresentOpen] = useState(false);
   const [chiefValue, setChiefValue] = useState("");
@@ -71,6 +42,10 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
     fetchSymptoms();
   }, []);
 
+  const handleSelectCareType = (careType: string) => {
+    setFormData({ ...formData, careType: careType });
+  };
+
   const handleDropdownSelect = (symptom: string, type: "chief" | "present") => {
     setSelectionType(type);
 
@@ -81,7 +56,7 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
       unit: "days",
       isOther: symptom === "other",
     });
-    
+
     setChiefOpen(false);
     setPresentOpen(false);
     setDialogOpen(true);
@@ -129,279 +104,51 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
   return (
     <>
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-bold">Preliminary Symptoms</h2>
+        <h2 className="text-xl font-bold">Purpose of Appointment</h2>
         <div className="flex border-t-2 border-gray-400 rounded" />
+        <p className="text-sm text-gray-500">
+          Please select the reason for your visit.
+        </p>
 
-        {/* Chief complaint */}
-        <div className="flex flex-col gap-2">
-          <h3 className="mb-1 font-semibold">Chief complaint</h3>
-          <p className="text-sm text-gray-500">
-            Symptom that makes you seek medical attention. (only 1)
-          </p>
-
-          {/* symptom selection list with dropdown menu */}
-          <Popover open={chiefOpen} onOpenChange={setChiefOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={chiefOpen}
-                className="w-[200px] justify-between"
-              >
-                {chiefValue
-                  ? chiefValue == "other"
-                    ? "Other..."
-                    : symptomList.find(
-                        (symptom) => symptom.value === chiefValue
-                      )?.label
-                  : "Select symptoms..."}
-                <FaChevronDown className="opacity-50" />
-              </Button>
-            </PopoverTrigger>
-
-            <PopoverContent className="w-[200px] p-0">
-              <Command>
-                <CommandInput placeholder="Search symptom..." className="h-9" />
-                <CommandList>
-                  <CommandEmpty>No symptom found.</CommandEmpty>
-                  <CommandGroup>
-                    <CommandItem
-                      key="other"
-                      value="other"
-                      onSelect={(currentValue: string) => {
-                        setChiefValue(
-                          currentValue === chiefValue ? "" : currentValue
-                        );
-                        handleDropdownSelect(currentValue, "chief");
-                      }}
-                    >
-                      {"Other..."}
-                      <FaCheck
-                        className={cn(
-                          "ml-auto",
-                          chiefValue === "other" ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-
-                    {symptomList.map((symptom) => (
-                      <CommandItem
-                        key={symptom.value}
-                        value={symptom.value}
-                        onSelect={(currentValue: string) => {
-                          setChiefValue(
-                            currentValue === chiefValue ? "" : currentValue
-                          );
-                          handleDropdownSelect(currentValue, "chief");
-                        }}
-                      >
-                        {symptom.label}
-                        <FaCheck
-                          className={cn(
-                            "ml-auto",
-                            chiefValue === symptom.value
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-
-          <div className="flex">
-            {formData.chiefComplaint.unit !== "" ? (
-              <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-red-200 shadow-sm">
-                <p className="flex gap-2">
-                  <span>{formData.chiefComplaint?.symptom}:</span>
-                  <span>{formData.chiefComplaint?.duration}</span>
-                  <span>{formData.chiefComplaint?.unit}</span>
-                </p>
-              </div>
-            ) : null}
+        <RadioGroup onValueChange={(value) => handleSelectCareType(value)}>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="scheduled" id="scheduled" />
+            <Label htmlFor="scheduled">Scheduled Appointment/Follow-Up</Label>
           </div>
-        </div>
-
-        {/* Present Illness */}
-        <div className="flex flex-col gap-2">
-          <h3 className="mb-1 font-semibold">Present illness</h3>
-          <p className="text-sm text-gray-500">
-            Other symptoms that you are experiencing.
-          </p>
-
-          <Popover open={presentOpen} onOpenChange={setPresentOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={presentOpen}
-                className="w-[200px] justify-between"
-              >
-                {presentValue
-                  ? presentValue == "other"
-                    ? "Other..."
-                    : symptomList.find(
-                        (symptom) => symptom.value === presentValue
-                      )?.label
-                  : "Select symptoms..."}
-                <FaChevronDown className="opacity-50" />
-              </Button>
-            </PopoverTrigger>
-
-            <PopoverContent className="w-[200px] p-0">
-              <Command>
-                <CommandInput placeholder="Search symptom..." className="h-9" />
-                <CommandList>
-                  <CommandEmpty>No symptom found.</CommandEmpty>
-                  <CommandGroup>
-                    <CommandItem
-                      key="other"
-                      value="other"
-                      onSelect={(currentValue: string) => {
-                        setPresentValue(
-                          currentValue === presentValue ? "" : currentValue
-                        );
-                        handleDropdownSelect(currentValue, "present");
-                      }}
-                    >
-                      {"Other..."}
-                      <FaCheck
-                        className={cn(
-                          "ml-auto",
-                          presentValue === "other" ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-
-                    {symptomList.map((symptom) => (
-                      <CommandItem
-                        key={symptom.value}
-                        value={symptom.value}
-                        onSelect={(currentValue: string) => {
-                          setPresentValue(
-                            currentValue === presentValue ? "" : currentValue
-                          );
-                          handleDropdownSelect(currentValue, "present");
-                        }}
-                      >
-                        {symptom.label}
-                        <FaCheck
-                          className={cn(
-                            "ml-auto",
-                            presentValue === symptom.value
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-
-          <div className="flex">
-            <div className="flex flex-col gap-2 justify-center">
-              {formData.presentIllness.map((symptom, index) => (
-                <div
-                  key={index}
-                  className="flex gap-2 h-10 p-2 items-center justify-between rounded-md bg-green-200 shadow-sm"
-                >
-                  <p className="flex gap-2">
-                    <span>{symptom.symptom}:</span>
-                    <span>{symptom.duration}</span>
-                    <span>{symptom.unit}</span>
-                  </p>
-                  <Button
-                    onClick={() => handleDeletePresentIllness(index)}
-                    className="bg-transparent px-1 hover:bg-neutral-200 shadow-none"
-                  >
-                    <FaRegTrashCan color="red" />
-                  </Button>
-                </div>
-              ))}
-            </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="symptoms" id="symptoms" />
+            <Label htmlFor="symptoms">Experiencing Symptoms</Label>
           </div>
-        </div>
+        </RadioGroup>
+
+        {formData.careType === "symptoms" && (
+          <SymptomSelect
+            chiefOpen={chiefOpen}
+            setChiefOpen={setChiefOpen}
+            chiefValue={chiefValue}
+            setChiefValue={setChiefValue}
+            presentOpen={presentOpen}
+            setPresentOpen={setPresentOpen}
+            presentValue={presentValue}
+            setPresentValue={setPresentValue}
+            symptomList={symptomList}
+            handleDropdownSelect={handleDropdownSelect}
+            handleDeletePresentIllness={handleDeletePresentIllness}
+            formData={formData}
+          />
+        )}
       </div>
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Symptom Details</DialogTitle>
-            <DialogDescription>
-              Fill details for the selected symptom.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="symptom" className="text-right">
-                Symptom
-              </Label>
-              <Input
-                id="symptom"
-                defaultValue={symptomDetails?.symptom}
-                disabled={
-                  selectionType === "chief"
-                    ? chiefValue !== "other"
-                    : presentValue !== "other"
-                }
-                onChange={(e) => {
-                  symptomDetails != undefined
-                    ? setSymptomDetails({
-                        ...symptomDetails,
-                        symptom: e.target.value,
-                      })
-                    : null;
-                }}
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="duration" className="text-right">
-                Duration
-              </Label>
-              <Input
-                id="duration"
-                defaultValue={symptomDetails?.duration}
-                onChange={(e) => {
-                  symptomDetails != undefined
-                    ? setSymptomDetails({
-                        ...symptomDetails,
-                        duration: parseInt(e.target.value),
-                      })
-                    : null;
-                }}
-              />
-              <Select
-                onValueChange={(unit) => {
-                  symptomDetails != undefined
-                    ? setSymptomDetails({ ...symptomDetails, unit: unit })
-                    : null;
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="days" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="days">days</SelectItem>
-                  <SelectItem value="hours">hours</SelectItem>
-                  <SelectItem value="minutes">minutes</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="submit" onClick={handleSaveChanges}>
-              Save changes
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <SymptomDialog
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        symptomDetails={symptomDetails}
+        setSymptomDetails={setSymptomDetails}
+        selectionType={selectionType}
+        chiefValue={chiefValue}
+        presentValue={presentValue}
+        handleSaveChanges={handleSaveChanges}
+      />
     </>
   );
 }

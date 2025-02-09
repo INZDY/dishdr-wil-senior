@@ -41,7 +41,7 @@ export default function MakeAppointment({ params }: { params: any }) {
     time: "",
     status: "pending",
 
-    // symptoms: [],
+    careType: "",
     chiefComplaint: { symptom: "", duration: 0, unit: "", isOther: false },
     presentIllness: [],
     inquiries: [],
@@ -53,36 +53,41 @@ export default function MakeAppointment({ params }: { params: any }) {
 
   const handleNext = () => {
     if (step === 2) {
-      // TODO: should be able to do this in symptom selection
-      setFormData({
-        ...formData,
-        inquiries: [
-          {
-            type: "chief",
-            symptom: formData.chiefComplaint.symptom,
-            duration: formData.chiefComplaint.duration,
-            unit: formData.chiefComplaint.unit,
-            hasSymptom: true,
-            isOther: formData.chiefComplaint.isOther,
-          },
-          ...formData.presentIllness.map((illness) => {
-            return {
-              type: "present",
-              symptom: illness.symptom,
-              duration: illness.duration,
-              unit: illness.unit,
-              hasSymptom: true,
-              isOther: illness.isOther,
-            };
-          }),
-        ],
-      });
-      if (
-        formData.chiefComplaint.isOther &&
-        formData.presentIllness.every((illness) => illness.isOther)
-      ) {
+      if (formData.careType === "scheduled") {
         // skip to step 4
         setStep((prevStep) => prevStep + 1);
+      } else if (formData.careType === "symptoms") {
+        // TODO: should be able to do this in symptom selection
+        setFormData({
+          ...formData,
+          inquiries: [
+            {
+              type: "chief",
+              symptom: formData.chiefComplaint.symptom,
+              duration: formData.chiefComplaint.duration,
+              unit: formData.chiefComplaint.unit,
+              hasSymptom: true,
+              isOther: formData.chiefComplaint.isOther,
+            },
+            ...formData.presentIllness.map((illness) => {
+              return {
+                type: "present",
+                symptom: illness.symptom,
+                duration: illness.duration,
+                unit: illness.unit,
+                hasSymptom: true,
+                isOther: illness.isOther,
+              };
+            }),
+          ],
+        });
+        if (
+          formData.chiefComplaint.isOther &&
+          formData.presentIllness.every((illness) => illness.isOther)
+        ) {
+          // skip to step 4
+          setStep((prevStep) => prevStep + 1);
+        }
       }
     }
     if (step === 3) {
@@ -138,6 +143,14 @@ export default function MakeAppointment({ params }: { params: any }) {
   const handleSaveToDevice = () => {
     console.log("Save to device");
   };
+
+  if (loading) {
+    return (
+      <p className="flex justify-center font-lg text-bold text-white">
+        Loading...
+      </p>
+    );
+  }
 
   if (!session) {
     router.push("/");
