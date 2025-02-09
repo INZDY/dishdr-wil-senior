@@ -16,6 +16,12 @@ model Symptom {
   enabled Boolean @default(true)
 }
 
+model Department {
+  id      Int     @id @default(autoincrement())
+  name    String  @unique
+  enabled Boolean @default(true)
+}
+
 model User {
   id            String        @id @default(cuid(2))
   name          String?

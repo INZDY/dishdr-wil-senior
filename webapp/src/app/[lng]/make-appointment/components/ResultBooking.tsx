@@ -1,13 +1,46 @@
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { StepProps } from "@/types/formTypes";
-import React, { useState } from "react";
+import { valueToLabel } from "@/utils/utils";
+import { Department } from "@prisma/client";
+import React, { useEffect, useState } from "react";
 
 export default function ResultBooking({ formData, setFormData }: StepProps) {
+  const careType = formData.careType;
+  const [departmentList, setDepartmentList] = useState<
+    {
+      value: string;
+      label: string;
+    }[]
+  >([]);
   const [showFullResults, setShowFullResults] = useState(false);
 
   const predictionResults = formData.prediction.split(",");
 
   const topPrediction = predictionResults[0];
+
+  useEffect(() => {
+    async function fetchDepartments() {
+      const response = await fetch("/api/actions/department-list");
+
+      if (!response.ok) {
+        throw new Error("Failed to get department list from server");
+      }
+
+      const data: Department[] = await response.json();
+
+      // need to transform label format
+      const department = valueToLabel(data);
+      setDepartmentList(department);
+    }
+    fetchDepartments();
+  }, []);
 
   const handleExpandResults = () => {
     setShowFullResults(!showFullResults);
@@ -58,58 +91,67 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
       </div>
 
       {/* Make Appointment Section */}
-      <div className="bg-gray-100 p-4 rounded shadow mt-4">
+      <div className="flex flex-col gap-4 bg-gray-100 p-4 rounded shadow mt-4">
         <h3 className="text-lg font-semibold">Make Appointment</h3>
-        {/* department selection: disabled */}
-        {/* <div className="mt-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Department
-          </label>
-          <select
-            value={formData.department}
-            onChange={handleDepartmentChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-          >
-            {predictionResults.map((result, index) => (
-              <option key={index} value={result.department}>
-                {result.department}
-              </option>
-            ))}
-            <option value="General Purpose">General Purpose</option>
-          </select>
-        </div> */}
-        <div className="mt-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Date
-          </label>
-          <input
-            type="date"
-            value={formData.date}
-            onChange={handleDateChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-          />
-        </div>
-        <div className="mt-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Time
-          </label>
-          <input
-            type="time"
-            value={formData.time}
-            onChange={handleTimeChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-          />
-        </div>
-        <div className="mt-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Additional Notes
-          </label>
-          <textarea
-            value={formData.notes}
-            onChange={handleNotesChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-            rows={3}
-          ></textarea>
+        <div className="flex flex-col gap-4 max-w-lg">
+          {/* department selection: disabled */}
+          {careType === "scheduled" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Department
+              </label>
+
+              <Select
+                onValueChange={(value) =>
+                  setFormData({ ...formData, department: value })
+                }
+              >
+                <SelectTrigger className="bg-white mt-1">
+                  <SelectValue placeholder="Choose" />
+                </SelectTrigger>
+                <SelectContent>
+                  {departmentList.map((dept, index) => (
+                    <SelectItem key={index} value={dept.value}>
+                      {dept.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Date
+            </label>
+            <input
+              type="date"
+              value={formData.date}
+              onChange={handleDateChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Time
+            </label>
+            <input
+              type="time"
+              value={formData.time}
+              onChange={handleTimeChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            />
+          </div>
+          <div className="mt-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Additional Notes
+            </label>
+            <textarea
+              value={formData.notes}
+              onChange={handleNotesChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+              rows={3}
+            ></textarea>
+          </div>
         </div>
       </div>
     </div>
