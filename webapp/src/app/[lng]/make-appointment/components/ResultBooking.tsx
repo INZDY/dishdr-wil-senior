@@ -179,23 +179,16 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
                   selected={date}
                   onSelect={setDate}
                   disabled={(date) => {
-                    // console.log(date.toISOString().split("T")[0]);
-                    // console.log(
-                    //   date.getDate(),
-                    //   date.getMonth(),
-                    //   date.getFullYear()
-                    // );
                     return (
-                      date < new Date()
-                      // ||
-                      // unavailableDates.some(
-                      //   (match) =>
-                      //     date.getDate() === match.dateTime.getDate() &&
-                      //     date.getMonth() === match.dateTime.getMonth() &&
-                      //     date.getFullYear() === match.dateTime.getFullYear()
-                      // )
+                      date < new Date() ||
+                      unavailableDates.some((obj) => {
+                        const unavailableDate = new Date(obj.dateTime);
+                        unavailableDate.setHours(0, 0, 0, 0);
+                        return (
+                          date.toISOString() === unavailableDate.toISOString()
+                        );
+                      })
                     );
-                    // return date.toISOString().split("T")[0] === "2025-02-15";
                   }}
                   initialFocus
                 />
