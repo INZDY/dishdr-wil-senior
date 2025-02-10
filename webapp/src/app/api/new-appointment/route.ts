@@ -1,6 +1,7 @@
 import getCurrentUser from "@/lib/db/getCurrentUser";
 import { prisma } from "@/lib/prisma";
 import { AppointmentSymptoms } from "@prisma/client";
+import { getHours, getMinutes } from "date-fns";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -18,8 +19,7 @@ export async function POST(request: Request) {
       chronicDiseases,
       allergies,
       department,
-      date,
-      time,
+      dateTime,
       status,
       chiefComplaint,
       presentIllness,
@@ -27,7 +27,12 @@ export async function POST(request: Request) {
       prediction,
       notes,
     } = body;
-    const appointmentDateTime = new Date(`${date} ${time}`);
+
+    console.log(typeof dateTime);
+    const appointmentDateTime = `${dateTime.split("T")[0]} ${getHours(
+      dateTime
+    )}:${getMinutes(dateTime)}`;
+    console.log(appointmentDateTime);
 
     // user check
     if (!currentUser?.id) {
@@ -37,10 +42,10 @@ export async function POST(request: Request) {
     //create new appointment
     const newAppointment = await prisma.appointment.create({
       data: {
-        appointmentName: `Appointment on ${date} ${time}`,
+        appointmentName: `Appointment on ${appointmentDateTime}`,
         userId: currentUser.id,
         name,
-        dob: dateOfBirth,
+        dob: dateOfBirth === "" ? null : new Date(dateOfBirth),
         height,
         weight,
         email,
@@ -48,10 +53,9 @@ export async function POST(request: Request) {
         chronicDisease: chronicDiseases,
         allergies,
         department,
-        dateTime: appointmentDateTime,
+        dateTime,
         notes,
         status: status || "pending",
-        // otherSymptoms: symptoms,
         prediction,
         symptoms: {
           createMany: {

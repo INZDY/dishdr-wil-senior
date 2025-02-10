@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import { StepProps } from "@/types/formTypes";
 import { valueToLabel } from "@/utils/utils";
 import { Department } from "@prisma/client";
-import { format } from "date-fns";
+import { format, getHours, getMinutes } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -30,8 +30,6 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
   >([]);
 
   const [showFullResults, setShowFullResults] = useState(false);
-  const [department, setDepartment] = useState("");
-  const [date, setDate] = useState<Date>();
   const [unavailableDates, setUnavailableDates] = useState<
     { _count: number; dateTime: Date }[]
   >([]);
@@ -57,8 +55,9 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
   }, []);
 
   useEffect(() => {
-    if (department === "") return;
+    if (formData.department === "") return;
     async function fetchAvailableDates() {
+      const department = formData.department;
       const response = await fetch("/api/actions/unavailable-dates", {
         method: "POST",
         headers: {
@@ -76,24 +75,14 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
       setUnavailableDates(data);
     }
     fetchAvailableDates();
-  }, [department]);
+  }, [formData.department]);
 
   const handleExpandResults = () => {
     setShowFullResults(!showFullResults);
   };
 
   const handleDepartmentChange = (value: string) => {
-    setDepartment(value);
-    setDate(undefined);
-    // setFormData({ ...formData, department: value });
-  };
-
-  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, date: event.target.value });
-  };
-
-  const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, time: event.target.value });
+    setFormData({ ...formData, department: value });
   };
 
   const handleNotesChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -166,18 +155,24 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
                   variant={"outline"}
                   className={cn(
                     "w-[280px] justify-start text-left font-normal",
-                    !date && "text-muted-foreground"
+                    !formData.dateTime && "text-muted-foreground"
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  {formData.dateTime ? (
+                    format(formData.dateTime, "PPP")
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
                 <Calendar
                   mode="single"
-                  selected={date}
-                  onSelect={setDate}
+                  selected={formData.dateTime}
+                  onSelect={(date) => {
+                    setFormData({ ...formData, dateTime: date });
+                  }}
                   disabled={(date) => {
                     return (
                       date < new Date() ||
@@ -201,8 +196,19 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
             </label>
             <input
               type="time"
-              value={formData.time}
-              onChange={handleTimeChange}
+              value={`${getHours(formData.dateTime!)
+                .toString()
+                .padStart(2, "0")}:${getMinutes(formData.dateTime!)
+                .toString()
+                .padStart(2, "0")}`}
+              onChange={(e) => {
+                const value = e.target.value;
+                const [hour, minute] = value.split(":").map(Number);
+                const dateObj = new Date(formData.dateTime!);
+                dateObj.setHours(hour, minute, 0, 0);
+
+                setFormData({ ...formData, dateTime: dateObj });
+              }}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
             />
           </div>

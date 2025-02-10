@@ -1,8 +1,8 @@
 import { FormData } from "@/types/formTypes";
+import { getHours, getMinutes } from "date-fns";
 import React from "react";
 
 export default function Summary({ formData }: { formData: FormData }) {
-
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-xl font-bold">Booking Details</h2>
@@ -13,8 +13,15 @@ export default function Summary({ formData }: { formData: FormData }) {
           {appointmentInfo.department}
         </p> */}
         <p>Name: {formData.name}</p>
-        <p>Date: {formData.date}</p>
-        <p>Time: {formData.time}</p>
+        <p>Date: {formData.dateTime?.toISOString().split("T")[0]}</p>
+        <p>
+          Time:{" "}
+          {`${getHours(formData.dateTime!)
+            .toString()
+            .padStart(2, "0")}:${getMinutes(formData.dateTime!)
+            .toString()
+            .padStart(2, "0")}`}
+        </p>
         <p>Notes: {formData.notes}</p>
         <p>Status: {formData.status}</p>
       </div>
