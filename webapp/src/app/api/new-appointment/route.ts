@@ -2,6 +2,7 @@ import getCurrentUser from "@/lib/db/getCurrentUser";
 import { prisma } from "@/lib/prisma";
 import { AppointmentSymptoms } from "@prisma/client";
 import { getHours, getMinutes } from "date-fns";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -11,6 +12,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const {
       name,
+      hn,
       dateOfBirth,
       height,
       weight,
@@ -77,6 +79,12 @@ export async function POST(request: Request) {
         },
       },
     });
+
+    const cookieStore = await cookies();
+    cookieStore.set("name", name);
+    cookieStore.set("hn", hn);
+    cookieStore.set("phone", phone);
+    cookieStore.set("email", email);
 
     return NextResponse.json(newAppointment);
   } catch (error: any) {

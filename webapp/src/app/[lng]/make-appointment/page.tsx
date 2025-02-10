@@ -24,10 +24,9 @@ export default function MakeAppointment({ params }: { params: any }) {
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState<"next" | "back">("next");
   const [formData, setFormData] = useState<FormData>({
-    // sessionId = userId
-    // current dummy - John Doe ID
     sessionId: session?.user?.id as string,
     name: "",
+    hn: "",
     dateOfBirth: "",
     height: 0,
     weight: 0,

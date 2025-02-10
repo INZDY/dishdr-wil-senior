@@ -95,25 +95,28 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
       <div className="flex border-t-2 border-gray-400 rounded" />
 
       {/* Prediction Result Section */}
-      <div className="bg-gray-100 p-4 rounded shadow">
-        <h3 className="text-lg font-semibold">Prediction Result</h3>
-        <p>
-          Top Prediction: {topPrediction} {/* ({topPrediction.percentage}%) */}
-        </p>
-        <Button onClick={handleExpandResults} className="mt-2">
-          {showFullResults ? "Hide Full Results" : "Show Full Results"}
-        </Button>
-        {showFullResults && (
-          <ul className="mt-2">
-            {predictionResults.map((result, index) => (
-              <li key={index}>
-                Rank {index + 1}. {result}
-                {/* {result.department}: {result.percentage}% */}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      {careType === "symptoms" && (
+        <div className="bg-gray-100 p-4 rounded shadow">
+          <h3 className="text-lg font-semibold">Prediction Result</h3>
+          <p>
+            Top Prediction: {topPrediction}{" "}
+            {/* ({topPrediction.percentage}%) */}
+          </p>
+          <Button onClick={handleExpandResults} className="mt-2">
+            {showFullResults ? "Hide Full Results" : "Show Full Results"}
+          </Button>
+          {showFullResults && (
+            <ul className="mt-2">
+              {predictionResults.map((result, index) => (
+                <li key={index}>
+                  Rank {index + 1}. {result}
+                  {/* {result.department}: {result.percentage}% */}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
 
       {/* Make Appointment Section */}
       <div className="flex flex-col gap-4 bg-gray-100 p-4 rounded shadow mt-4">

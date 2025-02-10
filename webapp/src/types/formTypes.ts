@@ -5,12 +5,12 @@ import { SymptomAnswer } from "./dataTypes";
 export interface FormData {
   sessionId: string;
   name: string;
+  hn: string;
   dateOfBirth: string;
   height: number;
   weight: number;
   email: string;
   phone: string;
-  // patientId: string;
   chronicDiseases: string;
   allergies: string;
 
@@ -26,7 +26,6 @@ export interface FormData {
   prediction: string;
 
   notes: string;
-  // bookingDetails: { confirmed: boolean } | null;
 }
 
 export interface StepProps {
