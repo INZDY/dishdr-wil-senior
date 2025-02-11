@@ -1,14 +1,12 @@
-FROM python:3.13-alpine
+FROM python:3.11-slim
 
 WORKDIR /model
 
-RUN apk add --no-cache gcc g++ musl-dev
-
 RUN python -m pip install --upgrade pip setuptools wheel
 
-COPY requirement.txt .
+COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirement.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
