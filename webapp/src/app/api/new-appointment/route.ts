@@ -1,7 +1,8 @@
 import getCurrentUser from "@/lib/db/getCurrentUser";
 import { prisma } from "@/lib/prisma";
 import { AppointmentSymptoms } from "@prisma/client";
-import { getHours, getMinutes } from "date-fns";
+import { format } from "date-fns";
+import { th } from "date-fns/locale";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -30,11 +31,12 @@ export async function POST(request: Request) {
       notes,
     } = body;
 
-    console.log(typeof dateTime);
-    const appointmentDateTime = `${dateTime.split("T")[0]} ${getHours(
-      dateTime
-    )}:${getMinutes(dateTime)}`;
-    console.log(appointmentDateTime);
+    const dateObj = new Date(dateTime);
+    const appointmentDateTime = format(dateObj, "PP HH:mm", {
+      locale: th,
+    });
+    const dateOnly = format(dateObj, "yyyy-MM-dd");
+    // console.log(appointmentDateTime);
 
     // user check
     if (!currentUser?.id) {
@@ -44,7 +46,7 @@ export async function POST(request: Request) {
     //create new appointment
     const newAppointment = await prisma.appointment.create({
       data: {
-        appointmentName: `Appointment on ${appointmentDateTime}`,
+        appointmentName: `Appointment - ${appointmentDateTime}`,
         userId: currentUser.id,
         name,
         dob: dateOfBirth === "" ? null : new Date(dateOfBirth),
@@ -56,6 +58,7 @@ export async function POST(request: Request) {
         allergies,
         department,
         dateTime,
+        dateOnly,
         notes,
         status: status || "pending",
         prediction,

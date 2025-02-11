@@ -21,5 +21,5 @@ export type FetchedCookieData = {
 
 export type Activity = Appointment & {
   symptoms: ({ type: string } & Omit<SymptomAnswer, "isOther">)[];
-  user: { profile: Omit<Profile, "id" | "userId" | "createdAt" | "updatedAt"> };
+  // user: { profile: Omit<Profile, "id" | "userId" | "createdAt" | "updatedAt"> };
 };

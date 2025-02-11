@@ -32,7 +32,7 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
 
   const [showFullResults, setShowFullResults] = useState(false);
   const [unavailableDates, setUnavailableDates] = useState<
-    { _count: number; dateTime: Date }[]
+    { _count: number; dateOnly: string }[]
   >([]);
 
   const predictionResults = formData.prediction.split(",");
@@ -185,7 +185,7 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
                       return (
                         date < new Date() ||
                         unavailableDates.some((obj) => {
-                          const unavailableDate = new Date(obj.dateTime);
+                          const unavailableDate = new Date(obj.dateOnly);
                           unavailableDate.setHours(0, 0, 0, 0);
                           return (
                             date.toISOString() === unavailableDate.toISOString()

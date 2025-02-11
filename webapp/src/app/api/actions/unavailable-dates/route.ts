@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     next30Days.setHours(0, 0, 0, 0);
 
     const unavailableDates = await prisma.appointment.groupBy({
-      by: ["dateTime"],
+      by: ["dateOnly"],
       _count: { dateTime: true },
       where: {
         department: department as string,
@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
           // use if limit booking to 30 days
           // lte: next30Days,
         },
+        dateOnly: { not: "" },
       },
       having: {
         dateTime: {
