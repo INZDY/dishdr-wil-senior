@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     //create new appointment
     const newAppointment = await prisma.appointment.create({
       data: {
-        appointmentName: `Appointment - ${appointmentDateTime}`,
+        appointmentName: `${name} - ${appointmentDateTime}`,
         userId: currentUser.id,
         name,
         dob: dateOfBirth === "" ? null : new Date(dateOfBirth),

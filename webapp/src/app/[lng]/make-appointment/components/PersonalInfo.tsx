@@ -55,7 +55,7 @@ export default function PersonalInfo({
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
           <Checkbox id="prev-data" onCheckedChange={handleUsePrevData} />
-          <Label htmlFor="prev-data">Use previous data?</Label>
+          <Label htmlFor="prev-data">{t("prev-data")}</Label>
         </div>
         <div>
           <p className="mb-1 font-semibold">

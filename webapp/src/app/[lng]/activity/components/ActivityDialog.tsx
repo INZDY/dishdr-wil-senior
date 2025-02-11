@@ -70,37 +70,12 @@ export default function ActivityDialog({
               {appointmentList[selectedAppointment]?.name}
             </p>
             <p>
-              <span className="font-semibold mr-2">{t("dob")}:</span>
-              {format(
-                new Date(appointmentList[selectedAppointment]?.dob as Date),
-                "dd/MM/yyyy"
-              )}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">{t("height")}:</span>
-              {appointmentList[selectedAppointment]?.height}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">{t("weight")}:</span>
-              {appointmentList[selectedAppointment]?.weight}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">{t("email")}:</span>
-              {appointmentList[selectedAppointment]?.email}
+              <span className="font-semibold mr-2">{t("hn")}:</span>
+              {appointmentList[selectedAppointment]?.hn}
             </p>
             <p>
               <span className="font-semibold mr-2">{t("phone")}:</span>
               {appointmentList[selectedAppointment]?.phone}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">
-                {t("chronic-disease")}:
-              </span>
-              {appointmentList[selectedAppointment]?.chronicDisease}
-            </p>
-            <p>
-              <span className="font-semibold mr-2">{t("allergy")}:</span>
-              {appointmentList[selectedAppointment]?.allergies}
             </p>
             <p className="flex">
               <span className="font-semibold mr-2">{t("chief")}:</span>
@@ -156,6 +131,14 @@ export default function ActivityDialog({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
+                    {!!appointmentList[selectedAppointment].department
+                      .length && (
+                      <SelectItem
+                        value={appointmentList[selectedAppointment].department}
+                      >
+                        {appointmentList[selectedAppointment].department}
+                      </SelectItem>
+                    )}
                     <SelectItem value="-">-</SelectItem>
                     <SelectItem value="general medicine">
                       General Medicine
@@ -167,7 +150,9 @@ export default function ActivityDialog({
             <p>
               <span className="font-semibold mr-2">{t("status")}:</span>
               {currentUser?.role === "patient" ? (
-                <span>{appointmentList[selectedAppointment].status}</span>
+                <span>
+                  {t(`${appointmentList[selectedAppointment].status}`)}
+                </span>
               ) : (
                 <Select
                   value={
@@ -181,9 +166,9 @@ export default function ActivityDialog({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="approved">Approved</SelectItem>
-                    <SelectItem value="canceled">canceled</SelectItem>
+                    <SelectItem value="pending">{t("pending")}</SelectItem>
+                    <SelectItem value="approved">{t("approved")}</SelectItem>
+                    <SelectItem value="canceled">{t("canceled")}</SelectItem>
                   </SelectContent>
                 </Select>
               )}

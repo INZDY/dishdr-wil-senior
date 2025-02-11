@@ -6,9 +6,18 @@ import { sortPresentIllness, valueToLabel } from "@/utils/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import SymptomDialog from "./symptom-select/SymptomDialog";
 import SymptomSelect from "./symptom-select/SymptomSelect";
+import { useTranslation } from "@/app/i18n/client";
 
-export default function SymptomSelection({ formData, setFormData }: StepProps) {
-  // const [reason, setReason] = useState("");
+interface SymptomSelctionProps extends StepProps {
+  lng: string;
+}
+
+export default function SymptomSelection({
+  formData,
+  setFormData,
+  lng,
+}: SymptomSelctionProps) {
+  const { t } = useTranslation(lng, "make-appointment");
   const [chiefOpen, setChiefOpen] = useState(false);
   const [presentOpen, setPresentOpen] = useState(false);
   const [chiefValue, setChiefValue] = useState("");
@@ -104,26 +113,27 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
   return (
     <>
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-bold">Purpose of Appointment</h2>
+        <h2 className="text-xl font-bold">{t("care-type")}</h2>
         <div className="flex border-t-2 border-gray-400 rounded" />
         <p className="text-sm text-gray-500">
-          Please select the reason for your visit.
-          <span className="text-red-500">*</span>
+          {t("care-type-desc")}
+          <span className="text-red-500"> *</span>
         </p>
 
         <RadioGroup onValueChange={(value) => handleSelectCareType(value)}>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="scheduled" id="scheduled" />
-            <Label htmlFor="scheduled">Scheduled Appointment/Follow-Up</Label>
+            <Label htmlFor="scheduled">{t("scheduled")}</Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="symptoms" id="symptoms" />
-            <Label htmlFor="symptoms">Experiencing Symptoms</Label>
+            <Label htmlFor="symptoms">{t("have-symptoms")}</Label>
           </div>
         </RadioGroup>
 
         {formData.careType === "symptoms" && (
           <SymptomSelect
+            lng={lng}
             chiefOpen={chiefOpen}
             setChiefOpen={setChiefOpen}
             chiefValue={chiefValue}

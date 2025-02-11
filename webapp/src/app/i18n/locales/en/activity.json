@@ -12,9 +12,11 @@
   "save": "Save",
   "filter": "Filter",
   "sort": "Sort",
-  "dialog-title": "Appointment Details",
+  "no-record": "No appointment record",
 
+  "dialog-title": "Appointment Details",
   "name": "Name",
+  "hn": "HN - Nakhon Pathom Hospital",
   "dob": "Date of Birth",
   "height": "Height (cm)",
   "weight": "Weight (kg)",

@@ -1,3 +1,4 @@
+import { useTranslation } from "@/app/i18n/client";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -21,7 +22,16 @@ import { th } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-export default function ResultBooking({ formData, setFormData }: StepProps) {
+interface ResultBookingProps extends StepProps {
+  lng: string;
+}
+
+export default function ResultBooking({
+  formData,
+  setFormData,
+  lng,
+}: ResultBookingProps) {
+  const { t } = useTranslation(lng, "make-appointment");
   const careType = formData.careType;
   const [departmentList, setDepartmentList] = useState<
     {
@@ -92,25 +102,25 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-bold">Result and Appointment Booking</h2>
+      <h2 className="text-xl font-bold">{t("result-booking")}</h2>
       <div className="flex border-t-2 border-gray-400 rounded" />
 
       {/* Prediction Result Section */}
       {careType === "symptoms" && (
         <div className="bg-gray-100 p-4 rounded shadow">
-          <h3 className="text-lg font-semibold">Prediction Result</h3>
+          <h3 className="text-lg font-semibold">{t("prediction-result")}</h3>
           <p>
-            Top Prediction: {topPrediction}{" "}
+            {t("top-prediction")} {topPrediction}{" "}
             {/* ({topPrediction.percentage}%) */}
           </p>
           <Button onClick={handleExpandResults} className="mt-2">
-            {showFullResults ? "Hide Full Results" : "Show Full Results"}
+            {showFullResults ? t("show-full") : t("hide-full")}
           </Button>
           {showFullResults && (
             <ul className="mt-2">
               {predictionResults.map((result, index) => (
                 <li key={index}>
-                  Rank {index + 1}. {result}
+                  {index + 1}. {result}
                   {/* {result.department}: {result.percentage}% */}
                 </li>
               ))}
@@ -121,13 +131,13 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
 
       {/* Make Appointment Section */}
       <div className="flex flex-col gap-4 bg-gray-100 p-4 rounded shadow mt-4">
-        <h3 className="text-lg font-semibold">Make Appointment</h3>
+        <h3 className="text-lg font-semibold">{t("make-appointment")}</h3>
         <div className="flex flex-col gap-4 max-w-lg">
           {/* department selection: disabled */}
           {careType === "scheduled" && (
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Department <span className="text-red-500">*</span>
+                {t("department")} <span className="text-red-500">*</span>
               </label>
               <Select
                 onValueChange={
@@ -136,7 +146,7 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
                 }
               >
                 <SelectTrigger className="bg-white mt-1">
-                  <SelectValue placeholder="Choose" />
+                  <SelectValue placeholder={t("choose")} />
                 </SelectTrigger>
                 <SelectContent>
                   {departmentList.map((dept, index) => (
@@ -151,7 +161,7 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
           {/* date picker */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Date <span className="text-red-500">*</span>
+              {t("date")} <span className="text-red-500">*</span>
             </label>
             <Popover>
               <PopoverTrigger asChild>
@@ -169,7 +179,7 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
                   {formData.dateTime ? (
                     format(formData.dateTime, "PPP", { locale: th })
                   ) : (
-                    <span>Pick a date</span>
+                    <span>{t("pick-date")}</span>
                   )}
                 </Button>
               </PopoverTrigger>
@@ -202,7 +212,7 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Time <span className="text-red-500">*</span>
+              {t("time")} <span className="text-red-500">*</span>
             </label>
             <input
               type="time"
@@ -227,7 +237,7 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
           </div>
           <div className="mt-2">
             <label className="block text-sm font-medium text-gray-700">
-              Additional Notes
+              {t("notes")}
             </label>
             <textarea
               value={formData.notes}

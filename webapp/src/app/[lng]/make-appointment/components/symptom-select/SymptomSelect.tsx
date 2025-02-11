@@ -1,3 +1,4 @@
+import { useTranslation } from "@/app/i18n/client";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -18,6 +19,7 @@ import React from "react";
 import { FaCheck, FaChevronDown, FaRegTrashCan } from "react-icons/fa6";
 
 interface SymptomSelectProps {
+  lng: string;
   chiefOpen: boolean;
   setChiefOpen: React.Dispatch<React.SetStateAction<boolean>>;
   chiefValue: string;
@@ -36,6 +38,7 @@ interface SymptomSelectProps {
 }
 
 export default function SymptomSelect({
+  lng,
   chiefOpen,
   setChiefOpen,
   chiefValue,
@@ -50,14 +53,17 @@ export default function SymptomSelect({
   handleDeletePresentIllness,
   formData,
 }: SymptomSelectProps) {
+  const { t } = useTranslation(lng, "make-appointment");
   return (
     <div>
       {/* Chief complaint */}
       <div className="flex flex-col gap-2">
-        <h3 className="mb-1 font-semibold">Chief complaint</h3>
-        <p className="text-sm text-gray-500">
-          Symptom that makes you seek medical attention. (only 1)
+        <p className="text-sm">
+          <span className="text-red-500">*ฟีเจอร์ทดลอง: </span>
+          ตัวเลือกจะเป็นภาษาอังกฤษ กรอกภาษาไทยได้โดยใช้ตัวเลือก "Other..."
         </p>
+        <h3 className="mb-1 font-semibold">{t("chief")}</h3>
+        <p className="text-sm text-gray-500">{t("chief-desc")}</p>
 
         {/* symptom selection list with dropdown menu */}
         <Popover open={chiefOpen} onOpenChange={setChiefOpen}>
@@ -146,10 +152,8 @@ export default function SymptomSelect({
 
       {/* Present Illness */}
       <div className="flex flex-col gap-2">
-        <h3 className="mb-1 font-semibold">Present illness</h3>
-        <p className="text-sm text-gray-500">
-          Other symptoms that you are experiencing.
-        </p>
+        <h3 className="mb-1 font-semibold">{t("illness")}</h3>
+        <p className="text-sm text-gray-500">{t("illness-desc")}</p>
 
         <Popover open={presentOpen} onOpenChange={setPresentOpen}>
           <PopoverTrigger asChild>

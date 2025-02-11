@@ -216,7 +216,7 @@ export default function Activity({ params }: { params: any }) {
 
         {/* appointments */}
         {appointmentList.length === 0 ? (
-          <p className="py-8 text-center">No appointment record</p>
+          <p className="py-8 text-center">{t("no-record")}</p>
         ) : (
           <div className="space-y-4">
             {filteredAppointments.map((appointment, index) => (
@@ -225,13 +225,13 @@ export default function Activity({ params }: { params: any }) {
                 className="p-4 border rounded flex justify-between items-center bg-neutral-100"
               >
                 <div className="flex flex-col gap-2">
-                  <div className="font-bold">{appointment.appointmentName}</div>
+                  <div className="font-bold">{appointment.name}</div>
                   <div className="text-sm text-gray-500">
                     Department: {appointment.department}
                   </div>
                   <div
                     className={`text-sm ${
-                      appointment.status === "completed"
+                      appointment.status === "approved"
                         ? "text-green-500"
                         : appointment.status === "pending"
                         ? "text-yellow-500"

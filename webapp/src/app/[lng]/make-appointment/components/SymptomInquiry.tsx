@@ -1,3 +1,4 @@
+import { useTranslation } from "@/app/i18n/client";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -6,13 +7,19 @@ import { cn } from "@/lib/utils";
 import { StepProps } from "@/types/formTypes";
 import React, { useEffect, useState } from "react";
 
+interface SymptomInquiryProps extends StepProps {
+  lng: string;
+}
+
 export default function SymptomInquiry({
   formData,
   setFormData,
+  lng,
   handleNext,
   handleBack,
   direction,
-}: StepProps) {
+}: SymptomInquiryProps) {
+  const { t } = useTranslation(lng, "make-appointment");
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
   const [questionsUpdated, setQuestionsUpdated] = useState(false);
@@ -215,20 +222,21 @@ export default function SymptomInquiry({
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-bold">Symptom Inquiry</h2>
+      <h2 className="text-xl font-bold">{t("symptom-inquiry")}</h2>
       <div className="flex border-t-2 border-gray-400 rounded" />
 
       <Progress value={(currentQuestion / inquiryQuestions.length) * 100} />
 
       {loading ? (
-        <div className="skeleton-loader">Processing...</div>
+        <div className="skeleton-loader">{t("processing")}</div>
       ) : (
         <>
           <p
             className={cn(formData.predicted ? "text-gray-500" : "text-black")}
           >
-            Are you experiencing
-            <span> {inquiryQuestions[currentQuestion].symptom}</span>?
+            <span>{t("q-begin")}</span>
+            <span>{inquiryQuestions[currentQuestion].symptom}</span>
+            <span>{t("q-end")}</span>
           </p>
 
           <RadioGroup
@@ -245,11 +253,11 @@ export default function SymptomInquiry({
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="yes" id="option-yes" />
-              <Label htmlFor="option-yes">Yes</Label>
+              <Label htmlFor="option-yes">{t("yes")}</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="no" id="option-no" />
-              <Label htmlFor="option-no">No</Label>
+              <Label htmlFor="option-no">{t("no")}</Label>
             </div>
           </RadioGroup>
 

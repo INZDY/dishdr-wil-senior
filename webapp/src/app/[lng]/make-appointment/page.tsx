@@ -175,21 +175,30 @@ export default function MakeAppointment({ params }: { params: any }) {
         <PersonalInfo formData={formData} setFormData={setFormData} lng={lng} />
       )}
       {step === 2 && (
-        <SymptomSelection formData={formData} setFormData={setFormData} />
+        <SymptomSelection
+          formData={formData}
+          setFormData={setFormData}
+          lng={lng}
+        />
       )}
       {step === 3 && (
         <SymptomInquiry
           formData={formData}
           setFormData={setFormData}
+          lng={lng}
           handleNext={handleNext}
           handleBack={handleBack}
           direction={direction}
         />
       )}
       {step === 4 && (
-        <ResultBooking formData={formData} setFormData={setFormData} />
+        <ResultBooking
+          formData={formData}
+          setFormData={setFormData}
+          lng={lng}
+        />
       )}
-      {step === 5 && <Summary formData={formData} />}
+      {step === 5 && <Summary formData={formData} lng={lng} />}
 
       {/* bottom section */}
       <div className="flex mt-6 items-center">
