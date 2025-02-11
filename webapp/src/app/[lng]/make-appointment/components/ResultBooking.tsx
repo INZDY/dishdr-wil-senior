@@ -114,7 +114,7 @@ export default function ResultBooking({
             {/* ({topPrediction.percentage}%) */}
           </p>
           <Button onClick={handleExpandResults} className="mt-2">
-            {showFullResults ? t("show-full") : t("hide-full")}
+            {showFullResults ? t("hide-full") : t("show-full")}
           </Button>
           {showFullResults && (
             <ul className="mt-2">

@@ -225,7 +225,7 @@ export default function Activity({ params }: { params: any }) {
                 className="p-4 border rounded flex justify-between items-center bg-neutral-100"
               >
                 <div className="flex flex-col gap-2">
-                  <div className="font-bold">{appointment.name}</div>
+                  <div className="font-bold">{appointment.appointmentName}</div>
                   <div className="text-sm text-gray-500">
                     Department: {appointment.department}
                   </div>
