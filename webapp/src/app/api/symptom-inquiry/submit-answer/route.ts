@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const flaskAPI = process.env.NEXT_PUBLIC_FLASK_API;
+    const flaskAPI = process.env.NEXT_PUBLIC_FLASK_URL;
     const currentUser = await getCurrentUser();
     const body = await request.json();
     const { session_id, symptoms } = body;
