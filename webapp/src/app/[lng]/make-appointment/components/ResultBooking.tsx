@@ -17,6 +17,7 @@ import { StepProps } from "@/types/formTypes";
 import { valueToLabel } from "@/utils/utils";
 import { Department } from "@prisma/client";
 import { format, getHours, getMinutes } from "date-fns";
+import { th } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -126,7 +127,7 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
           {careType === "scheduled" && (
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Department
+                Department <span className="text-red-500">*</span>
               </label>
               <Select
                 onValueChange={
@@ -150,12 +151,15 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
           {/* date picker */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Date
+              Date <span className="text-red-500">*</span>
             </label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant={"outline"}
+                  disabled={
+                    careType === "scheduled" && !!!formData.department.length
+                  }
                   className={cn(
                     "w-[280px] justify-start text-left font-normal",
                     !formData.dateTime && "text-muted-foreground"
@@ -163,7 +167,7 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {formData.dateTime ? (
-                    format(formData.dateTime, "PPP")
+                    format(formData.dateTime, "PPP", { locale: th })
                   ) : (
                     <span>Pick a date</span>
                   )}
@@ -176,18 +180,21 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
                   onSelect={(date) => {
                     setFormData({ ...formData, dateTime: date });
                   }}
-                  disabled={(date) => {
-                    return (
-                      date < new Date() ||
-                      unavailableDates.some((obj) => {
-                        const unavailableDate = new Date(obj.dateTime);
-                        unavailableDate.setHours(0, 0, 0, 0);
-                        return (
-                          date.toISOString() === unavailableDate.toISOString()
-                        );
-                      })
-                    );
-                  }}
+                  disabled={[
+                    (date) => {
+                      return (
+                        date < new Date() ||
+                        unavailableDates.some((obj) => {
+                          const unavailableDate = new Date(obj.dateTime);
+                          unavailableDate.setHours(0, 0, 0, 0);
+                          return (
+                            date.toISOString() === unavailableDate.toISOString()
+                          );
+                        })
+                      );
+                    },
+                    { dayOfWeek: [0] },
+                  ]}
                   initialFocus
                 />
               </PopoverContent>
@@ -195,10 +202,13 @@ export default function ResultBooking({ formData, setFormData }: StepProps) {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Time
+              Time <span className="text-red-500">*</span>
             </label>
             <input
               type="time"
+              disabled={
+                careType === "scheduled" && !!!formData.department.length
+              }
               value={`${getHours(formData.dateTime!)
                 .toString()
                 .padStart(2, "0")}:${getMinutes(formData.dateTime!)

@@ -49,6 +49,21 @@ export default function MakeAppointment({ params }: { params: any }) {
     notes: "",
   });
 
+  const handleCheckInput = () => {
+    if (step === 1) {
+      return !formData.name.length || !formData.phone.length;
+    } else if (step === 2) {
+      if (formData.careType === "symptoms") {
+        return !formData.chiefComplaint.symptom.length;
+      }
+      return !formData.careType.length;
+    } else if (step === 4) {
+      return formData.dateTime === undefined;
+    } else {
+      return false;
+    }
+  };
+
   const handleNext = () => {
     if (step === 2) {
       if (formData.careType === "scheduled") {
@@ -202,24 +217,27 @@ export default function MakeAppointment({ params }: { params: any }) {
             </Button>
           )}
           {step < 3 && (
-            <Button onClick={handleNext} className="px-4 py-2 text-base">
+            <Button
+              onClick={handleNext}
+              disabled={handleCheckInput()}
+              className="px-4 py-2 text-base"
+            >
               {t("next")}
               {/* Next */}
             </Button>
           )}
           {step == 4 && (
             <Button
+              disabled={handleCheckInput()}
               onClick={handleConfirmAppointment}
               className="px-4 py-2 text-base"
             >
               {t("confirm")}
-              {/* Confirm */}
             </Button>
           )}
           {step == 5 && (
             <Button onClick={handleNavigate} className="px-4 py-2 text-base">
-              {t("confirm")}
-              {/* Confirm */}
+              {t("return")}
             </Button>
           )}
         </div>

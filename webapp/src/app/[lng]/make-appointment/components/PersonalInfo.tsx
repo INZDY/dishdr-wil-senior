@@ -19,7 +19,7 @@ export default function PersonalInfo({
   const [cookieData, setCookieData] = useState<FetchedCookieData>({});
 
   useEffect(() => {
-    async function fetchDepartments() {
+    async function fetchCookies() {
       const response = await fetch("/api/cookie-data");
 
       if (!response.ok) {
@@ -31,7 +31,7 @@ export default function PersonalInfo({
 
       setCookieData(cookies);
     }
-    fetchDepartments();
+    fetchCookies();
   }, []);
 
   const handleUsePrevData = (useCookie: boolean) => {
@@ -58,7 +58,9 @@ export default function PersonalInfo({
           <Label htmlFor="prev-data">Use previous data?</Label>
         </div>
         <div>
-          <p className="mb-1 font-semibold">{t("name")}</p>
+          <p className="mb-1 font-semibold">
+            {t("name")} <span className="text-red-500">*</span>
+          </p>
           <Input
             type="text"
             value={formData.name}
@@ -124,7 +126,9 @@ export default function PersonalInfo({
         </div> */}
 
         <div>
-          <p className="mb-1 font-semibold">{t("phone")}</p>
+          <p className="mb-1 font-semibold">
+            {t("phone")} <span className="text-red-500">*</span>
+          </p>
           <Input
             type="tel"
             value={formData.phone}

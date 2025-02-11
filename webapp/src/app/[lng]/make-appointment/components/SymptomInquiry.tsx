@@ -120,7 +120,7 @@ export default function SymptomInquiry({
     const updatedQuestions = [...inquiryQuestions];
     updatedQuestions[currentQuestion].answer = answer === "yes" ? true : false;
     setInquiryQuestions([...updatedQuestions]);
-    console.log(inquiryQuestions);
+    // console.log(inquiryQuestions);
   };
 
   const submitAnswers = async () => {

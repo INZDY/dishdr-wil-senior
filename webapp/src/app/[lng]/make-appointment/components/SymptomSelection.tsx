@@ -108,6 +108,7 @@ export default function SymptomSelection({ formData, setFormData }: StepProps) {
         <div className="flex border-t-2 border-gray-400 rounded" />
         <p className="text-sm text-gray-500">
           Please select the reason for your visit.
+          <span className="text-red-500">*</span>
         </p>
 
         <RadioGroup onValueChange={(value) => handleSelectCareType(value)}>
