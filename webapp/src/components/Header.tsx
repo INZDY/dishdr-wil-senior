@@ -45,9 +45,9 @@ export default function Header({ lng }: { lng: string }) {
       {/* logo */}
       <div
         onClick={() => router.push(`/${lng}`)}
-        className="size-12 border-2 hover:cursor-pointer"
+        className="size-12 hover:cursor-pointer"
       >
-        logo
+        {/* logo */}
       </div>
 
       {/* nav links */}
@@ -64,12 +64,12 @@ export default function Header({ lng }: { lng: string }) {
         >
           {t("activity")}
         </button>
-        <button
+        {/* <button
           onClick={() => router.push(`/${lng}/profile`)}
           className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black transition-all"
         >
           {t("profile")}
-        </button>
+        </button> */}
       </div>
 
       {/* login */}
@@ -147,12 +147,12 @@ export default function Header({ lng }: { lng: string }) {
               >
                 {t("activity")}
               </button>
-              <button
+              {/* <button
                 onClick={() => router.push(`/${lng}/profile`)}
                 className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black transition-all"
               >
                 {t("profile")}
-              </button>
+              </button> */}
 
               {/* login */}
               {/* add w-1/12 if want fixed */}
@@ -175,7 +175,7 @@ export default function Header({ lng }: { lng: string }) {
                       onClick={() => signOut()}
                       className="bg-red-600 font-bold hover:bg-neutral-500"
                     >
-                      Log out
+                      {t("logout")}
                     </Button>
                   </PopoverContent>
                 </Popover>

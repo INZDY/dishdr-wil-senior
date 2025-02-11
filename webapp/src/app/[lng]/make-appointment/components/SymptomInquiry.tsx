@@ -1,3 +1,4 @@
+import { useTranslation } from "@/app/i18n/client";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -6,13 +7,19 @@ import { cn } from "@/lib/utils";
 import { StepProps } from "@/types/formTypes";
 import React, { useEffect, useState } from "react";
 
+interface SymptomInquiryProps extends StepProps {
+  lng: string;
+}
+
 export default function SymptomInquiry({
   formData,
   setFormData,
+  lng,
   handleNext,
   handleBack,
   direction,
-}: StepProps) {
+}: SymptomInquiryProps) {
+  const { t } = useTranslation(lng, "make-appointment");
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
   const [questionsUpdated, setQuestionsUpdated] = useState(false);
@@ -25,18 +32,9 @@ export default function SymptomInquiry({
 
   const [warning, setWarning] = useState(false);
   const [loading, setLoading] = useState(true);
-  const predicted = formData.predicted;
 
   useEffect(() => {
-    if (direction === "next" && predicted) {
-      setCurrentQuestion(0);
-      setSelectedAnswer(inquiryQuestions[0].answer ? "yes" : "no");
-    } else if (direction === "back" && predicted) {
-      setCurrentQuestion(inquiryQuestions.length - 1);
-      setSelectedAnswer(
-        inquiryQuestions[inquiryQuestions.length - 1]?.answer ? "yes" : "no"
-      );
-    }
+    setLoading(true);
 
     const fetchQuestions = async () => {
       // get only selected choice from symptom selectio nstep
@@ -67,28 +65,45 @@ export default function SymptomInquiry({
         }
 
         const data = await response.json();
-        console.log(data);
-        // add question/prediction to the form data
-        setInquiryQuestions([
-          { symptom: data.response.question, answer: null },
-        ]);
+        // console.log(data);
+
+        // stop loading only if a question is returned
+        if ("question" in data.response) {
+          setInquiryQuestions([
+            ...inquiryQuestions,
+            { symptom: data.response.question, answer: null },
+          ]);
+          setLoading(false);
+        } else if ("result 1" in data.response) {
+          const responses = Object.keys(data.response)
+            .filter((key) => key.startsWith("result"))
+            .map((key) => data.response[key])
+            .join(", ");
+          setFormData({ ...formData, prediction: responses });
+          setQuestionsUpdated(true);
+        } else {
+          // default suggestion for UX
+          setFormData({
+            ...formData,
+            prediction: "General Medicine",
+          });
+          setQuestionsUpdated(true);
+        }
       } catch (error) {
         console.error("Error getting questions:", error);
       } finally {
-        setLoading(false);
       }
     };
-    if (!predicted) {
+    if (!formData.predicted) {
       fetchQuestions();
     }
-  }, [direction]);
+  }, []);
 
   // TODO: should change and not use useEffect
   useEffect(() => {
     if (questionsUpdated) {
       setQuestionsUpdated(false);
-      console.log(formData.prediction);
-      if (formData.prediction === "") {
+      if (formData.prediction === "" && inquiryQuestions.length > 0) {
         setCurrentQuestion(currentQuestion + 1);
         setSelectedAnswer(
           inquiryQuestions[currentQuestion + 1]?.answer ? "yes" : "no"
@@ -112,7 +127,7 @@ export default function SymptomInquiry({
     const updatedQuestions = [...inquiryQuestions];
     updatedQuestions[currentQuestion].answer = answer === "yes" ? true : false;
     setInquiryQuestions([...updatedQuestions]);
-    console.log(inquiryQuestions);
+    // console.log(inquiryQuestions);
   };
 
   const submitAnswers = async () => {
@@ -197,20 +212,31 @@ export default function SymptomInquiry({
     }
   };
 
+  if (loading) {
+    return (
+      <p className="flex justify-center font-lg text-bold text-white">
+        Loading...
+      </p>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-bold">Symptom Inquiry</h2>
+      <h2 className="text-xl font-bold">{t("symptom-inquiry")}</h2>
       <div className="flex border-t-2 border-gray-400 rounded" />
 
       <Progress value={(currentQuestion / inquiryQuestions.length) * 100} />
 
       {loading ? (
-        <div className="skeleton-loader">Processing...</div>
+        <div className="skeleton-loader">{t("processing")}</div>
       ) : (
         <>
-          <p className={cn(predicted ? "text-gray-500" : "text-black")}>
-            Are you experiencing
-            <span> {inquiryQuestions[currentQuestion].symptom}</span>?
+          <p
+            className={cn(formData.predicted ? "text-gray-500" : "text-black")}
+          >
+            <span>{t("q-begin")}</span>
+            <span>{inquiryQuestions[currentQuestion].symptom}</span>
+            <span>{t("q-end")}</span>
           </p>
 
           <RadioGroup
@@ -222,16 +248,16 @@ export default function SymptomInquiry({
                 : "no"
             }
             onValueChange={handleAnswer}
-            className={cn(predicted ? "text-gray-500" : "text-black")}
-            disabled={predicted}
+            className={cn(formData.predicted ? "text-gray-500" : "text-black")}
+            disabled={formData.predicted}
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="yes" id="option-yes" />
-              <Label htmlFor="option-yes">Yes</Label>
+              <Label htmlFor="option-yes">{t("yes")}</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="no" id="option-no" />
-              <Label htmlFor="option-no">No</Label>
+              <Label htmlFor="option-no">{t("no")}</Label>
             </div>
           </RadioGroup>
 
@@ -239,7 +265,7 @@ export default function SymptomInquiry({
             <p className="text-red-500 text-sm">Please select an answer.</p>
           )}
 
-          {predicted && (
+          {formData.predicted && (
             <p className="text-sm">
               Prediction has started, changes not allowed.
             </p>

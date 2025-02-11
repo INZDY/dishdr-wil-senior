@@ -13,7 +13,7 @@ export default async function getActivities() {
       const allActivities = await prisma.appointment.findMany({
         include: {
           symptoms: true,
-          user: { include: { profile: true } },
+          // user: { include: { profile: true } },
         },
         orderBy: { dateTime: "desc" },
       });
@@ -30,7 +30,7 @@ export default async function getActivities() {
         },
         include: {
           symptoms: true,
-          user: { include: { profile: true } },
+          // user: { include: { profile: true } },
         },
         orderBy: { dateTime: "desc" },
       });

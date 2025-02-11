@@ -12,26 +12,14 @@ export type SymptomAnswer = {
   isOther: boolean;
 };
 
+export type FetchedCookieData = {
+  name?: string;
+  hn?: string;
+  phone?: string;
+  email?: string;
+};
+
 export type Activity = Appointment & {
   symptoms: ({ type: string } & Omit<SymptomAnswer, "isOther">)[];
-  user: { profile: Omit<Profile, "id" | "userId" | "createdAt" | "updatedAt"> };
-  // id: string;
-  // appointmentName: string;
-  // patientId: string;
-  // dateTime: string;
-  // department: string;
-  // prediction: string;
-  // status: string;
-  // notes: string;
-
-  // patient: {
-  //   name: string;
-  //   dateOfBirth: string;
-  //   height: number;
-  //   weight: number;
-  //   email: string;
-  //   phone: string;
-  //   chronicDisease: string;
-  //   allergies: string;
-  // };
+  // user: { profile: Omit<Profile, "id" | "userId" | "createdAt" | "updatedAt"> };
 };

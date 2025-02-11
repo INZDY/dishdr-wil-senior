@@ -25,6 +25,7 @@ import { format } from "date-fns";
 import { User } from "@prisma/client";
 import toast from "react-hot-toast";
 import { useTranslation } from "@/app/i18n/client";
+import ActivityDialog from "./components/ActivityDialog";
 
 export default function Activity({ params }: { params: any }) {
   const { lng } = React.use<{ lng: string }>(params);
@@ -215,7 +216,7 @@ export default function Activity({ params }: { params: any }) {
 
         {/* appointments */}
         {appointmentList.length === 0 ? (
-          <p className="py-8 text-center">No appointment record</p>
+          <p className="py-8 text-center">{t("no-record")}</p>
         ) : (
           <div className="space-y-4">
             {filteredAppointments.map((appointment, index) => (
@@ -224,13 +225,13 @@ export default function Activity({ params }: { params: any }) {
                 className="p-4 border rounded flex justify-between items-center bg-neutral-100"
               >
                 <div className="flex flex-col gap-2">
-                  <div className="font-bold">{appointment.appointmentName}</div>
+                  <div className="font-bold">{appointment.name}</div>
                   <div className="text-sm text-gray-500">
                     Department: {appointment.department}
                   </div>
                   <div
                     className={`text-sm ${
-                      appointment.status === "completed"
+                      appointment.status === "approved"
                         ? "text-green-500"
                         : appointment.status === "pending"
                         ? "text-yellow-500"
@@ -269,163 +270,19 @@ export default function Activity({ params }: { params: any }) {
         )}
       </div>
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>{t("dialog-title")}</DialogTitle>
-          </DialogHeader>
-
-          {appointmentList.length && (
-            <div className="grid gap-4 py-2">
-              <p>
-                <span className="font-semibold mr-2">{t("name")}:</span>
-                {appointmentList[selectedAppointment]?.name}
-              </p>
-              <p>
-                <span className="font-semibold mr-2">{t("dob")}:</span>
-                {format(
-                  new Date(appointmentList[selectedAppointment]?.dob as Date),
-                  "dd/MM/yyyy"
-                )}
-              </p>
-              <p>
-                <span className="font-semibold mr-2">{t("height")}:</span>
-                {appointmentList[selectedAppointment]?.height}
-              </p>
-              <p>
-                <span className="font-semibold mr-2">{t("weight")}:</span>
-                {appointmentList[selectedAppointment]?.weight}
-              </p>
-              <p>
-                <span className="font-semibold mr-2">{t("email")}:</span>
-                {appointmentList[selectedAppointment]?.email}
-              </p>
-              <p>
-                <span className="font-semibold mr-2">{t("phone")}:</span>
-                {appointmentList[selectedAppointment]?.phone}
-              </p>
-              <p>
-                <span className="font-semibold mr-2">
-                  {t("chronic-disease")}:
-                </span>
-                {appointmentList[selectedAppointment]?.chronicDisease}
-              </p>
-              <p>
-                <span className="font-semibold mr-2">{t("allergy")}:</span>
-                {appointmentList[selectedAppointment]?.allergies}
-              </p>
-              <p className="flex">
-                <span className="font-semibold mr-2">{t("chief")}:</span>
-                {appointmentList[selectedAppointment]?.symptoms.map(
-                  (s, index) => {
-                    if (s.type === "chief") {
-                      return (
-                        <span key={index}>
-                          {s.symptom}, {s.duration} {s.unit}
-                        </span>
-                      );
-                    }
-                  }
-                )}
-              </p>
-              <div className="flex">
-                <span className="font-semibold mr-2">{t("illness")}:</span>
-                <div className="flex flex-col gap-1">
-                  {appointmentList[selectedAppointment]?.symptoms.map(
-                    (s, index) => {
-                      if (s.type === "present") {
-                        return (
-                          <p key={index}>
-                            {s.symptom}, {s.duration} {s.unit}
-                          </p>
-                        );
-                      }
-                    }
-                  )}
-                </div>
-              </div>
-              <p>
-                <span className="font-semibold mr-2">{t("app-date")}:</span>
-                {format(
-                  new Date(appointmentList[selectedAppointment]?.dateTime),
-                  "dd/MM/yyyy HH:mm"
-                )}
-              </p>
-              <p>
-                <span className="font-semibold mr-2">{t("dept")}:</span>
-                {currentUser?.role === "patient" ? (
-                  <span>{appointmentList[selectedAppointment].department}</span>
-                ) : (
-                  <Select
-                    value={
-                      department.length
-                        ? department
-                        : appointmentList[selectedAppointment].department
-                    }
-                    onValueChange={(value) => setDepartment(value)}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="-">-</SelectItem>
-                      <SelectItem value="general medicine">
-                        General Medicine
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              </p>
-              <p>
-                <span className="font-semibold mr-2">{t("status")}:</span>
-                {currentUser?.role === "patient" ? (
-                  <span>{appointmentList[selectedAppointment].status}</span>
-                ) : (
-                  <Select
-                    value={
-                      status.length
-                        ? status
-                        : appointmentList[selectedAppointment].status
-                    }
-                    onValueChange={(value) => setStatus(value)}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="approved">Approved</SelectItem>
-                      <SelectItem value="canceled">canceled</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              </p>
-            </div>
-          )}
-          <DialogFooter>
-            <Button
-              onClick={() => {
-                handleEdit(
-                  appointmentList[selectedAppointment].id,
-                  appointmentList[selectedAppointment].department,
-                  appointmentList[selectedAppointment].status
-                );
-                setDialogOpen(false);
-              }}
-            >
-              {t("save")}
-            </Button>
-            <Button
-              type="submit"
-              onClick={() => {
-                setDialogOpen(false);
-              }}
-            >
-              {t("close")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ActivityDialog
+        lng={lng}
+        currentUser={currentUser}
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        appointmentList={appointmentList}
+        selectedAppointment={selectedAppointment}
+        department={department}
+        setDepartment={setDepartment}
+        status={status}
+        setStatus={setStatus}
+        handleEdit={handleEdit}
+      />
     </>
   );
 }

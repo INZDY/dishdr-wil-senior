@@ -1,6 +1,9 @@
 import getCurrentUser from "@/lib/db/getCurrentUser";
 import { prisma } from "@/lib/prisma";
 import { AppointmentSymptoms } from "@prisma/client";
+import { format } from "date-fns";
+import { th } from "date-fns/locale";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -10,6 +13,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const {
       name,
+      hn,
       dateOfBirth,
       height,
       weight,
@@ -18,8 +22,7 @@ export async function POST(request: Request) {
       chronicDiseases,
       allergies,
       department,
-      date,
-      time,
+      dateTime,
       status,
       chiefComplaint,
       presentIllness,
@@ -27,7 +30,13 @@ export async function POST(request: Request) {
       prediction,
       notes,
     } = body;
-    const appointmentDateTime = new Date(`${date} ${time}`);
+
+    const dateObj = new Date(dateTime);
+    const appointmentDateTime = format(dateObj, "PP HH:mm", {
+      locale: th,
+    });
+    const dateOnly = format(dateObj, "yyyy-MM-dd");
+    // console.log(appointmentDateTime);
 
     // user check
     if (!currentUser?.id) {
@@ -37,10 +46,10 @@ export async function POST(request: Request) {
     //create new appointment
     const newAppointment = await prisma.appointment.create({
       data: {
-        appointmentName: `Appointment on ${date} ${time}`,
+        appointmentName: `${name} - ${appointmentDateTime}`,
         userId: currentUser.id,
         name,
-        dob: dateOfBirth,
+        dob: dateOfBirth === "" ? null : new Date(dateOfBirth),
         height,
         weight,
         email,
@@ -48,10 +57,10 @@ export async function POST(request: Request) {
         chronicDisease: chronicDiseases,
         allergies,
         department,
-        dateTime: appointmentDateTime,
+        dateTime,
+        dateOnly,
         notes,
         status: status || "pending",
-        // otherSymptoms: symptoms,
         prediction,
         symptoms: {
           createMany: {
@@ -73,6 +82,12 @@ export async function POST(request: Request) {
         },
       },
     });
+
+    const cookieStore = await cookies();
+    cookieStore.set("name", name);
+    cookieStore.set("hn", hn);
+    cookieStore.set("phone", phone);
+    cookieStore.set("email", email);
 
     return NextResponse.json(newAppointment);
   } catch (error: any) {

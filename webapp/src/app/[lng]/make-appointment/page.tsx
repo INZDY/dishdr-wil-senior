@@ -24,10 +24,9 @@ export default function MakeAppointment({ params }: { params: any }) {
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState<"next" | "back">("next");
   const [formData, setFormData] = useState<FormData>({
-    // sessionId = userId
-    // current dummy - John Doe ID
     sessionId: session?.user?.id as string,
     name: "",
+    hn: "",
     dateOfBirth: "",
     height: 0,
     weight: 0,
@@ -37,11 +36,10 @@ export default function MakeAppointment({ params }: { params: any }) {
     allergies: "",
 
     department: "",
-    date: "",
-    time: "",
+    dateTime: undefined,
     status: "pending",
 
-    // symptoms: [],
+    careType: "",
     chiefComplaint: { symptom: "", duration: 0, unit: "", isOther: false },
     presentIllness: [],
     inquiries: [],
@@ -51,42 +49,58 @@ export default function MakeAppointment({ params }: { params: any }) {
     notes: "",
   });
 
-  // useEffect(() => {
-  //   setFormData({ ...formData, sessionId: session?.user?.id as string });
-  // }, [session]);
+  const handleCheckInput = () => {
+    if (step === 1) {
+      return !formData.name.length || !formData.phone.length;
+    } else if (step === 2) {
+      if (formData.careType === "symptoms") {
+        return !formData.chiefComplaint.symptom.length;
+      }
+      return !formData.careType.length;
+    } else if (step === 4) {
+      return formData.dateTime === undefined;
+    } else {
+      return false;
+    }
+  };
 
   const handleNext = () => {
     if (step === 2) {
-      // TODO: should be able to do this in symptom selection
-      setFormData({
-        ...formData,
-        inquiries: [
-          {
-            type: "chief",
-            symptom: formData.chiefComplaint.symptom,
-            duration: formData.chiefComplaint.duration,
-            unit: formData.chiefComplaint.unit,
-            hasSymptom: true,
-            isOther: formData.chiefComplaint.isOther,
-          },
-          ...formData.presentIllness.map((illness) => {
-            return {
-              type: "present",
-              symptom: illness.symptom,
-              duration: illness.duration,
-              unit: illness.unit,
-              hasSymptom: true,
-              isOther: illness.isOther,
-            };
-          }),
-        ],
-      });
-      if (
-        formData.chiefComplaint.isOther &&
-        formData.presentIllness.every((illness) => illness.isOther)
-      ) {
+      if (formData.careType === "scheduled") {
         // skip to step 4
         setStep((prevStep) => prevStep + 1);
+      } else if (formData.careType === "symptoms") {
+        // TODO: should be able to do this in symptom selection
+        setFormData({
+          ...formData,
+          inquiries: [
+            {
+              type: "chief",
+              symptom: formData.chiefComplaint.symptom,
+              duration: formData.chiefComplaint.duration,
+              unit: formData.chiefComplaint.unit,
+              hasSymptom: true,
+              isOther: formData.chiefComplaint.isOther,
+            },
+            ...formData.presentIllness.map((illness) => {
+              return {
+                type: "present",
+                symptom: illness.symptom,
+                duration: illness.duration,
+                unit: illness.unit,
+                hasSymptom: true,
+                isOther: illness.isOther,
+              };
+            }),
+          ],
+        });
+        if (
+          formData.chiefComplaint.isOther &&
+          formData.presentIllness.every((illness) => illness.isOther)
+        ) {
+          // skip to step 4
+          setStep((prevStep) => prevStep + 1);
+        }
       }
     }
     if (step === 3) {
@@ -95,6 +109,7 @@ export default function MakeAppointment({ params }: { params: any }) {
     setDirection("next");
     setStep((prevStep) => prevStep + 1);
   };
+
   const handleBack = () => {
     if (
       step == 4 &&
@@ -142,6 +157,14 @@ export default function MakeAppointment({ params }: { params: any }) {
     console.log("Save to device");
   };
 
+  if (loading) {
+    return (
+      <p className="flex justify-center font-lg text-bold text-white">
+        Loading...
+      </p>
+    );
+  }
+
   if (!session) {
     router.push("/");
   }
@@ -152,21 +175,30 @@ export default function MakeAppointment({ params }: { params: any }) {
         <PersonalInfo formData={formData} setFormData={setFormData} lng={lng} />
       )}
       {step === 2 && (
-        <SymptomSelection formData={formData} setFormData={setFormData} />
+        <SymptomSelection
+          formData={formData}
+          setFormData={setFormData}
+          lng={lng}
+        />
       )}
       {step === 3 && (
         <SymptomInquiry
           formData={formData}
           setFormData={setFormData}
+          lng={lng}
           handleNext={handleNext}
           handleBack={handleBack}
           direction={direction}
         />
       )}
       {step === 4 && (
-        <ResultBooking formData={formData} setFormData={setFormData} />
+        <ResultBooking
+          formData={formData}
+          setFormData={setFormData}
+          lng={lng}
+        />
       )}
-      {step === 5 && <Summary formData={formData} />}
+      {step === 5 && <Summary formData={formData} lng={lng} />}
 
       {/* bottom section */}
       <div className="flex mt-6 items-center">
@@ -194,24 +226,27 @@ export default function MakeAppointment({ params }: { params: any }) {
             </Button>
           )}
           {step < 3 && (
-            <Button onClick={handleNext} className="px-4 py-2 text-base">
+            <Button
+              onClick={handleNext}
+              disabled={handleCheckInput()}
+              className="px-4 py-2 text-base"
+            >
               {t("next")}
               {/* Next */}
             </Button>
           )}
           {step == 4 && (
             <Button
+              disabled={handleCheckInput()}
               onClick={handleConfirmAppointment}
               className="px-4 py-2 text-base"
             >
               {t("confirm")}
-              {/* Confirm */}
             </Button>
           )}
           {step == 5 && (
             <Button onClick={handleNavigate} className="px-4 py-2 text-base">
-              {t("confirm")}
-              {/* Confirm */}
+              {t("return")}
             </Button>
           )}
         </div>
