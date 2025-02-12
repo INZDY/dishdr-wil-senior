@@ -13,6 +13,8 @@ import Summary from "./components/Summary";
 import { useTranslation } from "@/app/i18n/client";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import { format } from "date-fns";
+import { th } from "date-fns/locale";
 
 export default function MakeAppointment({ params }: { params: any }) {
   const { data: session } = useSession();
@@ -128,12 +130,19 @@ export default function MakeAppointment({ params }: { params: any }) {
     console.log("Confirming appointment", formData);
     // send appointment data to the server
     try {
+      const dateObj = new Date(formData.dateTime!);
+      const appointmentDateTime = format(dateObj, "PP HH:mm", {
+        locale: th,
+      });
+      const appointmentName = `${formData.name} - ${appointmentDateTime}`;
+      const dateOnly = format(dateObj, "yyyy-MM-dd");
+
       const response = await fetch("/api/new-appointment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, appointmentName, dateOnly }),
       });
 
       if (!response.ok) {
