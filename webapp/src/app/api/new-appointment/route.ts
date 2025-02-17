@@ -12,6 +12,8 @@ export async function POST(request: Request) {
     const currentUser = await getCurrentUser();
     const body = await request.json();
     const {
+      appointmentName,
+      dateOnly,
       name,
       hn,
       dateOfBirth,
@@ -31,13 +33,6 @@ export async function POST(request: Request) {
       notes,
     } = body;
 
-    const dateObj = new Date(dateTime);
-    const appointmentDateTime = format(dateObj, "PP HH:mm", {
-      locale: th,
-    });
-    const dateOnly = format(dateObj, "yyyy-MM-dd");
-    // console.log(appointmentDateTime);
-
     // user check
     if (!currentUser?.id) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -46,7 +41,7 @@ export async function POST(request: Request) {
     //create new appointment
     const newAppointment = await prisma.appointment.create({
       data: {
-        appointmentName: `${name} - ${appointmentDateTime}`,
+        appointmentName,
         userId: currentUser.id,
         name,
         dob: dateOfBirth === "" ? null : new Date(dateOfBirth),

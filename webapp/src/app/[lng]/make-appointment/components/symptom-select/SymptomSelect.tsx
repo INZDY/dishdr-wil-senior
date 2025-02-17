@@ -60,7 +60,8 @@ export default function SymptomSelect({
       <div className="flex flex-col gap-2">
         <p className="text-sm">
           <span className="text-red-500">*ฟีเจอร์ทดลอง: </span>
-          ตัวเลือกจะเป็นภาษาอังกฤษ กรอกภาษาไทยได้โดยใช้ตัวเลือก "Other..."
+          ตัวเลือกจะเป็นภาษาอังกฤษ กรอกภาษาไทยได้โดยใช้ตัวเลือก
+          &quot;Other...&quot;
         </p>
         <h3 className="mb-1 font-semibold">{t("chief")}</h3>
         <p className="text-sm text-gray-500">{t("chief-desc")}</p>
