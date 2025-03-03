@@ -6,10 +6,10 @@ export default async function getDepartments() {
     const currentUser = await getCurrentUser();
 
     if (!currentUser) {
-      return [];
+      return { departments: [], timeSlots: [] };
     }
 
-    const symptoms = await prisma.department.findMany({
+    const departments = await prisma.department.findMany({
       where: {
         enabled: true,
       },
@@ -23,12 +23,14 @@ export default async function getDepartments() {
       },
     });
 
-    if (!symptoms) {
-      return [];
+    const timeSlots = await prisma.timeSlot.findMany();
+
+    if (!departments && !timeSlots) {
+      return { departments: [], timeSlots: [] };
     }
 
-    return symptoms;
+    return { departments, timeSlots };
   } catch (error) {
-    return [];
+    return { departments: [], timeSlots: [] };
   }
 }

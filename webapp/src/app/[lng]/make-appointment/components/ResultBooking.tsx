@@ -16,8 +16,9 @@ import {
 import { cn } from "@/lib/utils";
 import { DepartmentFull } from "@/types/dataTypes";
 import { StepProps } from "@/types/formTypes";
-import { valueToLabel } from "@/utils/utils";
-import { format, getHours, getMinutes } from "date-fns";
+import { generateTimeOptions, valueToLabel } from "@/utils/utils";
+import { TimeSlot } from "@prisma/client";
+import { format, getDay, getHours, getMinutes } from "date-fns";
 import { th } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -39,8 +40,13 @@ export default function ResultBooking({
       label: string;
     }[]
   >([]);
+  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
 
   const [showFullResults, setShowFullResults] = useState(false);
+  const predictionResults = formData.prediction.split(",");
+  const topPrediction = predictionResults[0];
+
+  const [timeList, setTimeList] = useState<string[]>([]);
   const [unavailableDates, setUnavailableDates] = useState<
     { _count: number; dateOnly: string }[]
   >([]);
@@ -51,9 +57,6 @@ export default function ResultBooking({
     }[]
   >([]);
 
-  const predictionResults = formData.prediction.split(",");
-  const topPrediction = predictionResults[0];
-
   useEffect(() => {
     async function fetchDepartments() {
       const response = await fetch("/api/actions/department-list");
@@ -62,13 +65,17 @@ export default function ResultBooking({
         throw new Error("Failed to get department list from server");
       }
 
-      const data: DepartmentFull[] = await response.json();
+      const responseData = await response.json();
+      const departmentData: DepartmentFull[] = responseData.departments;
+      const timeSlots: TimeSlot[] = responseData.timeSlots;
 
       // need to transform label format
-      const department = valueToLabel(data);
+      const department = valueToLabel(departmentData);
       setDepartmentList(department);
 
-      const departmentDOW = data.map((dept) => {
+      setTimeSlots(timeSlots);
+
+      const departmentDOW = departmentData.map((dept) => {
         return {
           name: dept.name,
           availability: dept.Availability.filter((item) => item.enabled).map(
@@ -112,6 +119,22 @@ export default function ResultBooking({
     setFormData({ ...formData, department: value });
   };
 
+  const handleDateChange = (date: Date | undefined) => {
+    setFormData({ ...formData, dateTime: date });
+
+    if (!date) {
+      setTimeList([]);
+    } else {
+      const dayOfWeek = getDay(date!);
+      const [start, end] = [
+        timeSlots.find((slot) => slot.dayIndex === dayOfWeek)?.startTime,
+        timeSlots.find((slot) => slot.dayIndex === dayOfWeek)?.endTime,
+      ];
+
+      setTimeList(generateTimeOptions(start!, end!));
+    }
+  };
+
   const findDeptUnavailableDOW = () => {
     const unavailableArray = [0, 1, 2, 3, 4, 5, 6];
     const result = deptUADOW.find((item) => item.name === formData.department);
@@ -135,7 +158,6 @@ export default function ResultBooking({
           <h3 className="text-lg font-semibold">{t("prediction-result")}</h3>
           <p>
             {t("top-prediction")} {topPrediction}{" "}
-            {/* ({topPrediction.percentage}%) */}
           </p>
           <Button onClick={handleExpandResults} className="mt-2">
             {showFullResults ? t("hide-full") : t("show-full")}
@@ -145,7 +167,6 @@ export default function ResultBooking({
               {predictionResults.map((result, index) => (
                 <li key={index}>
                   {index + 1}. {result}
-                  {/* {result.department}: {result.percentage}% */}
                 </li>
               ))}
             </ul>
@@ -163,12 +184,7 @@ export default function ResultBooking({
               <label className="block text-sm font-medium text-gray-700">
                 {t("department")} <span className="text-red-500">*</span>
               </label>
-              <Select
-                onValueChange={
-                  (value) => handleDepartmentChange(value)
-                  // setFormData({ ...formData, department: value })
-                }
-              >
+              <Select onValueChange={(value) => handleDepartmentChange(value)}>
                 <SelectTrigger className="bg-white mt-1">
                   <SelectValue placeholder={t("choose")} />
                 </SelectTrigger>
@@ -216,9 +232,7 @@ export default function ResultBooking({
                     day_selected: `bg-sky-400 text-white`,
                   }}
                   selected={formData.dateTime}
-                  onSelect={(date) => {
-                    setFormData({ ...formData, dateTime: date });
-                  }}
+                  onSelect={(date) => handleDateChange(date)}
                   disabled={[
                     (date) => {
                       return (
@@ -246,26 +260,26 @@ export default function ResultBooking({
             <label className="block text-sm font-medium text-gray-700">
               {t("time")} <span className="text-red-500">*</span>
             </label>
-            <input
-              type="time"
-              disabled={
-                careType === "scheduled" && !!!formData.department.length
-              }
-              value={`${getHours(formData.dateTime!)
-                .toString()
-                .padStart(2, "0")}:${getMinutes(formData.dateTime!)
-                .toString()
-                .padStart(2, "0")}`}
-              onChange={(e) => {
-                const value = e.target.value;
+            <Select
+              onValueChange={(value) => {
                 const [hour, minute] = value.split(":").map(Number);
                 const dateObj = new Date(formData.dateTime!);
                 dateObj.setHours(hour, minute, 0, 0);
 
                 setFormData({ ...formData, dateTime: dateObj });
               }}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-            />
+            >
+              <SelectTrigger className="bg-white mt-1">
+                <SelectValue placeholder="Choose..." />
+              </SelectTrigger>
+              <SelectContent>
+                {timeList.map((time, index) => (
+                  <SelectItem key={index} value={time}>
+                    {time}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="mt-2">
             <label className="block text-sm font-medium text-gray-700">
