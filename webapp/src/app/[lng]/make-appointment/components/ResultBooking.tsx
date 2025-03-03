@@ -14,9 +14,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { DepartmentFull } from "@/types/dataTypes";
 import { StepProps } from "@/types/formTypes";
 import { valueToLabel } from "@/utils/utils";
-import { Department } from "@prisma/client";
 import { format, getHours, getMinutes } from "date-fns";
 import { th } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
@@ -44,6 +44,12 @@ export default function ResultBooking({
   const [unavailableDates, setUnavailableDates] = useState<
     { _count: number; dateOnly: string }[]
   >([]);
+  const [deptUADOW, setDeptUADOW] = useState<
+    {
+      name: string;
+      availability: number[];
+    }[]
+  >([]);
 
   const predictionResults = formData.prediction.split(",");
   const topPrediction = predictionResults[0];
@@ -56,11 +62,21 @@ export default function ResultBooking({
         throw new Error("Failed to get department list from server");
       }
 
-      const data: Department[] = await response.json();
+      const data: DepartmentFull[] = await response.json();
 
       // need to transform label format
       const department = valueToLabel(data);
       setDepartmentList(department);
+
+      const departmentDOW = data.map((dept) => {
+        return {
+          name: dept.name,
+          availability: dept.Availability.filter((item) => item.enabled).map(
+            (item) => item.dayOfWeek
+          ),
+        };
+      });
+      setDeptUADOW(departmentDOW);
     }
     fetchDepartments();
   }, []);
@@ -94,6 +110,14 @@ export default function ResultBooking({
 
   const handleDepartmentChange = (value: string) => {
     setFormData({ ...formData, department: value });
+  };
+
+  const findDeptUnavailableDOW = () => {
+    const unavailableArray = [0, 1, 2, 3, 4, 5, 6];
+    const result = deptUADOW.find((item) => item.name === formData.department);
+    return result
+      ? unavailableArray.filter((num) => !result.availability.includes(num))
+      : [];
   };
 
   const handleNotesChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -186,6 +210,11 @@ export default function ResultBooking({
               <PopoverContent className="w-auto p-0">
                 <Calendar
                   mode="single"
+                  classNames={{
+                    cell: `text-green-600`,
+                    day_disabled: `text-red-600`,
+                    day_selected: `bg-sky-400 text-white`,
+                  }}
                   selected={formData.dateTime}
                   onSelect={(date) => {
                     setFormData({ ...formData, dateTime: date });
@@ -204,6 +233,9 @@ export default function ResultBooking({
                       );
                     },
                     { dayOfWeek: [0] },
+                    {
+                      dayOfWeek: findDeptUnavailableDOW(),
+                    },
                   ]}
                   initialFocus
                 />

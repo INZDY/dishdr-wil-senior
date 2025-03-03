@@ -17,9 +17,28 @@ model Symptom {
 }
 
 model Department {
-  id      Int     @id @default(autoincrement())
-  name    String  @unique
-  enabled Boolean @default(true)
+  id           Int            @id @default(autoincrement())
+  name         String         @unique
+  enabled      Boolean        @default(true)
+  Availability Availability[]
+}
+
+model Availability {
+  id           Int        @id @default(autoincrement())
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId Int
+  dayOfWeek    Int
+  enabled      Boolean    @default(true)
+
+  @@unique([departmentId, dayOfWeek])
+}
+
+model TimeSlot {
+  id        Int    @id @default(autoincrement())
+  dayOfWeek String
+  dayIndex  Int
+  startTime String
+  endTime   String
 }
 
 model User {

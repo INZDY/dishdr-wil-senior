@@ -11,14 +11,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { Activity } from "@/types/dataTypes";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { format } from "date-fns";

@@ -13,6 +13,14 @@ export default async function getDepartments() {
       where: {
         enabled: true,
       },
+      include: {
+        Availability: {
+          select: {
+            dayOfWeek: true,
+            enabled: true,
+          },
+        },
+      },
     });
 
     if (!symptoms) {
