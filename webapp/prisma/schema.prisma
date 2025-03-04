@@ -25,7 +25,7 @@ model Department {
 
 model DepartmentSchedule {
   id           Int        @id @default(autoincrement())
-  department   Department @relation(fields: [departmentId], references: [id])
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
   departmentId Int
   dayOfWeek    Int
   enabled      Boolean    @default(true)
