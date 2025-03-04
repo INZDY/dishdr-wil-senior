@@ -25,5 +25,5 @@ export type Activity = Appointment & {
 };
 
 export type DepartmentFull = Department & {
-  Availability: { dayOfWeek: number; enabled: boolean }[];
+  departmentSchedules: { dayOfWeek: number; enabled: boolean }[];
 };

@@ -70,17 +70,16 @@ export default function ResultBooking({
       const timeSlots: TimeSlot[] = responseData.timeSlots;
 
       // need to transform label format
-      const department = valueToLabel(departmentData);
-      setDepartmentList(department);
+      setDepartmentList(valueToLabel(departmentData));
 
       setTimeSlots(timeSlots);
 
       const departmentDOW = departmentData.map((dept) => {
         return {
           name: dept.name,
-          availability: dept.Availability.filter((item) => item.enabled).map(
-            (item) => item.dayOfWeek
-          ),
+          availability: dept.departmentSchedules
+            .filter((item) => item.enabled)
+            .map((item) => item.dayOfWeek),
         };
       });
       setDeptUADOW(departmentDOW);
@@ -136,6 +135,9 @@ export default function ResultBooking({
   };
 
   const findDeptUnavailableDOW = () => {
+    // need to change DepartmentSchedules table to include all DoW
+    // then filter out the enabled ones
+    // instead of doing this
     const unavailableArray = [0, 1, 2, 3, 4, 5, 6];
     const result = deptUADOW.find((item) => item.name === formData.department);
     return result
@@ -270,7 +272,7 @@ export default function ResultBooking({
               }}
             >
               <SelectTrigger className="bg-white mt-1">
-                <SelectValue placeholder="Choose..." />
+                <SelectValue placeholder={t("choose")} />
               </SelectTrigger>
               <SelectContent>
                 {timeList.map((time, index) => (

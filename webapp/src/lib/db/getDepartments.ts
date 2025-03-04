@@ -14,7 +14,7 @@ export default async function getDepartments() {
         enabled: true,
       },
       include: {
-        Availability: {
+        departmentSchedules: {
           select: {
             dayOfWeek: true,
             enabled: true,

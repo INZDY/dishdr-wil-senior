@@ -17,13 +17,13 @@ model Symptom {
 }
 
 model Department {
-  id           Int            @id @default(autoincrement())
-  name         String         @unique
-  enabled      Boolean        @default(true)
-  Availability Availability[]
+  id                  Int                  @id @default(autoincrement())
+  name                String               @unique
+  enabled             Boolean              @default(true)
+  departmentSchedules DepartmentSchedule[]
 }
 
-model Availability {
+model DepartmentSchedule {
   id           Int        @id @default(autoincrement())
   department   Department @relation(fields: [departmentId], references: [id])
   departmentId Int

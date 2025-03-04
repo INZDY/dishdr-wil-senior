@@ -1,20 +1,19 @@
 "use client";
 
 import { useTranslation } from "@/app/i18n/client";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import toast from "react-hot-toast";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { MdMenu } from "react-icons/md";
 
 export default function Header({ lng }: { lng: string }) {
   const { t } = useTranslation(lng, "make-appointment");
   const router = useRouter();
-  const currentUser = useCurrentUser();
+  const currentUser = useSession().data?.user;
 
   const currentPath = usePathname().substring(3);
 
@@ -46,17 +45,10 @@ export default function Header({ lng }: { lng: string }) {
           {t("activity")}
         </button>
         {/* <button
-          onClick={() => router.push(`/${lng}/profile`)}
+          onClick={() => router.push(`/${lng}/config`)}
           className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black transition-all"
         >
-          {t("profile")}
-        </button> */}
-        {}
-        {/* <button
-          onClick={() => router.push(`/${lng}/settings`)}
-          className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black transition-all"
-        >
-          ตั้งค่า
+          Config
         </button> */}
       </div>
 
@@ -136,10 +128,10 @@ export default function Header({ lng }: { lng: string }) {
                 {t("activity")}
               </button>
               {/* <button
-                onClick={() => router.push(`/${lng}/profile`)}
-                className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black transition-all"
+                onClick={() => router.push(`/${lng}/config`)}
+                className="px-2 rounded-md text-black font-semibold hover:bg-gray-300 hover:text-black transition-all"
               >
-                {t("profile")}
+                Config
               </button> */}
 
               {/* login */}
