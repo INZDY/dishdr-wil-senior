@@ -1,32 +1,31 @@
+import { AppointmentSymptoms } from "@prisma/client";
 import { SymptomAnswer } from "./dataTypes";
 
 // inquiries: should be list of {question, answer}
 export interface FormData {
   sessionId: string;
   name: string;
+  hn: string;
   dateOfBirth: string;
   height: number;
   weight: number;
   email: string;
   phone: string;
-  // patientId: string;
   chronicDiseases: string;
   allergies: string;
 
   department: string;
-  date: string;
-  time: string;
+  dateTime: Date | undefined;
   status: string | null;
 
-  symptoms: string[];
+  careType: string;
   chiefComplaint: SymptomAnswer;
   presentIllness: SymptomAnswer[];
-  inquiries: string[];
+  inquiries: Omit<AppointmentSymptoms, "id" | "appointmentId">[];
   predicted: boolean;
   prediction: string;
 
   notes: string;
-  // bookingDetails: { confirmed: boolean } | null;
 }
 
 export interface StepProps {

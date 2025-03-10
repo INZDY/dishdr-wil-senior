@@ -1,0 +1,11 @@
+{
+  "title": "Dishdr",
+  "home": "Home",
+  "activity": "Activity",
+  "profile": "Profile",
+  "login": "Log in",
+  "logout": "Log out",
+  "signup": "Signup",
+
+  "line-login": "Log in with LINE"
+}

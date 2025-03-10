@@ -1,7 +1,7 @@
 import { prisma } from "../prisma";
 import getCurrentUser from "./getCurrentUser";
 
-export default async function getSymptoms() {
+export default async function getDepartments() {
   try {
     const currentUser = await getCurrentUser();
 
@@ -9,7 +9,7 @@ export default async function getSymptoms() {
       return [];
     }
 
-    const symptoms = await prisma.symptom.findMany({
+    const symptoms = await prisma.department.findMany({
       where: {
         enabled: true,
       },

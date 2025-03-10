@@ -1,14 +1,21 @@
+import getCurrentUser from "@/lib/db/getCurrentUser";
 import { prisma } from "@/lib/prisma";
-import { SymptomAnswer } from "@/types/dataTypes";
+import { AppointmentSymptoms } from "@prisma/client";
+import { format } from "date-fns";
+import { th } from "date-fns/locale";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
     // John Doe is the current user
-    const currentUser = { id: "m5xvlaj522ldwmn3q3rr0m8l" };
+    const currentUser = await getCurrentUser();
     const body = await request.json();
     const {
+      appointmentName,
+      dateOnly,
       name,
+      hn,
       dateOfBirth,
       height,
       weight,
@@ -17,16 +24,14 @@ export async function POST(request: Request) {
       chronicDiseases,
       allergies,
       department,
-      date,
-      time,
+      dateTime,
       status,
-      symptoms,
       chiefComplaint,
       presentIllness,
+      inquiries,
       prediction,
       notes,
     } = body;
-    const appointmentDateTime = new Date(`${date} ${time}`);
 
     // user check
     if (!currentUser?.id) {
@@ -36,33 +41,48 @@ export async function POST(request: Request) {
     //create new appointment
     const newAppointment = await prisma.appointment.create({
       data: {
-        patientId: currentUser.id,
+        appointmentName,
+        userId: currentUser.id,
+        name,
+        dob: dateOfBirth === "" ? null : new Date(dateOfBirth),
+        height,
+        weight,
+        email,
+        phone,
+        chronicDisease: chronicDiseases,
+        allergies,
         department,
-        dateTime: appointmentDateTime,
+        dateTime,
+        dateOnly,
         notes,
         status: status || "pending",
-        // otherSymptoms: symptoms,
         prediction,
         symptoms: {
           createMany: {
             data: [
-              {
-                type: "chief",
-                symptom: chiefComplaint.symptom,
-                duration: chiefComplaint.duration,
-                unit: chiefComplaint.unit,
-              },
-              ...presentIllness.map((illness: SymptomAnswer) => ({
-                type: "present",
-                symptom: illness.symptom,
-                duration: illness.duration,
-                unit: illness.unit,
-              })),
+              ...inquiries.map(
+                (
+                  illness: Omit<AppointmentSymptoms, "id" | "appointmentId">
+                ) => ({
+                  type: illness.type,
+                  symptom: illness.symptom,
+                  duration: illness.duration,
+                  unit: illness.unit,
+                  hasSymptom: illness.hasSymptom,
+                  isOther: illness.isOther,
+                })
+              ),
             ],
           },
         },
       },
     });
+
+    const cookieStore = await cookies();
+    cookieStore.set("name", name);
+    cookieStore.set("hn", hn);
+    cookieStore.set("phone", phone);
+    cookieStore.set("email", email);
 
     return NextResponse.json(newAppointment);
   } catch (error: any) {

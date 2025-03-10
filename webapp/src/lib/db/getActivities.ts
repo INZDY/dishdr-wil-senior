@@ -9,21 +9,39 @@ export default async function getActivities() {
       return [];
     }
 
-    const activities = await prisma.appointment.findMany({
-      where: {
-        patientId: currentUser.id,
-      },
-      include: {
-        symptoms: true,
-        patient: true,
-      },
-    });
+    if (currentUser.role === "staff") {
+      const allActivities = await prisma.appointment.findMany({
+        include: {
+          symptoms: true,
+          // user: { include: { profile: true } },
+        },
+        orderBy: { dateTime: "desc" },
+      });
 
-    if (!activities) {
-      return [];
+      if (!allActivities) {
+        return [];
+      }
+
+      return allActivities;
+    } else if (currentUser.role === "patient") {
+      const userActivities = await prisma.appointment.findMany({
+        where: {
+          userId: currentUser.id,
+        },
+        include: {
+          symptoms: true,
+          // user: { include: { profile: true } },
+        },
+        orderBy: { dateTime: "desc" },
+      });
+
+      if (!userActivities) {
+        return [];
+      }
+      return userActivities;
     }
 
-    return activities;
+    return [];
   } catch (error) {
     return [];
   }
