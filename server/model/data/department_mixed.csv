@@ -1,0 +1,30 @@
+﻿disease,th,en
+Acute COPD exacerbation / infection,อายุรกรรม-ปอด,MED-PUL
+Acute laryngitis,หู-คอ-จมูก,ENT
+Acute otitis media,หู-คอ-จมูก,ENT
+Acute pulmonary edema,อายุรกรรม-ปอด,MED-PUL
+Acute rhinosinusitis,หู-คอ-จมูก,ENT
+Allergic sinusitis,หู-คอ-จมูก,ENT
+Anemia,อายุรกรรม-โรคเลือด,MED-HEM
+Atrial fibrillation,อายุรกรรม-หัวใจ,MED-CAR
+Bronchiectasis,อายุรกรรม-ปอด,MED-PUL
+Bronchitis,อายุรกรรม-ปอด,MED-PUL
+Bronchospasm / acute asthma exacerbation,อายุรกรรม-ปอด,MED-PUL
+Cluster headache,โรคทั่วไป,GP
+Croup,โรคทั่วไป,GP
+Epiglottitis,หู-คอ-จมูก,ENT
+GERD,อายุรกรรม-ทางเดินอาหาร,MED-GI
+Influenza,โรคทั่วไป,GP
+Inguinal hernia,ศัลยกรรมทั่วไป,SUR-GEN
+Panic attack,จิตเวช,PSY
+Pericarditis,อายุรกรรม-หัวใจ,MED-CAR
+Pneumonia,อายุรกรรม-ปอด,MED-PUL
+Possible NSTEMI / STEM,อายุรกรรม-หัวใจ,MED-CAR
+Pulmonary embolism,อายุรกรรม-ปอด,MED-PUL
+Pulmonary neoplasm,อายุรกรรม-ปอด,MED-PUL
+SLE,อายุรกรรม-ทั่วไป,MED-GEN
+Stable angina,อายุรกรรม-หัวใจ,MED-CAR
+Tuberculosis,อายุรกรรม-ทั่วไป,MED-GEN
+URT,โรคทั่วไป,GP
+Unstable angina,อายุรกรรม-หัวใจ,MED-CAR
+Viral pharyngitis,โรคทั่วไป,GP
