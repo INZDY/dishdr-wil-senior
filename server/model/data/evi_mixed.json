@@ -1,0 +1,582 @@
+{
+    "E_70": {
+        "th": "คุณมีน้ำหนักเกินอย่างมากเมื่อเทียบกับคนที่สูงเท่าคุณหรือไม่?",
+        "en": "Are you significantly overweight compared to people of the same height as you?"
+    },
+    "E_72": {
+        "th": "คุณมีอาการกำเริบของโรคปอดอุดกั้นเรื้อรังหนึ่งครั้งหรือหลายครั้งในปีที่ผ่านมาหรือไม่?",
+        "en": "Have you had one or several flare ups of chronic obstructive pulmonary disease (COPD) in the past year?"
+    },
+    "E_5": {
+        "th": "คุณเคยมีน้ำในปอดหรือไม่?",
+        "en": "Have you ever had fluid in your lungs?"
+    },
+    "E_207": {
+        "th": "คุณอาศัยอยู่ในเมืองใหญ่หรือไม่?",
+        "en": "Do you live in in a big city?"
+    },
+    "E_22": {
+        "th": "คุณมีปัญหาที่รู้จักเกี่ยวกับวาล์วหัวใจของคุณหรือไม่?",
+        "en": "Do you have a known issue with one of your heart valves?"
+    },
+    "E_226": {
+        "th": "คุณมีความเสี่ยงที่จะเป็นภูมิแพ้ทั่วไปมากกว่าคนทั่วไปหรือไม่?",
+        "en": "Are you more likely to develop common allergies than the general population?"
+    },
+    "E_46": {
+        "th": "คุณเคยมีอาการหอบหืด 2 ครั้งขึ้นไปในปีที่ผ่านมาหรือไม่?",
+        "en": "Have you had 2 or more asthma attacks in the past year?"
+    },
+    "E_175": {
+        "th": "คุณสังเกตเห็นความอ่อนเพลีย, อาการไม่สบายทั่วไป, ปวดกล้ามเนื้อทั่วร่างกาย หรือการเปลี่ยนแปลงในสภาวะทั่วไปที่เกี่ยวข้องกับการปรึกษาของคุณวันนี้หรือไม่?",
+        "en": "Have you noticed any new fatigue, generalized and vague discomfort, diffuse (widespread) muscle aches or a change in your general well-being related to your consultation today?"
+    },
+    "E_1": {
+        "th": "ตอนนี้คุณกำลังได้รับการรักษาหรือเพิ่งได้รับการรักษาด้วยยาปฏิชีวนะสำหรับการติดเชื้อที่หูหรือไม่?",
+        "en": "Are you currently being treated or have you recently been treated with an oral antibiotic for an ear infection?"
+    },
+    "E_222": {
+        "th": "คุณได้รับควันบุหรี่มือสองทุกวันหรือไม่?",
+        "en": "Are you exposed to secondhand cigarette smoke on a daily basis?"
+    },
+    "E_139": {
+        "th": "คุณมีความผิดปกติของหัวใจที่รู้จักหรือไม่?",
+        "en": "Do you have a known heart defect?"
+    },
+    "E_77": {
+        "th": "คุณมีอาการไอที่มีเสมหะสีหรือมากกว่าปกติหรือไม่?",
+        "en": "Do you have a cough that produces colored or more abundant sputum than usual?"
+    },
+    "E_16": {
+        "th": "คุณรู้สึกวิตกกังวลหรือไม่?",
+        "en": "Do you feel anxious?"
+    },
+    "E_161": {
+        "th": "คุณเคยมีอาการเบื่ออาหารหรือรู้สึกอิ่มเร็วขึ้นกว่าปกติหรือไม่?",
+        "en": "Have you recently had a loss of appetite or do you get full more quickly then usually?"
+    },
+    "E_127": {
+        "th": "คุณรู้สึกว่าตาของคุณมีน้ำตาหรือเปล่า?",
+        "en": "Do you feel that your eyes produce excessive tears?"
+    },
+    "E_87": {
+        "th": "คุณมีสมาชิกในครอบครัวที่เป็นโรคหอบหืดหรือไม่?",
+        "en": "Do you have any family members who have asthma?"
+    },
+    "E_4": {
+        "th": "คุณหรือสมาชิกในครอบครัวเคยมีอาการโรคครูป (croup) หรือไม่?",
+        "en": "Have you or any member of your family ever had croup?"
+    },
+    "E_18": {
+        "th": "คุณมีโรคซีสติกไฟโบรซิสหรือไม่?",
+        "en": "Do you have cystic fibrosis?"
+    },
+    "E_2": {
+        "th": "คุณติดเชื้อไวรัสเอชไอวี (HIV) หรือไม่?",
+        "en": "Are you infected with the human immunodeficiency virus (HIV)?"
+    },
+    "E_29": {
+        "th": "สมาชิกในครอบครัวของคุณมีอาการป่วยทางจิตเวชหรือไม่?",
+        "en": "Do any members of your immediate family have a psychiatric illness?"
+    },
+    "E_171": {
+        "th": "คุณรู้สึกเหมือนตัวเองหลุดออกจากร่างกายหรือรอบข้างหรือไม่?",
+        "en": "Do you feel like you are detached from your own body or your surroundings?"
+    },
+    "E_176": {
+        "th": "คุณเคยมีหรือกำลังมีอาการอ่อนแรง/อัมพาตที่แขนข้างใดข้างหนึ่งหรือใบหน้าหรือไม่?",
+        "en": "Did you previously, or do you currently, have any weakness/paralysis in one or more of your limbs or in your face?"
+    },
+    "E_66": {
+        "th": "คุณมีอาการหายใจลำบากหรือหายใจไม่สะดวกอย่างรุนแรงหรือไม่?",
+        "en": "Are you experiencing shortness of breath or difficulty breathing in a significant way?"
+    },
+    "E_181": {
+        "th": "คุณมีอาการคัดจมูกหรือมีน้ำมูกใสๆ หรือไม่?",
+        "en": "Do you have nasal congestion or a clear runny nose?"
+    },
+    "E_221": {
+        "th": "อาการหรือความเจ็บปวดของคุณแย่ลงเมื่อไอ, เมื่อพยายามยกของหนัก หรือจากการเบ่งอุจจาระหรือไม่?",
+        "en": "Are the symptoms or pain increased with coughing, with an effort like lifting a weight or from forcing a bowel movement?"
+    },
+    "E_220": {
+        "th": "คุณมีอาการปวดที่แย่ลงเมื่อหายใจลึกหรือไม่?",
+        "en": "Do you have pain that is increased when you breathe in deeply?"
+    },
+    "E_108": {
+        "th": "คุณมีปัญหาเรื่องการหมุนเวียนเลือดไม่ดีหรือไม่?",
+        "en": "Do you have a problem with poor circulation?"
+    },
+    "E_144": {
+        "th": "คุณมีอาการปวดกล้ามเนื้อทั่วร่างกายหรือไม่?",
+        "en": "Do you have diffuse (widespread) muscle pain?"
+    },
+    "E_157": {
+        "th": "คุณเคยมีอาการชาตามแขนและขาทั้งสองข้างหรือบริเวณรอบปากเมื่อเร็วๆ นี้หรือไม่?",
+        "en": "Have you recently had numbness, loss of sensation or tingling, in both arms and legs and around your mouth?"
+    },
+    "E_202": {
+        "th": "คนนี้มีอาการไอกรนหรือไม่?",
+        "en": "Does the person have a whooping cough?"
+    },
+    "E_47": {
+        "th": "คุณเป็นโรคโครห์น หรือโรคลำไส้ใหญ่อักเสบเรื้อรัง หรือไม่?",
+        "en": "Do you suffer from Crohn 2019s disease or ulcerative colitis (UC)?"
+    },
+    "E_123": {
+        "th": "คุณมีโรคปอดอุดกั้นเรื้อรังหรือไม่?",
+        "en": "Do you have a chronic obstructive pulmonary disease (COPD)?"
+    },
+    "E_100": {
+        "th": "ตอนนี้คุณกำลังใช้ฮอร์โมนอยู่หรือไม่?",
+        "en": "Do you currently take hormones?"
+    },
+    "E_148": {
+        "th": "คุณรู้สึกคลื่นไส้หรือรู้สึกอยากอาเจียนหรือไม่?",
+        "en": "Are you feeling nauseous or do you feel like vomiting?"
+    },
+    "E_79": {
+        "th": "คุณสูบบุหรี่หรือไม่?",
+        "en": "Do you smoke cigarettes?"
+    },
+    "E_110": {
+        "th": "คุณเคยไม่สามารถขยับตัวหรือลุกขึ้นจากที่นอนเกิน 3 วันติดต่อกันในช่วง 4 สัปดาห์ที่ผ่านมาไหม?",
+        "en": "Have you been unable to move or get up for more than 3 consecutive days within the last 4 weeks?"
+    },
+    "E_116": {
+        "th": "คุณเป็นหวัดในช่วง 2 สัปดาห์ที่ผ่านมาไหม?",
+        "en": "Have you had a cold in the last 2 weeks?"
+    },
+    "E_31": {
+        "th": "คุณมีโรคปอดอุดกั้นเรื้อรังอย่างรุนแรงหรือไม่?",
+        "en": "Do you have severe Chronic Obstructive Pulmonary Disease (COPD)?"
+    },
+    "E_155": {
+        "th": "คุณรู้สึกว่าใจเต้นเร็ว/เต้นผิดปกติ/ขาดจังหวะหรือรู้สึกมีอาการใจสั่นหรือไม่?",
+        "en": "Do you feel your heart is beating fast (racing), irregularly (missing a beat) or do you feel palpitations?"
+    },
+    "E_17": {
+        "th": "คุณมีเชื้อสายชาวเอเชียหรือไม่?",
+        "en": "Are you of Asian descent?"
+    },
+    "E_206": {
+        "th": "คุณมีแผลในปากหรือแผลร้อนในที่เจ็บหรือไม่?",
+        "en": "Do you have painful mouth ulcers or sores?"
+    },
+    "E_121": {
+        "th": "คุณมีภาวะกระดูกกั้นจมูกเบี้ยวหรือไม่?",
+        "en": "Do you have a deviated nasal septum?"
+    },
+    "E_97": {
+        "th": "คุณมีอาการเจ็บคอหรือไม่?",
+        "en": "Do you have a sore throat?"
+    },
+    "E_94": {
+        "th": "คุณเคยมีอาการหนาวสั่นหรือไม่?",
+        "en": "Have you had chills or shivers?"
+    },
+    "E_169": {
+        "th": "คุณมีอาการคันที่จมูกหรือคอหลังหรือไม่?",
+        "en": "Is your nose or the back of your throat itchy?"
+    },
+    "E_199": {
+        "th": "คุณทำงานในภาคก่อสร้างหรือไม่?",
+        "en": "Do you work in construction?"
+    },
+    "E_65": {
+        "th": "คุณมีอาการกลืนน้ำลายลำบากหรือมีความรู้สึกอึดอัด/อุดตันเมื่อกลืนน้ำหรือไม่?",
+        "en": "Do you have difficulty swallowing, or have a feeling of discomfort/blockage when swallowing?"
+    },
+    "E_45": {
+        "th": "คุณเคยไอเป็นเลือดหรือไม่?",
+        "en": "Have you been coughing up blood?"
+    },
+    "E_218": {
+        "th": "คุณมีอาการที่แย่ลงเมื่อออกแรงกายแต่ดีขึ้นเมื่อพักหรือไม่?",
+        "en": "Do you have symptoms that are increased with physical exertion but alleviated with rest?"
+    },
+    "E_159": {
+        "th": "คุณเคยสูญเสียการรู้สึกตัวหรือไม่?",
+        "en": "Did you lose consciousness?"
+    },
+    "E_119": {
+        "th": "คุณได้รับการวินิจฉัยว่าเป็นไซนัสอักเสบเรื้อรังหรือไม่?",
+        "en": "Have you been diagnosed with chronic sinusitis?"
+    },
+    "E_146": {
+        "th": "คุณกำลังทานยาต้านการแข็งตัวของเลือดชนิดใหม่หรือไม่?",
+        "en": "Are you taking any new oral anticoagulants ((NOACs)?"
+    },
+    "E_111": {
+        "th": "คุณรู้สึกเหมือนกำลังจะตายหรือเคยกลัวว่าจะตายหรือไม่?",
+        "en": "Do you feel like you are dying or were you afraid that you were about do die?"
+    },
+    "E_107": {
+        "th": "คุณเคยมีอาการหลอดเลือดสมองตีบหรือไม่?",
+        "en": "Have you ever had a stroke?"
+    },
+    "E_14": {
+        "th": "คุณมีอาการเจ็บหน้าอกแม้ในขณะพักหรือไม่?",
+        "en": "Do you have chest pain even at rest?"
+    },
+    "E_61": {
+        "th": "คุณกำลังใช้ยาฉีดทางหลอดเลือดหรือไม่?",
+        "en": "Are you currently using intravenous drugs?"
+    },
+    "E_13": {
+        "th": "คุณรู้สึกว่าอาการของคุณแย่ลงในช่วง 2 สัปดาห์ที่ผ่านมา และต้องใช้ความพยายามน้อยลงเพื่อให้เกิดอาการหรือไม่?",
+        "en": "Do you find that your symptoms have worsened over the last 2 weeks and that progressively less effort is required to cause the symptoms?"
+    },
+    "E_76": {
+        "th": "คุณรู้สึกเวียนศีรษะเล็กน้อยหรือรู้สึกมึนหัวหรือไม่?",
+        "en": "Do you feel slightly dizzy or lightheaded?"
+    },
+    "E_184": {
+        "th": "คุณทานยาที่ขยายหลอดเลือดหรือไม่?",
+        "en": "Do you take medication that dilates your blood vessels?"
+    },
+    "E_150": {
+        "th": "คุณสามารถขับถ่ายอุจจาระหรือก๊าซได้ตั้งแต่ที่อาการของคุณเพิ่มขึ้นหรือไม่?",
+        "en": "Have you been able to pass stools or gas since your symptoms increased?"
+    },
+    "E_103": {
+        "th": "คุณสูญเสียการรับรู้กลิ่นหรือไม่?",
+        "en": "Have you lost your sense of smell?"
+    },
+    "E_160": {
+        "th": "คุณเกิดมาท่ามกลางภาวะคลอดก่อนกำหนดหรือเคยมีภาวะแทรกซ้อนตอนคลอดหรือไม่?",
+        "en": "Were you born prematurely or did you suffer any complication at birth?"
+    },
+    "E_44": {
+        "th": "คุณทานยาคอร์ติโคสเตียรอยด์หรือไม่?",
+        "en": "Do you take corticosteroids?"
+    },
+    "E_227": {
+        "th": "คุณมีภาวะภูมิคุ้มกันบกพร่องหรือไม่?",
+        "en": "Are you immunosuppressed?"
+    },
+    "E_162": {
+        "th": "คุณเคยมีการลดน้ำหนักโดยไม่ตั้งใจในช่วง 3 เดือนที่ผ่านมาไหม?",
+        "en": "Have you had an involuntary weight loss over the last 3 months?"
+    },
+    "E_196": {
+        "th": "คุณเคยผ่าตัดในช่วงเดือนที่ผ่านมาหรือไม่?",
+        "en": "Have you had surgery within the last month?"
+    },
+    "E_217": {
+        "th": "อาการของคุณแย่ลงเมื่อคุณนอนราบและดีขึ้นเมื่อคุณนั่งหรือไม่?",
+        "en": "Are your symptoms worse when lying down and alleviated while sitting up?"
+    },
+    "E_86": {
+        "th": "คุณมีสมาชิกในครอบครัวที่มีอาการแพ้ (ทุกรูปแบบ)/ไข้ละอองเกสรดอกไม้หรือผื่นผิวหนังหรือไม่?",
+        "en": "Do you have any close family members who suffer from allergies (any type), hay fever or eczema?"
+    },
+    "E_201": {
+        "th": "คุณมีอาการไอหรือไม่?",
+        "en": "Do you have a cough?"
+    },
+    "E_113": {
+        "th": "คุณมีภาวะไตวายเรื้อรังหรือไม่?",
+        "en": "Do you have chronic kidney failure?"
+    },
+    "E_140": {
+        "th": "คุณเคยมีอุจจาระที่มีสีดำหรือไม่?",
+        "en": "Have you recently had stools that were black (like coal)?"
+    },
+    "E_209": {
+        "th": "คุณได้รับการฉีดวัคซีนครบตามกำหนดหรือไม่?",
+        "en": "Are your vaccinations up to date?"
+    },
+    "E_170": {
+        "th": "คุณมีอาการคันอย่างรุนแรงในตาข้างใดข้างหนึ่งหรือทั้งสองข้างหรือไม่?",
+        "en": "Do you have severe itching in one or both eyes?"
+    },
+    "E_143": {
+        "th": "คุณออกกำลังกายอย่างสม่ำเสมอ สัปดาห์ละ 4 ครั้งหรือมากกว่านั้นหรือไม่?",
+        "en": "Do you exercise regularly, 4 times per week or more?"
+    },
+    "E_75": {
+        "th": "คุณรู้สึกว่าคุณกำลังสำลักหรือหายใจไม่ออกหรือไม่?",
+        "en": "Do you feel like you are (or were) choking or suffocating?"
+    },
+    "E_124": {
+        "th": "คุณมีอาการหืดหรือเคยใช้ยาขยายหลอดลมมาก่อนหรือไม่?",
+        "en": "Do you have asthma or have you ever had to use a bronchodilator in the past?"
+    },
+    "E_67": {
+        "th": "คุณมีอาการสำลักหรือหายใจลำบากที่ทำให้ตื่นกลางดึกหรือไม่?",
+        "en": "Do you have bouts of choking or shortness of breath that wake you up at night?"
+    },
+    "E_225": {
+        "th": "คุณมีสมาชิกในครอบครัวที่มีปัญหาหัวใจหรือโรคหลอดเลือดก่อนอายุ 50 ปีหรือไม่?",
+        "en": "Do you have close family members who had a cardiovascular disease problem before the age of 50?"
+    },
+    "E_62": {
+        "th": "คุณทานยาที่กระตุ้นระบบประสาทเป็นประจำหรือไม่?",
+        "en": "Do you regularly take stimulant drugs?"
+    },
+    "E_48": {
+        "th": "คุณอาศัยอยู่กับคนอื่น 4 คนหรือมากกว่านั้นหรือไม่?",
+        "en": "Do you live with 4 or more people?"
+    },
+    "E_203": {
+        "th": "คุณมีอาการไอรุนแรงหรือไม่?",
+        "en": "Do you have intense coughing fits?"
+    },
+    "E_154": {
+        "th": "ผิวหนังของคุณดูซีดกว่าปกติหรือไม่?",
+        "en": "Is your skin much paler than usual?"
+    },
+    "E_26": {
+        "th": "คุณมีสมาชิกในครอบครัวที่ได้รับการวินิจฉัยว่าเป็นโรคโลหิตจางหรือไม่?",
+        "en": "Do you have any family members who have been diagnosed with anemia?"
+    },
+    "E_78": {
+        "th": "คุณดื่มแอลกอฮอล์มากเกินไปหรือมีความเสพติดแอลกอฮอล์หรือไม่?",
+        "en": "Do you drink alcohol excessively or do you have an addiction to alcohol?"
+    },
+    "E_102": {
+        "th": "คุณมาปรึกษาเพราะมีภาวะความดันโลหิตสูงใช่หรือไม่?",
+        "en": "Are you consulting because you have high blood pressure?"
+    },
+    "E_179": {
+        "th": "คุณสังเกตเห็นเลือดสีแดงอ่อนหรือก้อนเลือดในอุจจาระของคุณหรือไม่?",
+        "en": "Have you noticed light red blood or blood clots in your stool?"
+    },
+    "E_129": {
+        "th": "คุณมีแผล, แดง หรือปัญหาที่ผิวหนังที่คิดว่าเกี่ยวข้องกับอาการที่คุณมาปรึกษาหรือไม่?",
+        "en": "Do you have any lesions, redness or problems on your skin that you believe are related to the condition you are consulting for?"
+    },
+    "E_82": {
+        "th": "คุณรู้สึกเวียนหัวและมึนศีรษะหรือรู้สึกเหมือนจะเป็นลมหรือไม่?",
+        "en": "Do you feel lightheaded and dizzy or do you feel like you are about to faint?"
+    },
+    "E_33": {
+        "th": "คุณมีอาการปวดที่ดีขึ้นเมื่อเอนตัวไปข้างหน้าไหม?",
+        "en": "Do you have pain that improves when you lean forward?"
+    },
+    "E_182": {
+        "th": "คุณมีน้ำมูกที่มีสีเขียวหรือสีเหลืองหรือไม่?",
+        "en": "Do you have greenish or yellowish nasal discharge?"
+    },
+    "E_0": {
+        "th": "คุณเพิ่งมีอาการติดเชื้อไวรัสเมื่อไม่นานมานี้หรือไม่?",
+        "en": "Have you recently had a viral infection?"
+    },
+    "E_20": {
+        "th": "คุณมีโรคข้ออักเสบรูมาตอยด์หรือไม่?",
+        "en": "Do you have Rheumatoid Arthritis?"
+    },
+    "E_98": {
+        "th": "คุณมีไส้เลื่อนกระบังลมหรือไม่?",
+        "en": "Do you have a hiatal hernia?"
+    },
+    "E_164": {
+        "th": "คุณรู้สึกว่าใจเต้นผิดจังหวะมากๆ หรือเต้นไม่เป็นระเบียบหรือไม่?",
+        "en": "Do you feel your heart is beating very irregularly or in a disorganized pattern?"
+    },
+    "E_219": {
+        "th": "อาการของคุณเด่นชัดมากขึ้นในตอนกลางคืนหรือไม่?",
+        "en": "Are your symptoms more prominent at night?"
+    },
+    "E_138": {
+        "th": "คุณมีอาการของโรคไฟโบรมัยอัลเจีย (Fibromyalgia) หรือไม่?",
+        "en": "Do you suffer from fibromyalgia?"
+    },
+    "E_210": {
+        "th": "คุณเคยอาเจียนเลือดหรือสิ่งที่คล้ายเมล็ดกาแฟหรือไม่?",
+        "en": "Have you recently thrown up blood or something resembling coffee beans?"
+    },
+    "E_88": {
+        "th": "คุณรู้สึกเหนื่อยจนไม่สามารถทำกิจกรรมตามปกติได้หรือไม่? หรือคุณติดอยู่ในเตียงตลอดทั้งวันหรือไม่?",
+        "en": "Do you feel so tired that you are unable to do your usual activities or are you stuck in your bed all day long?"
+    },
+    "E_89": {
+        "th": "คุณรู้สึกอ่อนล้าตลอดเวลา หรือมีการนอนหลับที่ไม่พักผ่อนเต็มที่หรือไม่?",
+        "en": "Do you constantly feel fatigued or do you have non-restful sleep?"
+    },
+    "E_41": {
+        "th": "คุณเคยติดต่อกับผู้ที่มีอาการคล้ายๆ กันในช่วง 2 สัปดาห์ที่ผ่านมาหรือไม่?",
+        "en": "Have you been in contact with a person with similar symptoms in the past 2 weeks?"
+    },
+    "E_99": {
+        "th": "คุณเคยมีไมเกรนหรือมีสมาชิกในครอบครัวที่เป็นไมเกรนหรือไม่?",
+        "en": "Have you ever had a migraine or is a member of your family known to have migraines?"
+    },
+    "E_101": {
+        "th": "ในปีที่ผ่านมาคุณเคยต้องเข้ารับการรักษาในโรงพยาบาลเนื่องจากอาการหอบหืดกำเริบหรือไม่?",
+        "en": "Have you been hospitalized for an asthma attack in the past year?"
+    },
+    "E_194": {
+        "th": "คุณสังเกตเห็นเสียงสูงเมื่อหายใจเข้าหรือไม่?",
+        "en": "Have you noticed a high pitched sound when breathing in?"
+    },
+    "E_30": {
+        "th": "คุณรู้สึกท้องบวมหรือยื่นออกมาหรือไม่?",
+        "en": "Do you feel your abdomen is bloated or distended (swollen due to pressure from inside)?"
+    },
+    "E_91": {
+        "th": "คุณมีไข้ (รู้สึกหรือวัดได้จากเทอร์โมมิเตอร์) หรือไม่?",
+        "en": "Do you have a fever (either felt or measured with a thermometer)?"
+    },
+    "E_34": {
+        "th": "คุณมีมะเร็งที่กำลังดำเนินอยู่หรือไม่?",
+        "en": "Do you have an active cancer?"
+    },
+    "E_95": {
+        "th": "คุณเป็นโรคพาร์กินสันหรือไม่?",
+        "en": "Do you have Parkinson 2019s disease?"
+    },
+    "E_7": {
+        "th": "คุณมีนิสัยการกินอาหารที่ไม่ดีหรือไม่?",
+        "en": "Do you have a poor diet?"
+    },
+    "E_71": {
+        "th": "คุณมีคอเลสเตอรอลสูงหรือคุณทานยาเพื่อรักษาคอเลสเตอรอลสูงหรือไม่?",
+        "en": "Do you have high cholesterol or do you take medications to treat high cholesterol?"
+    },
+    "E_8": {
+        "th": "คุณกำลังทำการฟอกไตอยู่หรือไม่?",
+        "en": "Do you currently undergo dialysis?"
+    },
+    "E_215": {
+        "th": "คุณมีอาการที่แย่ลงหลังจากทานอาหารหรือไม่?",
+        "en": "Do you have symptoms that get worse after eating?"
+    },
+    "E_69": {
+        "th": "คุณเป็นเบาหวานหรือไม่?",
+        "en": "Do you have diabetes?"
+    },
+    "E_118": {
+        "th": "คุณเคยเป็นปอดบวมไหม?",
+        "en": "Have you ever had pneumonia?"
+    },
+    "E_105": {
+        "th": "คุณเคยมีอาการหัวใจวายหรือมีอาการเจ็บหน้าอกหรือไม่?",
+        "en": "Have you ever had a heart attack or do you have angina (chest pain)?"
+    },
+    "E_109": {
+        "th": "คุณเคยเป็นโรคลิ่มเลือดอุดตันในหลอดเลือดดำลึกหรือไม่?",
+        "en": "Have you ever had deep vein thrombosis (DVT)?"
+    },
+    "E_3": {
+        "th": "คุณเคยมีโรคเยื่อหุ้มหัวใจอักเสบหรือไม่?",
+        "en": "Have you ever had a pericarditis?"
+    },
+    "E_53": {
+        "th": "คุณมีอาการปวดที่ใดที่หนึ่งที่เกี่ยวข้องกับเหตุผลที่คุณมาปรึกษาหรือไม่?",
+        "en": "Do you have pain somewhere, related to your reason for consulting?"
+    },
+    "E_145": {
+        "th": "คุณมีประจำเดือนที่มากหรือนานผิดปกติหรือไม่?",
+        "en": "Do you have very abundant or very long menstruation periods?"
+    },
+    "E_104": {
+        "th": "คุณมีภาวะความดันโลหิตสูงหรือกำลังใช้ยารักษาความดันโลหิตสูงหรือไม่?",
+        "en": "Do you have high blood pressure or do you take medications to treat high blood pressure?"
+    },
+    "E_120": {
+        "th": "คุณมีติ่งเนื้อในจมูกหรือไม่?",
+        "en": "Do you have polyps in your nose?"
+    },
+    "E_200": {
+        "th": "คุณทำงานในภาคการทำเหมืองหรือไม่?",
+        "en": "Do you work in the mining sector?"
+    },
+    "E_11": {
+        "th": "คุณให้นมลูกหนึ่งคนมากกว่า 9 เดือนหรือไม่?",
+        "en": "Have you breastfed one of your children for more than 9 months?"
+    },
+    "E_167": {
+        "th": "คุณคิดว่าคุณตั้งครรภ์หรือกำลังตั้งครรภ์อยู่หรือไม่?",
+        "en": "Do you think you are pregnant or are you currently pregnant?"
+    },
+    "E_173": {
+        "th": "คุณมีอาการแสบร้อนที่เริ่มจากกระเพาะอาหารแล้วขึ้นไปที่คอ และอาจมีรสขมในปากหรือไม่?",
+        "en": "Do you have a burning sensation that starts in your stomach then goes up into your throat, and can be associated with a bitter taste in your mouth?"
+    },
+    "E_25": {
+        "th": "สมาชิกในครอบครัวของคุณเคยได้รับการวินิจฉัยว่าเป็นไมเกรนแบบกลุ่มหรือไม่?",
+        "en": "Have any of your family members been diagnosed with cluster headaches?"
+    },
+    "E_114": {
+        "th": "คุณรู้สึกหงุดหงิดมากขึ้นหรืออารมณ์แปรปรวนมากในช่วงนี้หรือไม่?",
+        "en": "Are you more irritable or has your mood been very unstable recently?"
+    },
+    "E_24": {
+        "th": "คุณเคยได้รับการวินิจฉัยว่าเป็นโรคโลหิตจางหรือไม่?",
+        "en": "Have you ever had a diagnosis of anemia?"
+    },
+    "E_49": {
+        "th": "คุณเข้าร่วมกิจกรรมหรือทำงานในสถานรับเลี้ยงเด็กหรือไม่?",
+        "en": "Do you attend or work in a daycare?"
+    },
+    "E_141": {
+        "th": "คุณเริ่มมีประจำเดือนครั้งแรกก่อนอายุ 12 ปีหรือไม่?",
+        "en": "Did you have your first menstrual period before the age of 12?"
+    },
+    "E_191": {
+        "th": "คุณเคยสูบบุหรี่หรือไม่?",
+        "en": "Are you a former smoker?"
+    },
+    "E_208": {
+        "th": "ดัชนีมวลกาย (BMI) ของคุณต่ำกว่า 18.5 หรือคุณน้ำหนักน้อยเกินไปหรือไม่?",
+        "en": "Is your BMI less than 18.5, or are you underweight?"
+    },
+    "E_125": {
+        "th": "คุณเคยได้รับการวินิจฉัยว่าเป็นโรคกรดไหลย้อนหรือไม่?",
+        "en": "Have you ever been diagnosed with gastroesophageal reflux?"
+    },
+    "E_214": {
+        "th": "คุณสังเกตเห็นเสียงวี๊ดเมื่อหายใจออกหรือไม่?",
+        "en": "Have you noticed a wheezing sound when you exhale?"
+    },
+    "E_19": {
+        "th": "คุณได้รับการวินิจฉัยว่าเป็นโรคไทรอยด์เป็นพิษหรือไม่?",
+        "en": "Have you been diagnosed with hyperthyroidism?"
+    },
+    "E_106": {
+        "th": "คุณมีภาวะหัวใจล้มเหลวหรือไม่?",
+        "en": "Do you have heart failure?"
+    },
+    "E_50": {
+        "th": "คุณมีอาการเหงื่อออกมากผิดปกติหรือไม่?",
+        "en": "Have you had significantly increased sweating?"
+    },
+    "E_81": {
+        "th": "คุณมีความวิตกกังวลเรื้อรังหรือไม่?",
+        "en": "Do you suffer from chronic anxiety?"
+    },
+    "E_151": {
+        "th": "คุณมีอาการบวมในส่วนใดส่วนหนึ่งของร่างกายหรือไม่?",
+        "en": "Do you have swelling in one or more areas of your body?"
+    },
+    "E_177": {
+        "th": "คุณกำลังมีหรือเคยมีอาการชาหรือสูญเสียความรู้สึกหรือรู้สึกจี๊ดที่ใดที่หนึ่งในร่างกายหรือไม่?",
+        "en": "Do you currently, or did you ever, have numbness, loss of sensitivity or tingling anywhere on your body?"
+    },
+    "E_224": {
+        "th": "คุณมีสมาชิกในครอบครัวที่เป็นมะเร็งปอดหรือไม่?",
+        "en": "Do you have family members who have had lung cancer?"
+    },
+    "E_185": {
+        "th": "คุณเคยมีอาการบาดเจ็บที่ศีรษะหรือไม่?",
+        "en": "Have you ever had a head trauma?"
+    },
+    "E_190": {
+        "th": "คุณสังเกตเห็นว่าคุณมีน้ำลายมากกว่าปกติหรือไม่?",
+        "en": "Have you noticed that you produce more saliva than usual?"
+    },
+    "E_198": {
+        "th": "คุณทำงานในภาคการเกษตรหรือไม่?",
+        "en": "Do you work in agriculture?"
+    },
+    "E_80": {
+        "th": "คุณเคยได้รับการวินิจฉัยว่าเป็นโรคซึมเศร้าหรือไม่?",
+        "en": "Have you ever been diagnosed with depression?"
+    },
+    "E_212": {
+        "th": "คุณสังเกตเห็นว่าเสียงของคุณทุ้มลง, นุ่มลง หรือแหบแห้งหรือไม่?",
+        "en": "Have you noticed that the tone of your voice has become deeper, softer or hoarse?"
+    }
+}
