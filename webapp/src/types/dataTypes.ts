@@ -6,7 +6,9 @@ export type Symptom = {
 };
 
 export type SymptomAnswer = {
-  symptom: string;
+  code: string;
+  name: string;
+  // symptom: string;
   duration: number;
   unit: string;
   isOther: boolean;

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { StepProps } from "@/types/formTypes";
-import { Symptom, SymptomAnswer } from "@/types/dataTypes";
+import { SymptomAnswer } from "@/types/dataTypes";
 import { Label } from "@/components/ui/label";
-import { sortPresentIllness, valueToLabel } from "@/utils/utils";
+import { sortPresentIllness } from "@/utils/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import SymptomDialog from "./symptom-select/SymptomDialog";
 import SymptomSelect from "./symptom-select/SymptomSelect";
 import { useTranslation } from "@/app/i18n/client";
+import { Symptom } from "@prisma/client";
 
 interface SymptomSelctionProps extends StepProps {
   lng: string;
@@ -45,25 +46,38 @@ export default function SymptomSelection({
       const data: Symptom[] = await response.json();
 
       // need to transform label format
-      const symptoms = valueToLabel(data);
+      const symptoms = convertToSelect(data, lng);
       setSymptomList(symptoms);
     }
     fetchSymptoms();
-  }, []);
+  }, [lng]);
+
+  const convertToSelect = (symptoms: Symptom[], lng: string) => {
+    return symptoms.map((symptom) => {
+      return {
+        value: symptom.code,
+        label: lng === "th" ? symptom.th : symptom.en,
+      };
+    });
+  };
 
   const handleSelectCareType = (careType: string) => {
     setFormData({ ...formData, careType: careType });
   };
 
-  const handleDropdownSelect = (symptom: string, type: "chief" | "present") => {
+  const handleDropdownSelect = (
+    code: string,
+    name: string,
+    type: "chief" | "present"
+  ) => {
     setSelectionType(type);
-
     // if user select 'other', dont dount
     setSymptomDetails({
-      symptom,
+      code,
+      name,
       duration: 0,
       unit: "days",
-      isOther: symptom === "other",
+      isOther: code === "other",
     });
 
     setChiefOpen(false);
@@ -76,7 +90,7 @@ export default function SymptomSelection({
       setFormData({ ...formData, chiefComplaint: symptomDetails! });
     } else {
       const existingIndex = formData.presentIllness.findIndex(
-        (symptom) => symptom.symptom === symptomDetails?.symptom
+        (symptom) => symptom.name === symptomDetails?.name
       );
 
       if (existingIndex !== -1) {

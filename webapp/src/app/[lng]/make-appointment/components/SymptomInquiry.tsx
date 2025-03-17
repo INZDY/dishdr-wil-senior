@@ -27,7 +27,7 @@ export default function SymptomInquiry({
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
 
   const [inquiryQuestions, setInquiryQuestions] = useState<
-    { symptom: string; answer: boolean | null }[]
+    { code: string; question: string; answer: boolean | null }[]
   >([]);
 
   const [warning, setWarning] = useState(false);
@@ -41,7 +41,7 @@ export default function SymptomInquiry({
       const filteredComplaints = [
         ...formData.inquiries
           .filter((illness) => !illness.isOther && illness.type !== "inquiry")
-          .map((illness) => ({ key: illness.symptom, value: true })),
+          .map((illness) => ({ key: illness.code, value: true })),
       ];
 
       const formattedData = Object.fromEntries(
@@ -65,21 +65,30 @@ export default function SymptomInquiry({
         }
 
         const data = await response.json();
-        // console.log(data);
+        console.log(data.question);
 
         // stop loading only if a question is returned
-        if ("question" in data.response) {
+        if ("question" in data) {
+          const qData = data.question;
           setInquiryQuestions([
             ...inquiryQuestions,
-            { symptom: data.response.question, answer: null },
+            {
+              code: qData.code,
+              question: lng === "th" ? qData.th : qData.en,
+              answer: null,
+            },
           ]);
           setLoading(false);
-        } else if ("result 1" in data.response) {
-          const responses = Object.keys(data.response)
-            .filter((key) => key.startsWith("result"))
-            .map((key) => data.response[key])
-            .join(", ");
-          setFormData({ ...formData, prediction: responses });
+        } else if ("department" in data) {
+          // const responses = Object.keys(data.response)
+          //   .filter((key) => key.startsWith("result"))
+          //   .map((key) => data.response[key])
+          //   .join(", ");
+          const dData = data.department;
+          setFormData({
+            ...formData,
+            prediction: lng === "th" ? dData.th : dData.en,
+          });
           setQuestionsUpdated(true);
         } else {
           // default suggestion for UX
@@ -137,9 +146,9 @@ export default function SymptomInquiry({
     const filteredComplaints = [
       ...formData.inquiries
         .filter((illness) => !illness.isOther && illness.type !== "inquiry")
-        .map((illness) => ({ key: illness.symptom, value: true })),
+        .map((illness) => ({ key: illness.code, value: true })),
       ...inquiryQuestions.map((illness) => ({
-        key: illness.symptom,
+        key: illness.code,
         value: illness.answer!,
       })),
     ];
@@ -167,18 +176,27 @@ export default function SymptomInquiry({
       const data = await response.json();
       // console.log(data);
 
-      if ("question" in data.response) {
+      if ("question" in data) {
+        const qData = data.question;
         setInquiryQuestions([
           ...inquiryQuestions,
-          { symptom: data.response.question, answer: null },
+          {
+            code: qData.code,
+            question: lng === "th" ? qData.th : qData.en,
+            answer: null,
+          },
         ]);
         setQuestionsUpdated(true);
-      } else if ("result 1" in data.response) {
-        const responses = Object.keys(data.response)
-          .filter((key) => key.startsWith("result"))
-          .map((key) => data.response[key])
-          .join(", ");
-        setFormData({ ...formData, prediction: responses });
+      } else if ("department" in data) {
+        // const responses = Object.keys(data.response)
+        //   .filter((key) => key.startsWith("result"))
+        //   .map((key) => data.response[key])
+        //   .join(", ");
+        const dData = data.department;
+        setFormData({
+          ...formData,
+          prediction: lng === "th" ? dData.th : dData.en,
+        });
         setQuestionsUpdated(true);
       } else {
         // default suggestion for UX
@@ -234,9 +252,9 @@ export default function SymptomInquiry({
           <p
             className={cn(formData.predicted ? "text-gray-500" : "text-black")}
           >
-            <span>{t("q-begin")}</span>
-            <span>{inquiryQuestions[currentQuestion].symptom}</span>
-            <span>{t("q-end")}</span>
+            {/* <span>{t("q-begin")}</span> */}
+            <span>{inquiryQuestions[currentQuestion].question}</span>
+            {/* <span>{t("q-end")}</span> */}
           </p>
 
           <RadioGroup

@@ -84,7 +84,7 @@ export default function ActivityDialog({
                   if (s.type === "chief") {
                     return (
                       <span key={index}>
-                        {s.symptom}, {s.duration} {s.unit}
+                        {s.name}, {s.duration} {s.unit}
                       </span>
                     );
                   }
@@ -99,7 +99,7 @@ export default function ActivityDialog({
                     if (s.type === "present") {
                       return (
                         <p key={index}>
-                          {s.symptom}, {s.duration} {s.unit}
+                          {s.name}, {s.duration} {s.unit}
                         </p>
                       );
                     }

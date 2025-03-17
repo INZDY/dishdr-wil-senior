@@ -13,8 +13,8 @@ export const valueToLabel = (symptomList: Symptom[]) => {
 };
 
 export const sortPresentIllness = (
-  a: { symptom: string; duration: number; unit: string },
-  b: { symptom: string; duration: number; unit: string }
+  a: { code: string; name: string; duration: number; unit: string },
+  b: { code: string; name: string; duration: number; unit: string }
 ) => {
   // const order = { day: 1, hour: 2, minute: 3 };
   return a.unit.localeCompare(b.unit) || b.duration - a.duration;

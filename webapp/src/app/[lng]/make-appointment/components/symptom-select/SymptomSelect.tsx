@@ -32,7 +32,11 @@ interface SymptomSelectProps {
   // setSymptomList: React.Dispatch<
   //   React.SetStateAction<React.Dispatch<{ value: string; label: string }[]>>
   // >;
-  handleDropdownSelect: (symptom: string, type: "chief" | "present") => void;
+  handleDropdownSelect: (
+    code: string,
+    name: string,
+    type: "chief" | "present"
+  ) => void;
   handleDeletePresentIllness: (index: number) => void;
   formData: FormData;
 }
@@ -98,7 +102,7 @@ export default function SymptomSelect({
                       setChiefValue(
                         currentValue === chiefValue ? "" : currentValue
                       );
-                      handleDropdownSelect(currentValue, "chief");
+                      handleDropdownSelect(currentValue, currentValue, "chief");
                     }}
                   >
                     {"Other..."}
@@ -118,7 +122,11 @@ export default function SymptomSelect({
                         setChiefValue(
                           currentValue === chiefValue ? "" : currentValue
                         );
-                        handleDropdownSelect(currentValue, "chief");
+                        handleDropdownSelect(
+                          currentValue,
+                          symptom.label,
+                          "chief"
+                        );
                       }}
                     >
                       {symptom.label}
@@ -142,7 +150,7 @@ export default function SymptomSelect({
           {formData.chiefComplaint.unit !== "" ? (
             <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-red-200 shadow-sm">
               <p className="flex gap-2">
-                <span>{formData.chiefComplaint?.symptom}:</span>
+                <span>{formData.chiefComplaint?.name}:</span>
                 <span>{formData.chiefComplaint?.duration}</span>
                 <span>{formData.chiefComplaint?.unit}</span>
               </p>
@@ -188,7 +196,11 @@ export default function SymptomSelect({
                       setPresentValue(
                         currentValue === presentValue ? "" : currentValue
                       );
-                      handleDropdownSelect(currentValue, "present");
+                      handleDropdownSelect(
+                        currentValue,
+                        currentValue,
+                        "present"
+                      );
                     }}
                   >
                     {"Other..."}
@@ -208,7 +220,11 @@ export default function SymptomSelect({
                         setPresentValue(
                           currentValue === presentValue ? "" : currentValue
                         );
-                        handleDropdownSelect(currentValue, "present");
+                        handleDropdownSelect(
+                          currentValue,
+                          symptom.label,
+                          "present"
+                        );
                       }}
                     >
                       {symptom.label}
@@ -236,7 +252,7 @@ export default function SymptomSelect({
                 className="flex gap-2 h-10 p-2 items-center justify-between rounded-md bg-green-200 shadow-sm"
               >
                 <p className="flex gap-2">
-                  <span>{symptom.symptom}:</span>
+                  <span>{symptom.name}:</span>
                   <span>{symptom.duration}</span>
                   <span>{symptom.unit}</span>
                 </p>
