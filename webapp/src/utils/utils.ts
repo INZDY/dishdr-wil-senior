@@ -1,4 +1,5 @@
 import { Symptom } from "@/types/dataTypes";
+import { addMinutes, format, parse } from "date-fns";
 
 export const valueToLabel = (symptomList: Symptom[]) => {
   const valueLabel = symptomList.map((symptom) => {
@@ -11,6 +12,27 @@ export const valueToLabel = (symptomList: Symptom[]) => {
   return valueLabel;
 };
 
+export const sortPresentIllness = (
+  a: { symptom: string; duration: number; unit: string },
+  b: { symptom: string; duration: number; unit: string }
+) => {
+  // const order = { day: 1, hour: 2, minute: 3 };
+  return a.unit.localeCompare(b.unit) || b.duration - a.duration;
+};
+
+export const generateTimeOptions = (start: string, end: string) => {
+  const times: string[] = [];
+  let currentTime = parse(start, "HH:mm", new Date());
+  const endTime = parse(end, "HH:mm", new Date());
+
+  while (currentTime <= endTime) {
+    times.push(format(currentTime, "HH:mm"));
+    currentTime = addMinutes(currentTime, 30);
+  }
+
+  return times;
+};
+
 export const getRandomColor = () => {
   const letters = "0123456789ABCDEF";
   let color = "#";
@@ -18,12 +40,4 @@ export const getRandomColor = () => {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
-};
-
-export const sortPresentIllness = (
-  a: { symptom: string; duration: number; unit: string },
-  b: { symptom: string; duration: number; unit: string }
-) => {
-  // const order = { day: 1, hour: 2, minute: 3 };
-  return a.unit.localeCompare(b.unit) || b.duration - a.duration;
 };

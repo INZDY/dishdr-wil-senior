@@ -45,8 +45,6 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    console.log(unavailableDates);
-
     return NextResponse.json(unavailableDates);
   } catch (error) {
     console.log(error);
