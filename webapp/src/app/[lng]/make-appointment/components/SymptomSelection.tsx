@@ -67,14 +67,14 @@ export default function SymptomSelection({
 
   const handleDropdownSelect = (
     code: string,
-    name: string,
+    symptom: string,
     type: "chief" | "present"
   ) => {
     setSelectionType(type);
     // if user select 'other', dont dount
     setSymptomDetails({
       code,
-      name,
+      symptom,
       duration: 0,
       unit: "days",
       isOther: code === "other",
@@ -90,7 +90,7 @@ export default function SymptomSelection({
       setFormData({ ...formData, chiefComplaint: symptomDetails! });
     } else {
       const existingIndex = formData.presentIllness.findIndex(
-        (symptom) => symptom.name === symptomDetails?.name
+        (symptom) => symptom.symptom === symptomDetails?.symptom
       );
 
       if (existingIndex !== -1) {

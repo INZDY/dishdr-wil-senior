@@ -58,7 +58,7 @@ export default function SymptomDialog({
             </Label>
             <Input
               id="symptom"
-              defaultValue={symptomDetails?.name}
+              defaultValue={symptomDetails?.symptom}
               disabled={
                 selectionType === "chief"
                   ? chiefValue !== "other"
@@ -68,7 +68,7 @@ export default function SymptomDialog({
                 symptomDetails != undefined
                   ? setSymptomDetails({
                       ...symptomDetails,
-                      name: e.target.value,
+                      symptom: e.target.value,
                     })
                   : null;
               }}

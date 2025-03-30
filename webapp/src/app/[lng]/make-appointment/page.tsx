@@ -44,7 +44,7 @@ export default function MakeAppointment({ params }: { params: any }) {
     careType: "",
     chiefComplaint: {
       code: "",
-      name: "",
+      symptom: "",
       duration: 0,
       unit: "",
       isOther: false,
@@ -62,7 +62,7 @@ export default function MakeAppointment({ params }: { params: any }) {
       return !formData.name.length || !formData.phone.length;
     } else if (step === 2) {
       if (formData.careType === "symptoms") {
-        return !formData.chiefComplaint.name.length;
+        return !formData.chiefComplaint.symptom.length;
       }
       return !formData.careType.length;
     } else if (step === 4) {
@@ -85,7 +85,7 @@ export default function MakeAppointment({ params }: { params: any }) {
             {
               type: "chief",
               code: formData.chiefComplaint.code,
-              symptom: formData.chiefComplaint.name,
+              symptom: formData.chiefComplaint.symptom,
               duration: formData.chiefComplaint.duration,
               unit: formData.chiefComplaint.unit,
               hasSymptom: true,
@@ -95,7 +95,7 @@ export default function MakeAppointment({ params }: { params: any }) {
               return {
                 type: "present",
                 code: illness.code,
-                symptom: illness.name,
+                symptom: illness.symptom,
                 duration: illness.duration,
                 unit: illness.unit,
                 hasSymptom: true,

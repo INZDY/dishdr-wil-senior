@@ -31,6 +31,8 @@
   "chief-desc": "Symptom that makes you seek medical attention. (only 1)",
   "illness": "Present Illness",
   "illness-desc": "Other symptoms that you are experiencing.",
+  "experimental-feat": "Experimental feature",
+  "experimental-feat-desc": "This feature is still in development. Please use with caution.",
 
   "symptom-inquiry": "Symptom Inquiry",
   "processing": "Processing",

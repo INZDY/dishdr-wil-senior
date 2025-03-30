@@ -63,9 +63,9 @@ export default function SymptomSelect({
       {/* Chief complaint */}
       <div className="flex flex-col gap-2">
         <p className="text-sm">
-          <span className="text-red-500">*ฟีเจอร์ทดลอง: </span>
-          ตัวเลือกจะเป็นภาษาอังกฤษ กรอกภาษาไทยได้โดยใช้ตัวเลือก
-          &quot;Other...&quot;
+          <span className="text-red-500">*{(t("experimental-feat"))} </span>
+          {/* ตัวเลือกจะเป็นภาษาอังกฤษ กรอกภาษาไทยได้โดยใช้ตัวเลือก
+          &quot;Other...&quot; */}
         </p>
         <h3 className="mb-1 font-semibold">{t("chief")}</h3>
         <p className="text-sm text-gray-500">{t("chief-desc")}</p>
@@ -90,7 +90,18 @@ export default function SymptomSelect({
           </PopoverTrigger>
 
           <PopoverContent className="w-[200px] p-0">
-            <Command>
+            <Command
+              // filter={(search, value) => {
+              //   // Find the matching option by value
+              //   const item = symptomList.find(
+              //     (symptom) => symptom.value === value
+              //   );
+              //   return (
+              //     item?.label.toLowerCase().includes(search.toLowerCase()) ??
+              //     0
+              //   );
+              // }}
+            >
               <CommandInput placeholder="Search symptom..." className="h-9" />
               <CommandList>
                 <CommandEmpty>No symptom found.</CommandEmpty>
@@ -150,7 +161,7 @@ export default function SymptomSelect({
           {formData.chiefComplaint.unit !== "" ? (
             <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-red-200 shadow-sm">
               <p className="flex gap-2">
-                <span>{formData.chiefComplaint?.name}:</span>
+                <span>{formData.chiefComplaint?.symptom}:</span>
                 <span>{formData.chiefComplaint?.duration}</span>
                 <span>{formData.chiefComplaint?.unit}</span>
               </p>
@@ -252,7 +263,7 @@ export default function SymptomSelect({
                 className="flex gap-2 h-10 p-2 items-center justify-between rounded-md bg-green-200 shadow-sm"
               >
                 <p className="flex gap-2">
-                  <span>{symptom.name}:</span>
+                  <span>{symptom.symptom}:</span>
                   <span>{symptom.duration}</span>
                   <span>{symptom.unit}</span>
                 </p>

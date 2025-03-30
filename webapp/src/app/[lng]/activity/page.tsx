@@ -55,8 +55,8 @@ export default function Activity({ params }: { params: any }) {
         if (!appointmentRes.ok) {
           throw new Error("Failed to fetch activities");
         }
-        const appoitmentData: Activity[] = await appointmentRes.json();
-        setAppointmentList(appoitmentData);
+        const appointmentData: Activity[] = await appointmentRes.json();
+        setAppointmentList(appointmentData);
       } catch (error) {
         console.error("Error fetching data: ", error);
       } finally {
