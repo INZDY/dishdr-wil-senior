@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/select";
 import { Activity } from "@/types/dataTypes";
 import { User } from "@prisma/client";
-import { format } from "date-fns";
-import React, { SetStateAction } from "react";
+import { format, parse } from "date-fns";
+import React from "react";
 
 interface ActivityDialogProps {
   lng: string;
@@ -26,15 +26,22 @@ interface ActivityDialogProps {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   appointmentList: Activity[];
   // setAppointmentList: React.Dispatch<React.SetStateAction<Activity[]>>;
+  departmentList: { value: string; label: string }[];
+  setDepartmentList: React.Dispatch<
+    React.SetStateAction<{ value: string; label: string }[]>
+  >;
   selectedAppointment: number;
   // setSelectedAppointment: React.Dispatch<React.SetStateAction<number>>;
   department: string;
   setDepartment: React.Dispatch<React.SetStateAction<string>>;
+  date: Date | undefined;
+  setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   status: string;
   setStatus: React.Dispatch<React.SetStateAction<string>>;
   handleEdit: (
     appointmentId: string,
     oriDept: string,
+    oriDate: Date,
     oriStatus: string
   ) => void;
 }
@@ -46,10 +53,14 @@ export default function ActivityDialog({
   setDialogOpen,
   appointmentList,
   // setAppointmentList,
+  departmentList,
+  setDepartmentList,
   selectedAppointment,
   // setSelectedAppointment,
   department,
   setDepartment,
+  date,
+  setDate,
   status,
   setStatus,
   handleEdit,
@@ -58,7 +69,7 @@ export default function ActivityDialog({
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]" autoFocus={false}>
         <DialogHeader>
           <DialogTitle>{t("dialog-title")}</DialogTitle>
         </DialogHeader>
@@ -107,13 +118,48 @@ export default function ActivityDialog({
                 )}
               </div>
             </div>
-            <p>
+            <div>
               <span className="font-semibold mr-2">{t("app-date")}:</span>
-              {format(
-                new Date(appointmentList[selectedAppointment]?.dateTime),
-                "dd/MM/yyyy HH:mm"
+              {currentUser?.role === "patient" ? (
+                <span>
+                  {format(
+                    new Date(appointmentList[selectedAppointment]?.dateTime),
+                    "dd/MM/yyyy HH:mm"
+                  )}
+                </span>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    type="date"
+                    className="px-2 py-1 rounded-md"
+                    defaultValue={format(
+                      new Date(appointmentList[selectedAppointment]?.dateTime),
+                      "yyyy-MM-dd"
+                    )}
+                    onChange={(e) =>
+                      setDate(parse(e.target.value, "yyyy-MM-dd", new Date()))
+                    }
+                  />
+                  <input
+                    type="time"
+                    className="px-2 py-1 rounded-md"
+                    defaultValue={format(
+                      new Date(appointmentList[selectedAppointment]?.dateTime),
+                      "HH:mm"
+                    )}
+                    onChange={(e) => {
+                      const [hour, minute] = e.target.value
+                        .split(":")
+                        .map(Number);
+                      const dateObj = date;
+                      dateObj?.setHours(hour, minute, 0, 0);
+                      console.log(dateObj);
+                      setDate(dateObj);
+                    }}
+                  />
+                </div>
               )}
-            </p>
+            </div>
             <p>
               <span className="font-semibold mr-2">{t("dept")}:</span>
               {currentUser?.role === "patient" ? (
@@ -131,18 +177,11 @@ export default function ActivityDialog({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {!!appointmentList[selectedAppointment].department
-                      .length && (
-                      <SelectItem
-                        value={appointmentList[selectedAppointment].department}
-                      >
-                        {appointmentList[selectedAppointment].department}
+                    {departmentList.map((dept) => (
+                      <SelectItem key={dept.value} value={dept.value}>
+                        {dept.label}
                       </SelectItem>
-                    )}
-                    <SelectItem value="-">-</SelectItem>
-                    <SelectItem value="general medicine">
-                      General Medicine
-                    </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}
@@ -181,6 +220,7 @@ export default function ActivityDialog({
               handleEdit(
                 appointmentList[selectedAppointment].id,
                 appointmentList[selectedAppointment].department,
+                appointmentList[selectedAppointment].dateTime,
                 appointmentList[selectedAppointment].status
               );
               setDialogOpen(false);
