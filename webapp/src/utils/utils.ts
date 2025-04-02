@@ -1,6 +1,7 @@
 import { Symptom } from "@/types/dataTypes";
 import { addMinutes, format, parse } from "date-fns";
 
+// This is for departmenmt, leaving as is because it does not break
 export const valueToLabel = (symptomList: Symptom[]) => {
   const valueLabel = symptomList.map((symptom) => {
     const readable = symptom.name
@@ -13,8 +14,8 @@ export const valueToLabel = (symptomList: Symptom[]) => {
 };
 
 export const sortPresentIllness = (
-  a: { symptom: string; duration: number; unit: string },
-  b: { symptom: string; duration: number; unit: string }
+  a: { code: string; symptom: string; duration: number; unit: string },
+  b: { code: string; symptom: string; duration: number; unit: string }
 ) => {
   // const order = { day: 1, hour: 2, minute: 3 };
   return a.unit.localeCompare(b.unit) || b.duration - a.duration;

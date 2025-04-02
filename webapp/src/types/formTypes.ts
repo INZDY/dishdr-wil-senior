@@ -21,7 +21,9 @@ export interface FormData {
   careType: string;
   chiefComplaint: SymptomAnswer;
   presentIllness: SymptomAnswer[];
-  inquiries: Omit<AppointmentSymptoms, "id" | "appointmentId">[];
+  inquiries: (Omit<AppointmentSymptoms, "id" | "appointmentId"> & {
+    code: string;
+  })[];
   predicted: boolean;
   prediction: string;
 

@@ -32,7 +32,11 @@ interface SymptomSelectProps {
   // setSymptomList: React.Dispatch<
   //   React.SetStateAction<React.Dispatch<{ value: string; label: string }[]>>
   // >;
-  handleDropdownSelect: (symptom: string, type: "chief" | "present") => void;
+  handleDropdownSelect: (
+    code: string,
+    name: string,
+    type: "chief" | "present"
+  ) => void;
   handleDeletePresentIllness: (index: number) => void;
   formData: FormData;
 }
@@ -59,9 +63,9 @@ export default function SymptomSelect({
       {/* Chief complaint */}
       <div className="flex flex-col gap-2">
         <p className="text-sm">
-          <span className="text-red-500">*ฟีเจอร์ทดลอง: </span>
-          ตัวเลือกจะเป็นภาษาอังกฤษ กรอกภาษาไทยได้โดยใช้ตัวเลือก
-          &quot;Other...&quot;
+          <span className="text-red-500">*{(t("experimental-feat"))} </span>
+          {/* ตัวเลือกจะเป็นภาษาอังกฤษ กรอกภาษาไทยได้โดยใช้ตัวเลือก
+          &quot;Other...&quot; */}
         </p>
         <h3 className="mb-1 font-semibold">{t("chief")}</h3>
         <p className="text-sm text-gray-500">{t("chief-desc")}</p>
@@ -86,7 +90,18 @@ export default function SymptomSelect({
           </PopoverTrigger>
 
           <PopoverContent className="w-[200px] p-0">
-            <Command>
+            <Command
+              // filter={(search, value) => {
+              //   // Find the matching option by value
+              //   const item = symptomList.find(
+              //     (symptom) => symptom.value === value
+              //   );
+              //   return (
+              //     item?.label.toLowerCase().includes(search.toLowerCase()) ??
+              //     0
+              //   );
+              // }}
+            >
               <CommandInput placeholder="Search symptom..." className="h-9" />
               <CommandList>
                 <CommandEmpty>No symptom found.</CommandEmpty>
@@ -98,7 +113,7 @@ export default function SymptomSelect({
                       setChiefValue(
                         currentValue === chiefValue ? "" : currentValue
                       );
-                      handleDropdownSelect(currentValue, "chief");
+                      handleDropdownSelect(currentValue, currentValue, "chief");
                     }}
                   >
                     {"Other..."}
@@ -118,7 +133,11 @@ export default function SymptomSelect({
                         setChiefValue(
                           currentValue === chiefValue ? "" : currentValue
                         );
-                        handleDropdownSelect(currentValue, "chief");
+                        handleDropdownSelect(
+                          currentValue,
+                          symptom.label,
+                          "chief"
+                        );
                       }}
                     >
                       {symptom.label}
@@ -188,7 +207,11 @@ export default function SymptomSelect({
                       setPresentValue(
                         currentValue === presentValue ? "" : currentValue
                       );
-                      handleDropdownSelect(currentValue, "present");
+                      handleDropdownSelect(
+                        currentValue,
+                        currentValue,
+                        "present"
+                      );
                     }}
                   >
                     {"Other..."}
@@ -208,7 +231,11 @@ export default function SymptomSelect({
                         setPresentValue(
                           currentValue === presentValue ? "" : currentValue
                         );
-                        handleDropdownSelect(currentValue, "present");
+                        handleDropdownSelect(
+                          currentValue,
+                          symptom.label,
+                          "present"
+                        );
                       }}
                     >
                       {symptom.label}

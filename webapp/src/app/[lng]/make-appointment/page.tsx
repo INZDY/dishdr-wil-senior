@@ -42,7 +42,13 @@ export default function MakeAppointment({ params }: { params: any }) {
     status: "pending",
 
     careType: "",
-    chiefComplaint: { symptom: "", duration: 0, unit: "", isOther: false },
+    chiefComplaint: {
+      code: "",
+      symptom: "",
+      duration: 0,
+      unit: "",
+      isOther: false,
+    },
     presentIllness: [],
     inquiries: [],
     predicted: false,
@@ -78,6 +84,7 @@ export default function MakeAppointment({ params }: { params: any }) {
           inquiries: [
             {
               type: "chief",
+              code: formData.chiefComplaint.code,
               symptom: formData.chiefComplaint.symptom,
               duration: formData.chiefComplaint.duration,
               unit: formData.chiefComplaint.unit,
@@ -87,6 +94,7 @@ export default function MakeAppointment({ params }: { params: any }) {
             ...formData.presentIllness.map((illness) => {
               return {
                 type: "present",
+                code: illness.code,
                 symptom: illness.symptom,
                 duration: illness.duration,
                 unit: illness.unit,

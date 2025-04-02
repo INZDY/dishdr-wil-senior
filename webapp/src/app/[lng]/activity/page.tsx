@@ -10,14 +10,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Activity } from "@/types/dataTypes";
+import type { Activity, DepartmentFull } from "@/types/dataTypes";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { format } from "date-fns";
 import { User } from "@prisma/client";
 import toast from "react-hot-toast";
 import { useTranslation } from "@/app/i18n/client";
 import ActivityDialog from "./components/ActivityDialog";
+import { valueToLabel } from "@/utils/utils";
 
 export default function Activity({ params }: { params: any }) {
   const { lng } = React.use<{ lng: string }>(params);
@@ -27,6 +27,12 @@ export default function Activity({ params }: { params: any }) {
 
   const [appointmentList, setAppointmentList] = useState<Activity[]>([]);
   const [currentUser, setCurrentUser] = useState<User>();
+  const [departmentList, setDepartmentList] = useState<
+    {
+      value: string;
+      label: string;
+    }[]
+  >([]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -35,6 +41,7 @@ export default function Activity({ params }: { params: any }) {
   const [selectedAppointment, setSelectedAppointment] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [department, setDepartment] = useState("");
+  const [date, setDate] = useState<Date | undefined>();
   const [status, setStatus] = useState("");
 
   const [loading, setLoading] = useState(true);
@@ -55,8 +62,18 @@ export default function Activity({ params }: { params: any }) {
         if (!appointmentRes.ok) {
           throw new Error("Failed to fetch activities");
         }
-        const appoitmentData: Activity[] = await appointmentRes.json();
-        setAppointmentList(appoitmentData);
+        const appointmentData: Activity[] = await appointmentRes.json();
+        setAppointmentList(appointmentData);
+        console.log(appointmentData, "appointemntData");
+
+        // departmentList
+        // free for staff to choose, unconditioned with schedule constraints
+        const deptRes = await fetch("/api/actions/department-list");
+        if (!deptRes.ok) {
+          throw new Error("Failed to fetch departments");
+        }
+        const deptData: DepartmentFull[] = (await deptRes.json()).departments;
+        setDepartmentList(valueToLabel(deptData));
       } catch (error) {
         console.error("Error fetching data: ", error);
       } finally {
@@ -95,6 +112,21 @@ export default function Activity({ params }: { params: any }) {
     }
   }, [session]);
 
+  const filterAppointments = (
+    searchTerm: string,
+    filterStatus: string
+    // sortby: string
+  ) => {
+    return appointmentList.filter(
+      (appointment) =>
+        filterStatus === "all" ||
+        (appointment.status === filterStatus &&
+          appointment.appointmentName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()))
+    );
+  };
+
   // conflicts with Dialog
   const filteredAppointments = appointmentList.filter(
     (appointment) =>
@@ -117,15 +149,18 @@ export default function Activity({ params }: { params: any }) {
       (appointment) => appointment.id === id
     );
     setSelectedAppointment(realIndex);
+    setDepartment(appointmentList[realIndex].department);
+    setDate(new Date(appointmentList[realIndex].dateTime));
+    setStatus(appointmentList[realIndex].status);
     setDialogOpen(true);
   };
 
   const handleEdit = async (
     appointmentId: string,
     oriDept: string,
+    oriDate: Date,
     oriStatus: string
   ) => {
-    console.log(department, status);
     try {
       if (!department.length && !status.length) {
         return;
@@ -134,8 +169,10 @@ export default function Activity({ params }: { params: any }) {
       const formattedData = {
         appointmentId,
         department: department.length ? department : oriDept,
+        dateTime: date ? date : oriDate,
         status: status.length ? status : oriStatus,
       };
+      console.log(formattedData);
 
       await fetch("/api/activity-management", {
         method: "POST",
@@ -184,7 +221,7 @@ export default function Activity({ params }: { params: any }) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
+              <SelectItem value="approved">Approved</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="cancelled">Cancelled</SelectItem>
             </SelectContent>
@@ -269,8 +306,12 @@ export default function Activity({ params }: { params: any }) {
         setDialogOpen={setDialogOpen}
         appointmentList={appointmentList}
         selectedAppointment={selectedAppointment}
+        departmentList={departmentList}
+        setDepartmentList={setDepartmentList}
         department={department}
         setDepartment={setDepartment}
+        date={date}
+        setDate={setDate}
         status={status}
         setStatus={setStatus}
         handleEdit={handleEdit}

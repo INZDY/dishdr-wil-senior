@@ -12,7 +12,9 @@ datasource db {
 
 model Symptom {
   id      Int     @id @default(autoincrement())
-  name    String  @unique
+  code    String  @unique
+  en      String
+  th      String
   enabled Boolean @default(true)
 }
 
