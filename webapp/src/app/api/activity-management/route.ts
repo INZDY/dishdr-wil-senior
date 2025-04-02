@@ -6,7 +6,8 @@ export async function POST(request: NextRequest) {
   try {
     const currentUser = await getCurrentUser();
     const body = await request.json();
-    const { appointmentId, department, dateTime, status } = body;
+    const { appointmentId, appointmentName, department, dateTime, status } =
+      body;
 
     if (!currentUser?.id || currentUser.role !== "staff") {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -17,6 +18,7 @@ export async function POST(request: NextRequest) {
         id: appointmentId,
       },
       data: {
+        appointmentName: appointmentName,
         department: department,
         dateTime: dateTime,
         status: status,

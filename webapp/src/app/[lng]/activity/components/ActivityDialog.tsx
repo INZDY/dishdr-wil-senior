@@ -24,26 +24,12 @@ interface ActivityDialogProps {
   currentUser: User | undefined;
   dialogOpen: boolean;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  appointmentList: Activity[];
-  // setAppointmentList: React.Dispatch<React.SetStateAction<Activity[]>>;
   departmentList: { value: string; label: string }[];
-  setDepartmentList: React.Dispatch<
-    React.SetStateAction<{ value: string; label: string }[]>
+  selectedAppointment: Activity;
+  setSelectedAppointment: React.Dispatch<
+    React.SetStateAction<Activity | undefined>
   >;
-  selectedAppointment: number;
-  // setSelectedAppointment: React.Dispatch<React.SetStateAction<number>>;
-  department: string;
-  setDepartment: React.Dispatch<React.SetStateAction<string>>;
-  date: Date | undefined;
-  setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  status: string;
-  setStatus: React.Dispatch<React.SetStateAction<string>>;
-  handleEdit: (
-    appointmentId: string,
-    oriDept: string,
-    oriDate: Date,
-    oriStatus: string
-  ) => void;
+  handleEdit: (selectedAppointment: Activity, original: Activity) => void;
 }
 
 export default function ActivityDialog({
@@ -51,21 +37,13 @@ export default function ActivityDialog({
   currentUser,
   dialogOpen,
   setDialogOpen,
-  appointmentList,
-  // setAppointmentList,
   departmentList,
-  setDepartmentList,
   selectedAppointment,
-  // setSelectedAppointment,
-  department,
-  setDepartment,
-  date,
-  setDate,
-  status,
-  setStatus,
+  setSelectedAppointment,
   handleEdit,
 }: ActivityDialogProps) {
   const { t } = useTranslation(lng, "activity");
+  const original = selectedAppointment;
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -74,48 +52,44 @@ export default function ActivityDialog({
           <DialogTitle>{t("dialog-title")}</DialogTitle>
         </DialogHeader>
 
-        {appointmentList.length && (
+        {selectedAppointment !== undefined && (
           <div className="grid gap-4 py-2">
             <p>
               <span className="font-semibold mr-2">{t("name")}:</span>
-              {appointmentList[selectedAppointment]?.name}
+              {selectedAppointment.name}
             </p>
             <p>
               <span className="font-semibold mr-2">{t("hn")}:</span>
-              {appointmentList[selectedAppointment]?.hn}
+              {selectedAppointment.hn}
             </p>
             <p>
               <span className="font-semibold mr-2">{t("phone")}:</span>
-              {appointmentList[selectedAppointment]?.phone}
+              {selectedAppointment.phone}
             </p>
             <p className="flex">
               <span className="font-semibold mr-2">{t("chief")}:</span>
-              {appointmentList[selectedAppointment]?.symptoms.map(
-                (s, index) => {
-                  if (s.type === "chief") {
-                    return (
-                      <span key={index}>
-                        {s.symptom}, {s.duration} {s.unit}
-                      </span>
-                    );
-                  }
+              {selectedAppointment.symptoms.map((s, index) => {
+                if (s.type === "chief") {
+                  return (
+                    <span key={index}>
+                      {s.symptom}, {s.duration} {s.unit}
+                    </span>
+                  );
                 }
-              )}
+              })}
             </p>
             <div className="flex">
               <span className="font-semibold mr-2">{t("illness")}:</span>
               <div className="flex flex-col gap-1">
-                {appointmentList[selectedAppointment]?.symptoms.map(
-                  (s, index) => {
-                    if (s.type === "present") {
-                      return (
-                        <p key={index}>
-                          {s.symptom}, {s.duration} {s.unit}
-                        </p>
-                      );
-                    }
+                {selectedAppointment.symptoms.map((s, index) => {
+                  if (s.type === "present") {
+                    return (
+                      <p key={index}>
+                        {s.symptom}, {s.duration} {s.unit}
+                      </p>
+                    );
                   }
-                )}
+                })}
               </div>
             </div>
             <div>
@@ -123,7 +97,7 @@ export default function ActivityDialog({
               {currentUser?.role === "patient" ? (
                 <span>
                   {format(
-                    new Date(appointmentList[selectedAppointment]?.dateTime),
+                    new Date(selectedAppointment.dateTime),
                     "dd/MM/yyyy HH:mm"
                   )}
                 </span>
@@ -133,28 +107,47 @@ export default function ActivityDialog({
                     type="date"
                     className="px-2 py-1 rounded-md"
                     defaultValue={format(
-                      new Date(appointmentList[selectedAppointment]?.dateTime),
+                      new Date(selectedAppointment.dateTime),
                       "yyyy-MM-dd"
                     )}
-                    onChange={(e) =>
-                      setDate(parse(e.target.value, "yyyy-MM-dd", new Date()))
-                    }
+                    onChange={(e) => {
+                      const date = parse(
+                        e.target.value,
+                        "yyyy-MM-dd",
+                        new Date()
+                      );
+                      const [hour, minute] = format(
+                        new Date(selectedAppointment.dateTime),
+                        "HH:mm"
+                      )
+                        .split(":")
+                        .map(Number);
+
+                      date.setHours(hour, minute, 0, 0);
+                      setSelectedAppointment({
+                        ...selectedAppointment,
+                        dateTime: date,
+                      });
+                    }}
                   />
                   <input
                     type="time"
                     className="px-2 py-1 rounded-md"
                     defaultValue={format(
-                      new Date(appointmentList[selectedAppointment]?.dateTime),
+                      new Date(selectedAppointment.dateTime),
                       "HH:mm"
                     )}
                     onChange={(e) => {
                       const [hour, minute] = e.target.value
                         .split(":")
                         .map(Number);
-                      const dateObj = date;
+                      const dateObj = selectedAppointment.dateTime;
                       dateObj?.setHours(hour, minute, 0, 0);
                       console.log(dateObj);
-                      setDate(dateObj);
+                      setSelectedAppointment({
+                        ...selectedAppointment,
+                        dateTime: dateObj,
+                      });
                     }}
                   />
                 </div>
@@ -163,15 +156,20 @@ export default function ActivityDialog({
             <p>
               <span className="font-semibold mr-2">{t("dept")}:</span>
               {currentUser?.role === "patient" ? (
-                <span>{appointmentList[selectedAppointment].department}</span>
+                <span>{selectedAppointment.department}</span>
               ) : (
                 <Select
                   value={
-                    department.length
-                      ? department
-                      : appointmentList[selectedAppointment].department
+                    selectedAppointment.department.length
+                      ? selectedAppointment.department
+                      : ""
                   }
-                  onValueChange={(value) => setDepartment(value)}
+                  onValueChange={(value) =>
+                    setSelectedAppointment({
+                      ...selectedAppointment,
+                      department: value,
+                    })
+                  }
                 >
                   <SelectTrigger className="w-[180px]">
                     <SelectValue />
@@ -189,17 +187,20 @@ export default function ActivityDialog({
             <p>
               <span className="font-semibold mr-2">{t("status")}:</span>
               {currentUser?.role === "patient" ? (
-                <span>
-                  {t(`${appointmentList[selectedAppointment].status}`)}
-                </span>
+                <span>{t(`${selectedAppointment.status}`)}</span>
               ) : (
                 <Select
                   value={
-                    status.length
-                      ? status
-                      : appointmentList[selectedAppointment].status
+                    selectedAppointment.status.length
+                      ? selectedAppointment.status
+                      : ""
                   }
-                  onValueChange={(value) => setStatus(value)}
+                  onValueChange={(value) =>
+                    setSelectedAppointment({
+                      ...selectedAppointment,
+                      status: value,
+                    })
+                  }
                 >
                   <SelectTrigger className="w-[180px]">
                     <SelectValue />
@@ -217,12 +218,7 @@ export default function ActivityDialog({
         <DialogFooter>
           <Button
             onClick={() => {
-              handleEdit(
-                appointmentList[selectedAppointment].id,
-                appointmentList[selectedAppointment].department,
-                appointmentList[selectedAppointment].dateTime,
-                appointmentList[selectedAppointment].status
-              );
+              handleEdit(selectedAppointment, original);
               setDialogOpen(false);
             }}
           >

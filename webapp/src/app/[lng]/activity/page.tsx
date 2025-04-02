@@ -18,6 +18,8 @@ import toast from "react-hot-toast";
 import { useTranslation } from "@/app/i18n/client";
 import ActivityDialog from "./components/ActivityDialog";
 import { valueToLabel } from "@/utils/utils";
+import { format } from "date-fns";
+import { th } from "date-fns/locale";
 
 export default function Activity({ params }: { params: any }) {
   const { lng } = React.use<{ lng: string }>(params);
@@ -38,11 +40,8 @@ export default function Activity({ params }: { params: any }) {
   const [filterStatus, setFilterStatus] = useState("all");
   const [sortOption, setSortOption] = useState("date");
 
-  const [selectedAppointment, setSelectedAppointment] = useState(0);
+  const [selectedAppointment, setSelectedAppointment] = useState<Activity>();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [department, setDepartment] = useState("");
-  const [date, setDate] = useState<Date | undefined>();
-  const [status, setStatus] = useState("");
 
   const [loading, setLoading] = useState(true);
 
@@ -148,29 +147,35 @@ export default function Activity({ params }: { params: any }) {
     const realIndex = appointmentList.findIndex(
       (appointment) => appointment.id === id
     );
-    setSelectedAppointment(realIndex);
-    setDepartment(appointmentList[realIndex].department);
-    setDate(new Date(appointmentList[realIndex].dateTime));
-    setStatus(appointmentList[realIndex].status);
+    setSelectedAppointment(appointmentList[realIndex]);
     setDialogOpen(true);
   };
 
   const handleEdit = async (
-    appointmentId: string,
-    oriDept: string,
-    oriDate: Date,
-    oriStatus: string
+    selectedAppointment: Activity,
+    original: Activity
   ) => {
     try {
-      if (!department.length && !status.length) {
+      if (
+        selectedAppointment?.dateTime === undefined ||
+        !selectedAppointment?.department.length ||
+        !selectedAppointment?.status.length
+      ) {
         return;
       }
 
+      const dateObj = new Date(selectedAppointment.dateTime!);
+      const appointmentDateTime = format(dateObj, "PP HH:mm", {
+        locale: th,
+      });
+      const appointmentName = `${selectedAppointment.name} - ${appointmentDateTime}`;
+
       const formattedData = {
-        appointmentId,
-        department: department.length ? department : oriDept,
-        dateTime: date ? date : oriDate,
-        status: status.length ? status : oriStatus,
+        appointmentId: selectedAppointment.id,
+        appointmentName: appointmentName,
+        department: selectedAppointment.department,
+        dateTime: selectedAppointment.dateTime,
+        status: selectedAppointment.status,
       };
       console.log(formattedData);
 
@@ -304,16 +309,9 @@ export default function Activity({ params }: { params: any }) {
         currentUser={currentUser}
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
-        appointmentList={appointmentList}
-        selectedAppointment={selectedAppointment}
+        selectedAppointment={selectedAppointment!!}
+        setSelectedAppointment={setSelectedAppointment}
         departmentList={departmentList}
-        setDepartmentList={setDepartmentList}
-        department={department}
-        setDepartment={setDepartment}
-        date={date}
-        setDate={setDate}
-        status={status}
-        setStatus={setStatus}
         handleEdit={handleEdit}
       />
     </>
