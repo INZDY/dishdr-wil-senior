@@ -309,7 +309,7 @@ export default function Activity({ params }: { params: any }) {
         currentUser={currentUser}
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
-        selectedAppointment={selectedAppointment!!}
+        selectedAppointment={selectedAppointment as Activity}
         setSelectedAppointment={setSelectedAppointment}
         departmentList={departmentList}
         handleEdit={handleEdit}
