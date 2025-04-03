@@ -11,6 +11,12 @@ interface SymptomInquiryProps extends StepProps {
   lng: string;
 }
 
+type Inquiry = {
+  code: string;
+  question: string;
+  answer: boolean | null;
+};
+
 export default function SymptomInquiry({
   formData,
   setFormData,
@@ -26,9 +32,7 @@ export default function SymptomInquiry({
 
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
 
-  const [inquiryQuestions, setInquiryQuestions] = useState<
-    { code: string; question: string; answer: boolean | null }[]
-  >([]);
+  const [inquiryQuestions, setInquiryQuestions] = useState<Inquiry[]>([]);
 
   const [warning, setWarning] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -80,10 +84,6 @@ export default function SymptomInquiry({
           ]);
           setLoading(false);
         } else if ("department" in data) {
-          // const responses = Object.keys(data.response)
-          //   .filter((key) => key.startsWith("result"))
-          //   .map((key) => data.response[key])
-          //   .join(", ");
           const dData = data.department;
           setFormData({
             ...formData,
@@ -94,7 +94,7 @@ export default function SymptomInquiry({
           // default suggestion for UX
           setFormData({
             ...formData,
-            prediction: "General Medicine",
+            prediction: lng === "th" ? "อายุรกรรมทั่วไป" : "General Medicine",
           });
           setQuestionsUpdated(true);
         }
@@ -136,7 +136,6 @@ export default function SymptomInquiry({
     const updatedQuestions = [...inquiryQuestions];
     updatedQuestions[currentQuestion].answer = answer === "yes" ? true : false;
     setInquiryQuestions([...updatedQuestions]);
-    // console.log(inquiryQuestions);
   };
 
   const submitAnswers = async () => {
@@ -188,19 +187,15 @@ export default function SymptomInquiry({
         ]);
         setQuestionsUpdated(true);
       } else if ("department" in data) {
-        // const responses = Object.keys(data.response)
-        //   .filter((key) => key.startsWith("result"))
-        //   .map((key) => data.response[key])
-        //   .join(", ");
         const dData = data.department;
-        setFormData({
-          ...formData,
-          prediction: lng === "th" ? dData.th : dData.en,
-        });
+        const prediction = lng === "th" ? dData.th : dData.en;
+        saveInquiryAnswers(inquiryQuestions, prediction, true);
         setQuestionsUpdated(true);
       } else {
         // default suggestion for UX
-        setFormData({ ...formData, prediction: "General Medicine" });
+        const prediction =
+          lng === "th" ? "อายุรกรรมทั่วไป" : "General Medicine";
+        saveInquiryAnswers(inquiryQuestions, prediction, true);
         setQuestionsUpdated(true);
       }
     } catch (error) {
@@ -210,23 +205,39 @@ export default function SymptomInquiry({
     }
   };
 
+  const saveInquiryAnswers = (
+    inquiryQAList: Inquiry[],
+    prediction: string,
+    predicted: boolean
+  ) => {
+    const mappedQAList = inquiryQAList.map((item) => {
+      return {
+        type: "inquiry",
+        code: item.code,
+        symptom: item.question,
+        duration: 0,
+        unit: "-",
+        hasSymptom: item.answer === null ? false : item.answer,
+        isOther: false,
+      };
+    });
+
+    const updatedInquiries = [...formData.inquiries, ...mappedQAList];
+    console.log("updatedInquiries", updatedInquiries);
+
+    setFormData({
+      ...formData,
+      inquiries: updatedInquiries,
+      prediction: prediction,
+      predicted: predicted,
+    });
+  };
+
   const handleNextQuestion = async () => {
     if (selectedAnswer) {
       await submitAnswers();
     } else {
       setWarning(true);
-    }
-  };
-
-  // UNDECIDED: disabled for now
-  const handleBackQuestion = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-      setSelectedAnswer(
-        inquiryQuestions[currentQuestion - 1]?.answer ? "yes" : "no"
-      );
-    } else {
-      handleBack && handleBack();
     }
   };
 
@@ -292,14 +303,6 @@ export default function SymptomInquiry({
       )}
 
       <div className="flex justify-end gap-4 mt-6">
-        {/* <Button
-          onClick={handleBackQuestion}
-          variant={"secondary"}
-          className="px-4 py-2 bg-gray-300 text-base"
-          disabled={loading}
-        >
-          Back
-        </Button> */}
         <Button
           onClick={handleNextQuestion}
           className="px-4 py-2 text-base"

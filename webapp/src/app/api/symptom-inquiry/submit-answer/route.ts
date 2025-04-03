@@ -28,16 +28,7 @@ export async function POST(request: Request) {
     }
 
     const data = await flaskResponse.json();
-    // format {_id, response: {question / {response 1, response 2}}}
-
-    // Simulate server wait time
-    // await new Promise((resolve) => setTimeout(resolve, 700));
-    // dummy data
-    // const data = {
-    //   sessionId: "JohnDoeId",
-    //   question: "question x",
-    //   department: "",
-    // };
+    // format {sessionId, (question / department)}
 
     return NextResponse.json(data);
   } catch (error) {

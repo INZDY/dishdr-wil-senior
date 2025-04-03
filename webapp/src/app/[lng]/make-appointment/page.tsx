@@ -113,9 +113,6 @@ export default function MakeAppointment({ params }: { params: any }) {
         }
       }
     }
-    if (step === 3) {
-      setFormData({ ...formData, predicted: true });
-    }
     setDirection("next");
     setStep((prevStep) => prevStep + 1);
   };
