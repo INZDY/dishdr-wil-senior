@@ -43,10 +43,12 @@ export default function MakeAppointment({ params }: { params: any }) {
 
     careType: "",
     chiefComplaint: {
+      type: "",
       code: "",
       symptom: "",
       duration: 0,
       unit: "",
+      hasSymptom: false,
       isOther: false,
     },
     presentIllness: [],

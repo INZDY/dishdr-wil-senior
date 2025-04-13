@@ -1,4 +1,4 @@
-import { Appointment, Department, Profile, User } from "@prisma/client";
+import { Appointment, Department } from "@prisma/client";
 
 export type Symptom = {
   id: number;
@@ -6,11 +6,12 @@ export type Symptom = {
 };
 
 export type SymptomAnswer = {
+  type: string;
   code: string;
   symptom: string;
-  // symptom: string;
   duration: number;
   unit: string;
+  hasSymptom: boolean;
   isOther: boolean;
 };
 
@@ -22,8 +23,7 @@ export type FetchedCookieData = {
 };
 
 export type Activity = Appointment & {
-  symptoms: ({ type: string } & Omit<SymptomAnswer, "isOther">)[];
-  // user: { profile: Omit<Profile, "id" | "userId" | "createdAt" | "updatedAt"> };
+  symptoms: Omit<SymptomAnswer, "isOther">[];
 };
 
 export type DepartmentFull = Department & {
