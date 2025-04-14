@@ -217,36 +217,38 @@ export default function ActivityDialog({
 
             <Separator />
             {/* New section for inquiry symptoms */}
-            <div className="mt-2">
-              <h3 className="font-semibold text-lg mb-2">
-                {t("inquiry-details")}
-              </h3>
-              <div className="flex flex-col gap-2">
-                {selectedAppointment.symptoms.map((s, index) => {
-                  if (s.type === "inquiry") {
-                    return (
-                      <div
-                        key={index}
-                        className="p-2 border rounded-md bg-gray-50"
-                      >
-                        <p>
-                          <span className="font-semibold mr-2">
-                            {t("question")}:
-                          </span>
-                          {s.symptom}
-                        </p>
-                        <p>
-                          <span className="font-semibold mr-2">
-                            {t("answer")}:
-                          </span>
-                          {s.hasSymptom ? t("yes") : t("no")}
-                        </p>
-                      </div>
-                    );
-                  }
-                })}
+            {currentUser?.role === "staff" && (
+              <div className="mt-2">
+                <h3 className="font-semibold text-lg mb-2">
+                  {t("inquiry-details")}
+                </h3>
+                <div className="flex flex-col gap-2">
+                  {selectedAppointment.symptoms.map((s, index) => {
+                    if (s.type === "inquiry") {
+                      return (
+                        <div
+                          key={index}
+                          className="p-2 border rounded-md bg-gray-50"
+                        >
+                          <p>
+                            <span className="font-semibold mr-2">
+                              {t("question")}:
+                            </span>
+                            {s.symptom}
+                          </p>
+                          <p>
+                            <span className="font-semibold mr-2">
+                              {t("answer")}:
+                            </span>
+                            {s.hasSymptom ? t("yes") : t("no")}
+                          </p>
+                        </div>
+                      );
+                    }
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
         <DialogFooter>
