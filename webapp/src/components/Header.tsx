@@ -9,6 +9,7 @@ import { Button } from "./ui/button";
 import { signOut, useSession } from "next-auth/react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { MdMenu } from "react-icons/md";
+import { cn } from "@/lib/utils";
 
 export default function Header({ lng }: { lng: string }) {
   const { t } = useTranslation(lng, "make-appointment");
@@ -17,10 +18,11 @@ export default function Header({ lng }: { lng: string }) {
 
   const currentPath = usePathname().substring(3);
 
-  const handleSwitchLanguage = () => {
-    if (lng === "en") {
+  const handleSwitchLanguage = (lang: "en" | "th") => {
+    if (lang === lng) return;
+    else if (lang === "th") {
       router.push(`/th/${currentPath}`);
-    } else {
+    } else if (lang === "en") {
       router.push(`/en/${currentPath}`);
     }
     toast.success("Language switched");
@@ -40,16 +42,10 @@ export default function Header({ lng }: { lng: string }) {
       <div className="hidden md:flex flex-grow px-8 py-2 justify-end gap-8">
         <button
           onClick={() => router.push(`/${lng}/activity`)}
-          className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black transition-all"
+          className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black"
         >
           {t("activity")}
         </button>
-        {/* <button
-          onClick={() => router.push(`/${lng}/config`)}
-          className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black transition-all"
-        >
-          Config
-        </button> */}
       </div>
 
       {/* login */}
@@ -80,32 +76,34 @@ export default function Header({ lng }: { lng: string }) {
           <div className="flex gap-4 py-2">
             <button
               onClick={() => router.push(`/${lng}`)}
-              className="px-2 rounded-md font-semibold bg-black hover:bg-gray-300 hover:text-black transition-all"
+              className="px-2 rounded-md font-semibold bg-black hover:bg-gray-300 hover:text-black"
             >
               {t("login")}
-            </button>
-            <button
-              onClick={() => router.push(`/${lng}`)}
-              className="px-2 rounded-md font-semibold bg-white hover:bg-gray-300 text-black transition-all"
-            >
-              {t("signup")}
             </button>
           </div>
         )}
       </div>
-      <div className="hidden md:flex border-l-2 border-white" />
 
       {/* language switcher */}
-      <div className="hidden md:flex gap-4 py-2">
-        <button
-          onClick={handleSwitchLanguage}
-          className="px-2 rounded-md font-semibold bg-white hover:bg-gray-300 text-black transition-all"
+      <div className="hidden md:flex gap-4 px-2 py-2 justify-center items-center border-l-2 border-neutral-400">
+        <div
+          className={cn(
+            "px-2 py-1 rounded-md text-neutral-400 hover:cursor-pointer hover:bg-neutral-700",
+            lng === "en" ? "bg-neutral-500" : "bg-transparent"
+          )}
+          onClick={() => handleSwitchLanguage("en")}
         >
-          <p>
-            {lng === "en" ? "Language:" : "ภาษา:"}
-            <span className="ml-1">{lng.toUpperCase()}</span>
-          </p>
-        </button>
+          English
+        </div>
+        <div
+          className={cn(
+            "px-2 py-1 rounded-md text-neutral-400 hover:cursor-pointer hover:bg-neutral-700",
+            lng === "th" ? "bg-neutral-600" : "bg-transparent"
+          )}
+          onClick={() => handleSwitchLanguage("th")}
+        >
+          ภาษาไทย
+        </div>
       </div>
 
       {/* hamburger */}
@@ -123,16 +121,10 @@ export default function Header({ lng }: { lng: string }) {
               {/* nav links */}
               <button
                 onClick={() => router.push(`/${lng}/activity`)}
-                className="px-2 rounded-md text-black font-semibold hover:bg-gray-300 hover:text-black transition-all"
+                className="px-2 rounded-md text-black font-semibold hover:bg-gray-300 hover:text-black"
               >
                 {t("activity")}
               </button>
-              {/* <button
-                onClick={() => router.push(`/${lng}/config`)}
-                className="px-2 rounded-md text-black font-semibold hover:bg-gray-300 hover:text-black transition-all"
-              >
-                Config
-              </button> */}
 
               {/* login */}
               {/* add w-1/12 if want fixed */}
@@ -163,32 +155,33 @@ export default function Header({ lng }: { lng: string }) {
                 <div className="flex gap-4 py-2">
                   <button
                     onClick={() => router.push(`/${lng}`)}
-                    className="px-2 rounded-md font-semibold bg-black hover:bg-gray-300 hover:text-black transition-all"
+                    className="px-2 rounded-md font-semibold text-white bg-black hover:bg-gray-300 hover:text-black"
                   >
                     {t("login")}
-                  </button>
-                  <button
-                    onClick={() => router.push(`/${lng}`)}
-                    className="px-2 rounded-md font-semibold bg-white hover:bg-gray-300 text-black transition-all"
-                  >
-                    {t("signup")}
                   </button>
                 </div>
               )}
 
-              <div className="flex border-b-2 border-neutral-400" />
-
               {/* language switcher */}
-              <div className="flex gap-4 py-2">
-                <button
-                  onClick={handleSwitchLanguage}
-                  className="px-2 rounded-md font-semibold bg-neutral-200 hover:bg-gray-300 text-black transition-all"
+              <div className="flex flex-col gap-4 py-2 border-t-2 border-neutral-300">
+                <div
+                  className={cn(
+                    "px-2 py-1 rounded-md text-neutral-400 hover:cursor-pointer hover:bg-neutral-700",
+                    lng === "en" ? "bg-neutral-600" : "bg-transparent"
+                  )}
+                  onClick={() => handleSwitchLanguage("en")}
                 >
-                  <p>
-                    {lng === "en" ? "Language:" : "ภาษา:"}
-                    <span className="ml-1">{lng.toUpperCase()}</span>
-                  </p>
-                </button>
+                  English
+                </div>
+                <div
+                  className={cn(
+                    "px-2 py-1 rounded-md text-neutral-400 hover:cursor-pointer hover:bg-neutral-700",
+                    lng === "th" ? "bg-neutral-600" : "bg-transparent"
+                  )}
+                  onClick={() => handleSwitchLanguage("th")}
+                >
+                  ภาษาไทย
+                </div>
               </div>
             </div>
           </SheetContent>
