@@ -209,7 +209,14 @@ export default function Activity({ params }: { params: any }) {
   return (
     <>
       <div className="flex flex-col max-w-screen-lg max-h-svh overflow-y-scroll mx-auto my-12 p-4 gap-4 bg-white shadow rounded">
-        <h1 className="text-2xl font-bold mb-4">{t("activity")}</h1>
+        <div className="flex justify-between">
+          <h1 className="text-2xl font-bold">{t("activity")}</h1>
+          {currentUser?.role === "patient" && (
+            <Button onClick={() => router.push(`/${lng}/make-appointment`)}>
+              <span>+</span>{t("new-appointment")}
+            </Button>
+          )}
+        </div>
 
         {/* toolbar */}
         <div className="flex flex-col sm:flex-row gap-4 mb-4">
@@ -241,11 +248,6 @@ export default function Activity({ params }: { params: any }) {
               <SelectItem value="date">Date</SelectItem>
             </SelectContent>
           </Select>
-          {currentUser?.role === "patient" && (
-            <Button onClick={() => router.push(`/${lng}/make-appointment`)}>
-              {t("new-appointment")}
-            </Button>
-          )}
         </div>
 
         {/* appointments */}
@@ -256,7 +258,7 @@ export default function Activity({ params }: { params: any }) {
             {filteredAppointments.map((appointment, index) => (
               <div
                 key={appointment.id}
-                className="p-4 border rounded flex justify-between items-center bg-neutral-100"
+                className="p-4 gap-2 border rounded flex justify-between items-center bg-neutral-100"
               >
                 <div className="flex flex-col gap-2">
                   <div className="font-bold">{appointment.appointmentName}</div>

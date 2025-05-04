@@ -48,7 +48,10 @@ export default function ActivityDialog({
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <DialogContent className="sm:max-w-[425px]" autoFocus={false}>
+      <DialogContent
+        className="m-2 sm:max-w-[425px] max-h-lvh overflow-y-scroll"
+        autoFocus={false}
+      >
         <DialogHeader>
           <DialogTitle>{t("dialog-title")}</DialogTitle>
         </DialogHeader>
@@ -252,24 +255,26 @@ export default function ActivityDialog({
           </div>
         )}
         <DialogFooter>
-          {currentUser?.role === "staff" && (
+          <div className="flex gap-2 justify-end">
+            {currentUser?.role === "staff" && (
+              <Button
+                onClick={() => {
+                  handleEdit(selectedAppointment, original);
+                  setDialogOpen(false);
+                }}
+              >
+                {t("save")}
+              </Button>
+            )}
             <Button
+              type="submit"
               onClick={() => {
-                handleEdit(selectedAppointment, original);
                 setDialogOpen(false);
               }}
             >
-              {t("save")}
+              {t("close")}
             </Button>
-          )}
-          <Button
-            type="submit"
-            onClick={() => {
-              setDialogOpen(false);
-            }}
-          >
-            {t("close")}
-          </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

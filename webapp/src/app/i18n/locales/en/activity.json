@@ -29,5 +29,8 @@
   "app-date": "Appointment Date",
   "dept": "Department",
   "date": "Date",
-  "time": "Time"
+  "time": "Time",
+  "inquiry-details": "Inquiry Details",
+  "question": "Question",
+  "answer": "Answer"
 }
