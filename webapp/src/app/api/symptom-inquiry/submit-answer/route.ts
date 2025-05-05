@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const flaskAPI = process.env.NEXT_PUBLIC_FLASK_URL_LOCAL;
+    const flaskAPI = process.env.NEXT_PUBLIC_FLASK_URL;
     // const flaskAPI = process.env.NEXT_PUBLIC_FLASK_URL;
     const currentUser = await getCurrentUser();
     const body = await request.json();
