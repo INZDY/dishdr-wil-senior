@@ -46,6 +46,12 @@ export default function Header({ lng }: { lng: string }) {
         >
           {t("activity")}
         </button>
+        <button
+          onClick={() => router.push(`/${lng}/disclaimer`)}
+          className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black"
+        >
+          {t("disclaimer")}
+        </button>
       </div>
 
       {/* login */}
@@ -124,6 +130,12 @@ export default function Header({ lng }: { lng: string }) {
                 className="px-2 rounded-md text-black font-semibold hover:bg-gray-300 hover:text-black"
               >
                 {t("activity")}
+              </button>
+              <button
+                onClick={() => router.push(`/${lng}/disclaimer`)}
+                className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black"
+              >
+                {t("disclaimer")}
               </button>
 
               {/* login */}
