@@ -71,12 +71,14 @@ export default function SymptomSelection({
     type: "chief" | "present"
   ) => {
     setSelectionType(type);
-    // if user select 'other', dont dount
+    // if user select 'other', dont count
     setSymptomDetails({
-      code,
-      symptom,
+      type: type,
+      code: code,
+      symptom: symptom,
       duration: 0,
       unit: "days",
+      hasSymptom: true,
       isOther: code === "other",
     });
 

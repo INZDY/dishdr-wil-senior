@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["python", "flask-GAP.py"]
+CMD ["python", "flask-XGB.py"]

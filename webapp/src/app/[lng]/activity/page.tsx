@@ -18,6 +18,8 @@ import toast from "react-hot-toast";
 import { useTranslation } from "@/app/i18n/client";
 import ActivityDialog from "./components/ActivityDialog";
 import { valueToLabel } from "@/utils/utils";
+import { format } from "date-fns";
+import { th } from "date-fns/locale";
 
 export default function Activity({ params }: { params: any }) {
   const { lng } = React.use<{ lng: string }>(params);
@@ -38,11 +40,8 @@ export default function Activity({ params }: { params: any }) {
   const [filterStatus, setFilterStatus] = useState("all");
   const [sortOption, setSortOption] = useState("date");
 
-  const [selectedAppointment, setSelectedAppointment] = useState(0);
+  const [selectedAppointment, setSelectedAppointment] = useState<Activity>();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [department, setDepartment] = useState("");
-  const [date, setDate] = useState<Date | undefined>();
-  const [status, setStatus] = useState("");
 
   const [loading, setLoading] = useState(true);
 
@@ -148,29 +147,35 @@ export default function Activity({ params }: { params: any }) {
     const realIndex = appointmentList.findIndex(
       (appointment) => appointment.id === id
     );
-    setSelectedAppointment(realIndex);
-    setDepartment(appointmentList[realIndex].department);
-    setDate(new Date(appointmentList[realIndex].dateTime));
-    setStatus(appointmentList[realIndex].status);
+    setSelectedAppointment(appointmentList[realIndex]);
     setDialogOpen(true);
   };
 
   const handleEdit = async (
-    appointmentId: string,
-    oriDept: string,
-    oriDate: Date,
-    oriStatus: string
+    selectedAppointment: Activity,
+    original: Activity
   ) => {
     try {
-      if (!department.length && !status.length) {
+      if (
+        selectedAppointment?.dateTime === undefined ||
+        !selectedAppointment?.department.length ||
+        !selectedAppointment?.status.length
+      ) {
         return;
       }
 
+      const dateObj = new Date(selectedAppointment.dateTime!);
+      const appointmentDateTime = format(dateObj, "PP HH:mm", {
+        locale: th,
+      });
+      const appointmentName = `${selectedAppointment.name} - ${appointmentDateTime}`;
+
       const formattedData = {
-        appointmentId,
-        department: department.length ? department : oriDept,
-        dateTime: date ? date : oriDate,
-        status: status.length ? status : oriStatus,
+        appointmentId: selectedAppointment.id,
+        appointmentName: appointmentName,
+        department: selectedAppointment.department,
+        dateTime: selectedAppointment.dateTime,
+        status: selectedAppointment.status,
       };
       console.log(formattedData);
 
@@ -204,7 +209,14 @@ export default function Activity({ params }: { params: any }) {
   return (
     <>
       <div className="flex flex-col max-w-screen-lg max-h-svh overflow-y-scroll mx-auto my-12 p-4 gap-4 bg-white shadow rounded">
-        <h1 className="text-2xl font-bold mb-4">{t("activity")}</h1>
+        <div className="flex justify-between">
+          <h1 className="text-2xl font-bold">{t("activity")}</h1>
+          {currentUser?.role === "patient" && (
+            <Button onClick={() => router.push(`/${lng}/make-appointment`)}>
+              <span>+</span>{t("new-appointment")}
+            </Button>
+          )}
+        </div>
 
         {/* toolbar */}
         <div className="flex flex-col sm:flex-row gap-4 mb-4">
@@ -236,11 +248,6 @@ export default function Activity({ params }: { params: any }) {
               <SelectItem value="date">Date</SelectItem>
             </SelectContent>
           </Select>
-          {currentUser?.role === "patient" && (
-            <Button onClick={() => router.push(`/${lng}/make-appointment`)}>
-              {t("new-appointment")}
-            </Button>
-          )}
         </div>
 
         {/* appointments */}
@@ -251,7 +258,7 @@ export default function Activity({ params }: { params: any }) {
             {filteredAppointments.map((appointment, index) => (
               <div
                 key={appointment.id}
-                className="p-4 border rounded flex justify-between items-center bg-neutral-100"
+                className="p-4 gap-2 border rounded flex justify-between items-center bg-neutral-100"
               >
                 <div className="flex flex-col gap-2">
                   <div className="font-bold">{appointment.appointmentName}</div>
@@ -304,16 +311,9 @@ export default function Activity({ params }: { params: any }) {
         currentUser={currentUser}
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
-        appointmentList={appointmentList}
-        selectedAppointment={selectedAppointment}
+        selectedAppointment={selectedAppointment as Activity}
+        setSelectedAppointment={setSelectedAppointment}
         departmentList={departmentList}
-        setDepartmentList={setDepartmentList}
-        department={department}
-        setDepartment={setDepartment}
-        date={date}
-        setDate={setDate}
-        status={status}
-        setStatus={setStatus}
         handleEdit={handleEdit}
       />
     </>

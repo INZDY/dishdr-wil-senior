@@ -43,10 +43,12 @@ export default function MakeAppointment({ params }: { params: any }) {
 
     careType: "",
     chiefComplaint: {
+      type: "",
       code: "",
       symptom: "",
       duration: 0,
       unit: "",
+      hasSymptom: false,
       isOther: false,
     },
     presentIllness: [],
@@ -112,9 +114,6 @@ export default function MakeAppointment({ params }: { params: any }) {
           setStep((prevStep) => prevStep + 1);
         }
       }
-    }
-    if (step === 3) {
-      setFormData({ ...formData, predicted: true });
     }
     setDirection("next");
     setStep((prevStep) => prevStep + 1);

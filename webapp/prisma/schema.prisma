@@ -52,6 +52,7 @@ model User {
   account       Account[]
   sessions      Session[]
   role          String        @default("patient")
+  isAdmin       Boolean       @default(false)
   profile       Profile[]
   appointments  Appointment[]
   createdAt     DateTime      @default(now())

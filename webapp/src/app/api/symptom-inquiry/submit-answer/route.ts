@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const flaskAPI = process.env.NEXT_PUBLIC_FLASK_URL;
+    const flaskAPI = process.env.NEXT_PUBLIC_FLASK_URL_LOCAL;
+    // const flaskAPI = process.env.NEXT_PUBLIC_FLASK_URL;
     const currentUser = await getCurrentUser();
     const body = await request.json();
     const { session_id, symptoms } = body;
@@ -28,16 +29,7 @@ export async function POST(request: Request) {
     }
 
     const data = await flaskResponse.json();
-    // format {_id, response: {question / {response 1, response 2}}}
-
-    // Simulate server wait time
-    // await new Promise((resolve) => setTimeout(resolve, 700));
-    // dummy data
-    // const data = {
-    //   sessionId: "JohnDoeId",
-    //   question: "question x",
-    //   department: "",
-    // };
+    // format {sessionId, (question / department)}
 
     return NextResponse.json(data);
   } catch (error) {

@@ -155,7 +155,7 @@ export default function ResultBooking({
       <div className="flex border-t-2 border-gray-400 rounded" />
 
       {/* Prediction Result Section */}
-      {careType === "symptoms" && (
+      {careType === "symptoms" && !!formData.prediction.length && (
         <div className="bg-gray-100 p-4 rounded shadow">
           <h3 className="text-lg font-semibold">{t("prediction-result")}</h3>
           <p>

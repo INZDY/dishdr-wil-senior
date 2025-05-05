@@ -29,9 +29,6 @@ interface SymptomSelectProps {
   presentValue: string;
   setPresentValue: React.Dispatch<React.SetStateAction<string>>;
   symptomList: { value: string; label: string }[];
-  // setSymptomList: React.Dispatch<
-  //   React.SetStateAction<React.Dispatch<{ value: string; label: string }[]>>
-  // >;
   handleDropdownSelect: (
     code: string,
     name: string,
@@ -52,7 +49,6 @@ export default function SymptomSelect({
   presentValue,
   setPresentValue,
   symptomList,
-  // setSymptomList,
   handleDropdownSelect,
   handleDeletePresentIllness,
   formData,
@@ -63,9 +59,7 @@ export default function SymptomSelect({
       {/* Chief complaint */}
       <div className="flex flex-col gap-2">
         <p className="text-sm">
-          <span className="text-red-500">*{(t("experimental-feat"))} </span>
-          {/* ตัวเลือกจะเป็นภาษาอังกฤษ กรอกภาษาไทยได้โดยใช้ตัวเลือก
-          &quot;Other...&quot; */}
+          <span className="text-red-500">*{t("experimental-feat")} </span>
         </p>
         <h3 className="mb-1 font-semibold">{t("chief")}</h3>
         <p className="text-sm text-gray-500">{t("chief-desc")}</p>
@@ -90,18 +84,7 @@ export default function SymptomSelect({
           </PopoverTrigger>
 
           <PopoverContent className="w-[200px] p-0">
-            <Command
-              // filter={(search, value) => {
-              //   // Find the matching option by value
-              //   const item = symptomList.find(
-              //     (symptom) => symptom.value === value
-              //   );
-              //   return (
-              //     item?.label.toLowerCase().includes(search.toLowerCase()) ??
-              //     0
-              //   );
-              // }}
-            >
+            <Command>
               <CommandInput placeholder="Search symptom..." className="h-9" />
               <CommandList>
                 <CommandEmpty>No symptom found.</CommandEmpty>
@@ -128,16 +111,23 @@ export default function SymptomSelect({
                   {symptomList.map((symptom) => (
                     <CommandItem
                       key={symptom.value}
-                      value={symptom.value}
+                      value={symptom.label} // Use label for filtering
                       onSelect={(currentValue: string) => {
-                        setChiefValue(
-                          currentValue === chiefValue ? "" : currentValue
+                        const selectedSymptom = symptomList.find(
+                          (s) => s.label === currentValue
                         );
-                        handleDropdownSelect(
-                          currentValue,
-                          symptom.label,
-                          "chief"
-                        );
+                        if (selectedSymptom) {
+                          setChiefValue(
+                            selectedSymptom.value === chiefValue
+                              ? ""
+                              : selectedSymptom.value
+                          );
+                          handleDropdownSelect(
+                            selectedSymptom.value, // Pass code
+                            selectedSymptom.label, // Pass label
+                            "chief"
+                          );
+                        }
                       }}
                     >
                       {symptom.label}
@@ -226,16 +216,23 @@ export default function SymptomSelect({
                   {symptomList.map((symptom) => (
                     <CommandItem
                       key={symptom.value}
-                      value={symptom.value}
+                      value={symptom.label} // Use label for filtering
                       onSelect={(currentValue: string) => {
-                        setPresentValue(
-                          currentValue === presentValue ? "" : currentValue
+                        const selectedSymptom = symptomList.find(
+                          (s) => s.label === currentValue
                         );
-                        handleDropdownSelect(
-                          currentValue,
-                          symptom.label,
-                          "present"
-                        );
+                        if (selectedSymptom) {
+                          setPresentValue(
+                            selectedSymptom.value === presentValue
+                              ? ""
+                              : selectedSymptom.value
+                          );
+                          handleDropdownSelect(
+                            selectedSymptom.value, // Pass code
+                            selectedSymptom.label, // Pass label
+                            "present"
+                          );
+                        }
                       }}
                     >
                       {symptom.label}
