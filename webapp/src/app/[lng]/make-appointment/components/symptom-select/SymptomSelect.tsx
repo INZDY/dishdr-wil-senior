@@ -75,17 +75,17 @@ export default function SymptomSelect({
             >
               {chiefValue
                 ? chiefValue == "other"
-                  ? "Other..."
+                  ? t("other")
                   : symptomList.find((symptom) => symptom.value === chiefValue)
                       ?.label
-                : "Select symptoms..."}
+                : t("select-symptom")}
               <FaChevronDown className="opacity-50" />
             </Button>
           </PopoverTrigger>
 
           <PopoverContent className="w-[200px] p-0">
             <Command>
-              <CommandInput placeholder="Search symptom..." className="h-9" />
+              <CommandInput placeholder={t("search-symptom")} className="h-9" />
               <CommandList>
                 <CommandEmpty>No symptom found.</CommandEmpty>
                 <CommandGroup>
@@ -99,7 +99,7 @@ export default function SymptomSelect({
                       handleDropdownSelect(currentValue, currentValue, "chief");
                     }}
                   >
-                    {"Other..."}
+                    {t("other")}
                     <FaCheck
                       className={cn(
                         "ml-auto",
@@ -175,18 +175,18 @@ export default function SymptomSelect({
             >
               {presentValue
                 ? presentValue == "other"
-                  ? "Other..."
+                  ? t("other")
                   : symptomList.find(
                       (symptom) => symptom.value === presentValue
                     )?.label
-                : "Select symptoms..."}
+                : t("select-symptom")}
               <FaChevronDown className="opacity-50" />
             </Button>
           </PopoverTrigger>
 
           <PopoverContent className="w-[200px] p-0">
             <Command>
-              <CommandInput placeholder="Search symptom..." className="h-9" />
+              <CommandInput placeholder={t("search-symptom")} className="h-9" />
               <CommandList>
                 <CommandEmpty>No symptom found.</CommandEmpty>
                 <CommandGroup>
@@ -204,7 +204,7 @@ export default function SymptomSelect({
                       );
                     }}
                   >
-                    {"Other..."}
+                    {t("other")}
                     <FaCheck
                       className={cn(
                         "ml-auto",

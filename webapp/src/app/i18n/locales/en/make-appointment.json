@@ -33,6 +33,9 @@
   "illness-desc": "Other symptoms that you are experiencing.",
   "experimental-feat": "Experimental feature",
   "experimental-feat-desc": "This feature is still in development. Please use with caution.",
+  "select-symptom": "Select symptoms...",
+  "search-symptom": "Search symptom...",
+  "other": "Other...",
 
   "symptom-inquiry": "Symptom Inquiry",
   "processing": "Processing",

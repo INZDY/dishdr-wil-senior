@@ -33,6 +33,9 @@
   "illness-desc": "อาการอื่นๆ ที่มี",
   "experimental-feat": "ฟีเจอร์ทดลอง",
   "experimental-feat-desc": "ฟีเจอร์นี้อยู่ในระหว่างการพัฒนา กรุณาใช้ด้วยความระมัดระวัง",
+  "select-symptom": "เลือกอาการ...",
+  "search-symptom": "ค้นหาอาการ...",
+  "other": "อื่นๆ...",
 
   "symptom-inquiry": "ซักอาการ",
   "processing": "กำลังดำเนินการ",
