@@ -120,7 +120,7 @@ class Build():
         # case 2 : confidence level > 80%, input more than 3 symptom
         elif class_value > 0.8 and len(user_list.keys()) > 3:
             department_loc = department_data.loc[department_data["disease"] == class_list[0]]
-            return {"department":{"en":department_loc['en'].values,"th":department_loc['th'].values}}
+            return {"department":{"en":department_loc['en'].iloc[0],"th":department_loc['th'].iloc[0]}}
         # return question
         else:
             # special case
