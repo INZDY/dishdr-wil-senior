@@ -51,15 +51,13 @@ export default function SymptomDialog({
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Symptom Details</DialogTitle>
-          <DialogDescription>
-            Fill details for the selected symptom.
-          </DialogDescription>
+          <DialogTitle>{t("symptom-detail")}</DialogTitle>
+          <DialogDescription>{t("symptom-detail-desc")}</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="symptom" className="text-right">
-              Symptom
+              {t("symptom")}
             </Label>
             <Input
               id="symptom"
@@ -82,7 +80,7 @@ export default function SymptomDialog({
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="duration" className="text-right">
-              Duration
+              {t("duration")}
             </Label>
             <Input
               id="duration"
@@ -104,7 +102,7 @@ export default function SymptomDialog({
               }}
             >
               <SelectTrigger>
-                <SelectValue placeholder="days" />
+                <SelectValue defaultValue={"day"} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="week">{t("week")}</SelectItem>
@@ -117,7 +115,7 @@ export default function SymptomDialog({
         </div>
         <DialogFooter>
           <Button type="submit" onClick={handleSaveChanges}>
-            Save changes
+            {t("save")}
           </Button>
         </DialogFooter>
       </DialogContent>
