@@ -1,3 +1,4 @@
+import { useTranslation } from "@/app/i18n/client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,6 +21,7 @@ import { SymptomAnswer } from "@/types/dataTypes";
 import React from "react";
 
 interface SymptomDialogProps {
+  lng: string;
   dialogOpen: boolean;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   symptomDetails: SymptomAnswer | undefined;
@@ -33,6 +35,7 @@ interface SymptomDialogProps {
 }
 
 export default function SymptomDialog({
+  lng,
   dialogOpen,
   setDialogOpen,
   symptomDetails,
@@ -42,6 +45,8 @@ export default function SymptomDialog({
   presentValue,
   handleSaveChanges,
 }: SymptomDialogProps) {
+  const { t } = useTranslation(lng, "make-appointment");
+
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogContent className="sm:max-w-[425px]">
@@ -102,9 +107,10 @@ export default function SymptomDialog({
                 <SelectValue placeholder="days" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="days">days</SelectItem>
-                <SelectItem value="hours">hours</SelectItem>
-                <SelectItem value="minutes">minutes</SelectItem>
+                <SelectItem value="week">{t("week")}</SelectItem>
+                <SelectItem value="day">{t("day")}</SelectItem>
+                <SelectItem value="hour">{t("hour")}</SelectItem>
+                <SelectItem value="minute">{t("minute")}</SelectItem>
               </SelectContent>
             </Select>
           </div>

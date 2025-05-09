@@ -30,6 +30,10 @@
   "dept": "Department",
   "date": "Date",
   "time": "Time",
+  "week": "week(s)",
+  "day": "day(s)",
+  "hour": "hour(s)",
+  "minute": "minute(s)",
   "inquiry-details": "Inquiry Details",
   "question": "Question",
   "answer": "Answer"
