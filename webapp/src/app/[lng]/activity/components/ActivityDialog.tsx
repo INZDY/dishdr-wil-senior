@@ -76,7 +76,7 @@ export default function ActivityDialog({
                 if (s.type === "chief") {
                   return (
                     <span key={index}>
-                      {s.symptom}, {s.duration} {s.unit}
+                      {s.symptom}, {s.duration} {t(`${s.unit}`)}
                     </span>
                   );
                 }
@@ -89,7 +89,7 @@ export default function ActivityDialog({
                   if (s.type === "present") {
                     return (
                       <p key={index}>
-                        {s.symptom}, {s.duration} {s.unit}
+                        {s.symptom}, {s.duration} {t(`${s.unit}`)}
                       </p>
                     );
                   }

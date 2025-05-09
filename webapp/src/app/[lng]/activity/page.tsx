@@ -213,7 +213,8 @@ export default function Activity({ params }: { params: any }) {
           <h1 className="text-2xl font-bold">{t("activity")}</h1>
           {currentUser?.role === "patient" && (
             <Button onClick={() => router.push(`/${lng}/make-appointment`)}>
-              <span>+</span>{t("new-appointment")}
+              <span>+</span>
+              {t("new-appointment")}
             </Button>
           )}
         </div>
@@ -263,7 +264,7 @@ export default function Activity({ params }: { params: any }) {
                 <div className="flex flex-col gap-2">
                   <div className="font-bold">{appointment.appointmentName}</div>
                   <div className="text-sm text-gray-500">
-                    Department: {appointment.department}
+                    {t("dept")} {appointment.department}
                   </div>
                   <div
                     className={`text-sm ${

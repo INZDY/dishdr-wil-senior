@@ -167,6 +167,7 @@ export default function SymptomSelection({
       </div>
 
       <SymptomDialog
+      lng={lng}
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
         symptomDetails={symptomDetails}
