@@ -160,7 +160,11 @@ export default function ActivityDialog({
             <p>
               <span className="font-semibold mr-2">{t("dept")}:</span>
               {currentUser?.role === "patient" ? (
-                <span>{selectedAppointment.department}</span>
+                <span>
+                  {!!selectedAppointment.department.length
+                    ? selectedAppointment.department
+                    : `${t("wait-for-confirm")}`}
+                </span>
               ) : (
                 <Select
                   value={
