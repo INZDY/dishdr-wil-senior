@@ -49,7 +49,7 @@ export default function ActivityDialog({
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogContent
-        className="m-2 sm:max-w-[425px] max-h-lvh overflow-y-scroll"
+        className="m-2 sm:max-w-[425px] max-h-[85vh] overflow-y-scroll"
         autoFocus={false}
       >
         <DialogHeader>
@@ -160,7 +160,11 @@ export default function ActivityDialog({
             <p>
               <span className="font-semibold mr-2">{t("dept")}:</span>
               {currentUser?.role === "patient" ? (
-                <span>{selectedAppointment.department}</span>
+                <span>
+                  {!!selectedAppointment.department.length
+                    ? selectedAppointment.department
+                    : `${t("wait-for-confirm")}`}
+                </span>
               ) : (
                 <Select
                   value={

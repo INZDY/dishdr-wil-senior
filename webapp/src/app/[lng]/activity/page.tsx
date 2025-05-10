@@ -264,7 +264,10 @@ export default function Activity({ params }: { params: any }) {
                 <div className="flex flex-col gap-2">
                   <div className="font-bold">{appointment.appointmentName}</div>
                   <div className="text-sm text-gray-500">
-                    {t("dept")}: {appointment.department}
+                    {t("dept")}:{" "}
+                    {!!appointment.department.length
+                      ? appointment.department
+                      : `${t("wait-for-confirm")}`}
                   </div>
                   <div
                     className={`text-sm ${
