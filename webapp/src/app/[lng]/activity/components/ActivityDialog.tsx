@@ -49,7 +49,7 @@ export default function ActivityDialog({
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogContent
-        className="m-2 sm:max-w-[425px] max-h-lvh overflow-y-scroll"
+        className="m-2 sm:max-w-[425px] max-h-[85vh] overflow-y-scroll"
         autoFocus={false}
       >
         <DialogHeader>

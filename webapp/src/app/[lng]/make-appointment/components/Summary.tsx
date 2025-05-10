@@ -25,7 +25,9 @@ export default function Summary({ formData, lng }: SummaryProps) {
         <p className=" py-2 border-b-2">
           <span className="font-semibold">{t("department")}: </span>
           <br />
-          {formData.department}
+          {!!formData.department.length
+            ? formData.department
+            : `${t("wait-for-confirm")}`}
         </p>
         <p className=" py-2 border-b-2">
           <span className="font-semibold">{t("date")}:</span>

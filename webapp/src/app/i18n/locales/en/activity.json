@@ -36,5 +36,7 @@
   "minute": "minute(s)",
   "inquiry-details": "Inquiry Details",
   "question": "Question",
-  "answer": "Answer"
+  "answer": "Answer",
+
+  "wait-for-confirm": "Awaiting confirmation"
 }
