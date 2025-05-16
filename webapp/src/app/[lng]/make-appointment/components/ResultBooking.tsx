@@ -19,7 +19,7 @@ import { StepProps } from "@/types/formTypes";
 import { generateTimeOptions, valueToLabel } from "@/utils/utils";
 import { TimeSlot } from "@prisma/client";
 import { format, getDay, getHours, getMinutes } from "date-fns";
-import { th } from "date-fns/locale";
+import { enUS, th } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -219,7 +219,9 @@ export default function ResultBooking({
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {formData.dateTime ? (
-                    format(formData.dateTime, "PPP", { locale: th })
+                    format(formData.dateTime, "PPP", {
+                      locale: lng === "en" ? enUS : th,
+                    })
                   ) : (
                     <span>{t("pick-date")}</span>
                   )}
@@ -227,6 +229,7 @@ export default function ResultBooking({
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
                 <Calendar
+                  locale={lng === "en" ? enUS : th}
                   mode="single"
                   classNames={{
                     cell: `text-green-600`,
