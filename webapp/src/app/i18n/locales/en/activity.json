@@ -3,6 +3,7 @@
   "new-appointment": "New Appointment",
   "search-appointments": "Search Appointments",
   "status": "Status",
+  "all": "All",
   "pending": "pending",
   "approved": "approved",
   "canceled": "canceled",
@@ -10,8 +11,12 @@
   "edit": "Edit",
   "close": "Close",
   "save": "Save",
-  "filter": "Filter",
+  "status-filter": "Status Filter",
   "sort": "Sort",
+  "by-app-asc": "Appointment date (earliest first)",
+  "by-app-desc": "Appointment date (furthest first)",
+  "by-book-asc": "Booking date (oldest first)",
+  "by-book-desc": "Booking date (newest first)",
   "no-record": "No appointment record",
 
   "dialog-title": "Appointment Details",
@@ -37,6 +42,8 @@
   "inquiry-details": "Inquiry Details",
   "question": "Question",
   "answer": "Answer",
+  "yes": "Yes",
+  "no": "No",
 
   "wait-for-confirm": "Awaiting confirmation"
 }

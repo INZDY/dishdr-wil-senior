@@ -38,7 +38,7 @@ export default function Activity({ params }: { params: any }) {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [sortOption, setSortOption] = useState("date");
+  const [sortOption, setSortOption] = useState("by-book-desc");
 
   const [selectedAppointment, setSelectedAppointment] = useState<Activity>();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -111,37 +111,26 @@ export default function Activity({ params }: { params: any }) {
     }
   }, [session]);
 
-  const filterAppointments = (
-    searchTerm: string,
-    filterStatus: string
-    // sortby: string
-  ) => {
-    return appointmentList.filter(
+  const filteredAppointments = appointmentList
+    .filter(
       (appointment) =>
-        filterStatus === "all" ||
-        (appointment.status === filterStatus &&
-          appointment.appointmentName
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()))
-    );
-  };
-
-  // conflicts with Dialog
-  const filteredAppointments = appointmentList.filter(
-    (appointment) =>
-      filterStatus === "all" ||
-      (appointment.status === filterStatus &&
         appointment.appointmentName
           .toLowerCase()
-          .includes(searchTerm.toLowerCase()))
-  );
-  // already pre-sorted from db
-  // .sort((a, b) => {
-  //   if (sortOption === "date") {
-  //     return new Date(a.dateTime) > new Date(b.dateTime) ? -1 : 1;
-  //   }
-  //   return 0;
-  // });
+          .includes(searchTerm.toLowerCase()) &&
+        (filterStatus === "all" || appointment.status === filterStatus)
+    )
+    .sort((a, b) => {
+      if (sortOption === "by-app-asc") {
+        return new Date(a.dateTime) > new Date(b.dateTime) ? 1 : -1;
+      } else if (sortOption === "by-app-desc") {
+        return new Date(a.dateTime) <= new Date(b.dateTime) ? 1 : -1;
+      } else if (sortOption === "by-book-asc") {
+        return new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1;
+      } else if (sortOption === "by-book-desc") {
+        return new Date(a.createdAt) <= new Date(b.createdAt) ? 1 : -1;
+      }
+      return 0;
+    });
 
   const handleViewClick = (id: string) => {
     const realIndex = appointmentList.findIndex(
@@ -229,24 +218,27 @@ export default function Activity({ params }: { params: any }) {
           <Select value={filterStatus} onValueChange={setFilterStatus}>
             <SelectTrigger>
               <SelectValue placeholder="Filter by...">
-                {t("filter")}: {filterStatus}
+                {t("status-filter")}: {t(`${filterStatus}`)}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="approved">Approved</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
+              <SelectItem value="all">{t("all")}</SelectItem>
+              <SelectItem value="approved">{t("approved")}</SelectItem>
+              <SelectItem value="pending">{t("pending")}</SelectItem>
+              <SelectItem value="canceled">{t("canceled")}</SelectItem>
             </SelectContent>
           </Select>
           <Select value={sortOption} onValueChange={setSortOption}>
             <SelectTrigger>
               <SelectValue placeholder="Filter by...">
-                {t("sort")}: {sortOption}
+                {t("sort")}: {t(`${sortOption}`)}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="date">Date</SelectItem>
+              <SelectItem value="by-book-desc">{t("by-book-desc")}</SelectItem>
+              <SelectItem value="by-book-asc">{t("by-book-asc")}</SelectItem>
+              <SelectItem value="by-app-desc">{t("by-app-desc")}</SelectItem>
+              <SelectItem value="by-app-asc">{t("by-app-asc")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -278,31 +270,16 @@ export default function Activity({ params }: { params: any }) {
                         : "text-red-500"
                     }`}
                   >
-                    {appointment.status}
+                    {t(`${appointment.status}`)}
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  {currentUser?.role === "patient" && (
-                    <>
-                      <Button
-                        className="bg-white text-black hover:bg-neutral-300"
-                        // variant="secondary"
-                        onClick={() => handleViewClick(appointment.id)}
-                      >
-                        {t("view")}
-                      </Button>
-                      {/* <Button variant="destructive">Cancel</Button> */}
-                    </>
-                  )}
-                  {currentUser?.role === "staff" && (
-                    <Button
-                      className="bg-white text-black hover:bg-neutral-300"
-                      // variant="secondary"
-                      onClick={() => handleViewClick(appointment.id)}
-                    >
-                      {t("edit")}
-                    </Button>
-                  )}
+                  <Button
+                    className="bg-white text-black hover:bg-neutral-300"
+                    onClick={() => handleViewClick(appointment.id)}
+                  >
+                    {currentUser?.role === "patient" ? t("view") : t("edit")}
+                  </Button>
                 </div>
               </div>
             ))}
