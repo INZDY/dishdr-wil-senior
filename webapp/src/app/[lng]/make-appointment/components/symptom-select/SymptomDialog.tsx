@@ -95,6 +95,7 @@ export default function SymptomDialog({
               }}
             />
             <Select
+              defaultValue="day"
               onValueChange={(unit) => {
                 symptomDetails != undefined
                   ? setSymptomDetails({ ...symptomDetails, unit: unit })
@@ -102,7 +103,7 @@ export default function SymptomDialog({
               }}
             >
               <SelectTrigger>
-                <SelectValue defaultValue={"day"} />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="week">{t("week")}</SelectItem>

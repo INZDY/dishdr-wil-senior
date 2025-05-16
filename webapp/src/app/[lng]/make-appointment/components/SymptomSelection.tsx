@@ -77,7 +77,7 @@ export default function SymptomSelection({
       code: code,
       symptom: symptom,
       duration: 0,
-      unit: "days",
+      unit: "day",
       hasSymptom: true,
       isOther: code === "other",
     });
