@@ -138,10 +138,8 @@ export default function MakeAppointment({ params }: { params: any }) {
     // send appointment data to the server
     try {
       const dateObj = new Date(formData.dateTime!);
-      const appointmentDateTime = format(dateObj, "PP HH:mm", {
-        locale: th,
-      });
-      const appointmentName = `${formData.name} - ${appointmentDateTime}`;
+      const appointmentDateTime = format(dateObj, "dd/MM/yyyy HH:mm");
+      const appointmentName = `${formData.name} | ${appointmentDateTime}`;
       const dateOnly = format(dateObj, "yyyy-MM-dd");
 
       const response = await fetch("/api/new-appointment", {

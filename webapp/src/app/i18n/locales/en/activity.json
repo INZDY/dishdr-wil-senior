@@ -4,9 +4,9 @@
   "search-appointments": "Search Appointments",
   "status": "Status",
   "all": "All",
-  "pending": "pending",
-  "approved": "approved",
-  "canceled": "canceled",
+  "pending": "Pending",
+  "approved": "Approved",
+  "canceled": "Canceled",
   "view": "View",
   "edit": "Edit",
   "close": "Close",
@@ -44,6 +44,7 @@
   "answer": "Answer",
   "yes": "Yes",
   "no": "No",
+  "predicted-dept": "Predicted Department",
 
   "wait-for-confirm": "Awaiting confirmation"
 }

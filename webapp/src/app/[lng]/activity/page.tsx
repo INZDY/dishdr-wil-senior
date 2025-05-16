@@ -154,10 +154,8 @@ export default function Activity({ params }: { params: any }) {
       }
 
       const dateObj = new Date(selectedAppointment.dateTime!);
-      const appointmentDateTime = format(dateObj, "PP HH:mm", {
-        locale: th,
-      });
-      const appointmentName = `${selectedAppointment.name} - ${appointmentDateTime}`;
+      const appointmentDateTime = format(dateObj, "dd/MM/yyyy HH:mm");
+      const appointmentName = `${selectedAppointment.name} | ${appointmentDateTime}`;
 
       const formattedData = {
         appointmentId: selectedAppointment.id,
@@ -197,7 +195,7 @@ export default function Activity({ params }: { params: any }) {
 
   return (
     <>
-      <div className="flex flex-col max-w-screen-lg max-h-svh overflow-y-scroll mx-auto my-12 p-4 gap-4 bg-white shadow rounded">
+      <div className="flex flex-col max-w-screen-lg max-h-[85vh] overflow-y-scroll mx-auto my-12 p-4 gap-4 bg-white shadow rounded">
         <div className="flex justify-between">
           <h1 className="text-2xl font-bold">{t("activity")}</h1>
           {currentUser?.role === "patient" && (
@@ -244,25 +242,25 @@ export default function Activity({ params }: { params: any }) {
         </div>
 
         {/* appointments */}
-        {appointmentList.length === 0 ? (
+        {!!!appointmentList.length ? (
           <p className="py-8 text-center">{t("no-record")}</p>
         ) : (
           <div className="space-y-4">
             {filteredAppointments.map((appointment, index) => (
               <div
                 key={appointment.id}
-                className="p-4 gap-2 border rounded flex justify-between items-center bg-neutral-100"
+                className="flex px-4 py-2 gap-2 border rounded justify-between items-center bg-neutral-100"
               >
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1">
                   <div className="font-bold">{appointment.appointmentName}</div>
                   <div className="text-sm text-gray-500">
-                    {t("dept")}:{" "}
+                    <span className="font-semibold mr-1">{t("dept")}:</span>
                     {!!appointment.department.length
                       ? appointment.department
                       : `${t("wait-for-confirm")}`}
                   </div>
                   <div
-                    className={`text-sm ${
+                    className={`text-sm font-semibold ${
                       appointment.status === "approved"
                         ? "text-green-500"
                         : appointment.status === "pending"

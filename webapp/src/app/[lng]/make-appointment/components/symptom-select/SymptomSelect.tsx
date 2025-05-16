@@ -55,13 +55,13 @@ export default function SymptomSelect({
 }: SymptomSelectProps) {
   const { t } = useTranslation(lng, "make-appointment");
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       {/* Chief complaint */}
       <div className="flex flex-col gap-2">
         <p className="text-sm">
           <span className="text-red-500">*{t("experimental-feat")} </span>
         </p>
-        <h3 className="mb-1 font-semibold">{t("chief")}</h3>
+        <h3 className="font-semibold">{t("chief")}</h3>
         <p className="text-sm text-gray-500">{t("chief-desc")}</p>
 
         {/* symptom selection list with dropdown menu */}
@@ -162,7 +162,7 @@ export default function SymptomSelect({
 
       {/* Present Illness */}
       <div className="flex flex-col gap-2">
-        <h3 className="mb-1 font-semibold">{t("illness")}</h3>
+        <h3 className="font-semibold">{t("illness")}</h3>
         <p className="text-sm text-gray-500">{t("illness-desc")}</p>
 
         <Popover open={presentOpen} onOpenChange={setPresentOpen}>

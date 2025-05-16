@@ -123,17 +123,17 @@ export default function Header({ lng }: { lng: string }) {
           </SheetTrigger>
           <SheetTitle></SheetTitle>
           <SheetContent className="w-[200px]">
-            <div className="flex flex-col mt-24 items-start gap-8">
+            <div className="flex flex-col mt-24 items-start gap-6">
               {/* nav links */}
               <button
                 onClick={() => router.push(`/${lng}/activity`)}
-                className="px-2 rounded-md text-black font-semibold hover:bg-gray-300 hover:text-black"
+                className="px-4 py-2 rounded-md text-black font-semibold hover:bg-gray-300 hover:text-black"
               >
                 {t("activity")}
               </button>
               <button
                 onClick={() => router.push(`/${lng}/disclaimer`)}
-                className="px-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black"
+                className="px-4 py-2 rounded-md font-semibold hover:bg-gray-300 hover:text-black"
               >
                 {t("disclaimer")}
               </button>
@@ -141,28 +141,25 @@ export default function Header({ lng }: { lng: string }) {
               {/* login */}
               {/* add w-1/12 if want fixed */}
               {currentUser != null ? (
-                <Popover>
-                  <PopoverTrigger>
-                    <div className="flex p-2 gap-2 items-center rounded-md bg-neutral-200 shadow-md hover:cursor-pointer hover:bg-neutral-300">
-                      <img
-                        src={currentUser.image!}
-                        alt="avatar"
-                        className="size-8 rounded-full shadow-md"
-                      />
-                      <p className="text-black font-semibold">
-                        {currentUser.name}
-                      </p>
-                    </div>
-                  </PopoverTrigger>
-                  <PopoverContent className="flex p-2 w-30">
-                    <Button
-                      onClick={() => signOut()}
-                      className="bg-red-600 font-bold hover:bg-neutral-500"
-                    >
-                      {t("logout")}
-                    </Button>
-                  </PopoverContent>
-                </Popover>
+                <div className="flex flex-col gap-6">
+                  <div className="flex p-2 gap-2 items-center rounded-md bg-neutral-200 shadow-md hover:cursor-pointer hover:bg-neutral-300">
+                    <img
+                      src={currentUser.image!}
+                      alt="avatar"
+                      className="size-8 rounded-full shadow-md"
+                    />
+                    <p className="text-black font-semibold">
+                      {currentUser.name}
+                    </p>
+                  </div>
+
+                  <Button
+                    onClick={() => signOut()}
+                    className="bg-red-600 font-semibold hover:bg-neutral-500"
+                  >
+                    {t("logout")}
+                  </Button>
+                </div>
               ) : (
                 <div className="flex gap-4 py-2">
                   <button

@@ -44,6 +44,7 @@
   "answer": "คำตอบ",
   "yes": "ใช่",
   "no": "ไม่ใช่",
+  "predicted-dept": "แผนกที่แนะนำ",
 
   "wait-for-confirm": "รอการยืนยัน"
 }
