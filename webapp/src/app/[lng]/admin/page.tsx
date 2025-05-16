@@ -160,10 +160,10 @@ export default function Admin({ params }: { params: any }) {
                 </select>
               </TableCell>
               <TableCell>
-                {user.isAdmin && (
+                {currentUser?.isAdmin && (
                   <Switch
-                    hidden={!user.isAdmin}
-                    disabled={!user.isAdmin || currentUser?.id === user.id}
+                    hidden={!currentUser.isAdmin}
+                    disabled={currentUser?.id === user.id}
                     checked={user.isAdmin}
                     onCheckedChange={(checked) => {
                       handleAdminToggle(user.id, checked);

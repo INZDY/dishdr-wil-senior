@@ -95,7 +95,7 @@ export default function Header({ lng }: { lng: string }) {
         <div
           className={cn(
             "px-2 py-1 rounded-md text-neutral-400 hover:cursor-pointer hover:bg-neutral-700",
-            lng === "en" ? "bg-neutral-500" : "bg-transparent"
+            lng === "en" ? "bg-neutral-600" : "bg-transparent"
           )}
           onClick={() => handleSwitchLanguage("en")}
         >

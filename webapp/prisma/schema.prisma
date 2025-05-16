@@ -134,6 +134,7 @@ model Appointment {
   dateTime        DateTime
   dateOnly        String                @default("")
   notes           String?
+  // type            String?
   status          String
   prediction      String?
   createdAt       DateTime              @default(now())
