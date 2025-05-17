@@ -36,6 +36,7 @@ export default function MakeAppointment({ params }: { params: any }) {
     allergies: "",
 
     department: "",
+    departmentTh: "",
     dateTime: undefined,
     status: "pending",
 

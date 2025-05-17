@@ -23,6 +23,7 @@ model Symptom {
 model Department {
   id                  Int                  @id @default(autoincrement())
   name                String               @unique
+  nameTh              String               @unique
   enabled             Boolean              @default(true)
   departmentSchedules DepartmentSchedule[]
 }
@@ -130,7 +131,8 @@ model Appointment {
   phone           String?
   chronicDisease  String?
   allergies       String?
-  department      String                @default("-")
+  department      String
+  departmentTh    String
   dateTime        DateTime
   dateOnly        String                @default("")
   notes           String?

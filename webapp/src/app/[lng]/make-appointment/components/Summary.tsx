@@ -1,5 +1,5 @@
 import { useTranslation } from "@/app/i18n/client";
-import { FormData, StepProps } from "@/types/formTypes";
+import { FormData } from "@/types/formTypes";
 import { format, getHours, getMinutes } from "date-fns";
 import { th } from "date-fns/locale";
 import React from "react";
@@ -26,7 +26,9 @@ export default function Summary({ formData, lng }: SummaryProps) {
           <span className="font-semibold">{t("department")}: </span>
           <br />
           {!!formData.department.length
-            ? formData.department
+            ? lng === "th"
+              ? formData.departmentTh
+              : formData.department
             : `${t("wait-for-confirm")}`}
         </p>
         <p className=" py-2 border-b-2">

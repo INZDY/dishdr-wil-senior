@@ -1,16 +1,15 @@
-import { Symptom } from "@/types/dataTypes";
+import { DepartmentFull } from "@/types/dataTypes";
 import { addMinutes, format, parse } from "date-fns";
 
 // This is for departmenmt, leaving as is because it does not break
-export const valueToLabel = (symptomList: Symptom[]) => {
-  const valueLabel = symptomList.map((symptom) => {
-    const readable = symptom.name
-      .replace(/_/g, " ")
-      .replace(/\b\w/g, (char) => char.toUpperCase());
-    return { value: symptom.name, label: readable };
+export const convertToSelect = (deptList: DepartmentFull[]) => {
+  return deptList.map((dept) => {
+    return {
+      value: dept.name,
+      label: dept.name,
+      labelTh: dept.nameTh,
+    };
   });
-
-  return valueLabel;
 };
 
 export const sortPresentIllness = (

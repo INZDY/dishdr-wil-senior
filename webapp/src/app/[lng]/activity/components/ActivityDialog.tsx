@@ -25,7 +25,7 @@ interface ActivityDialogProps {
   currentUser: User | undefined;
   dialogOpen: boolean;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  departmentList: { value: string; label: string }[];
+  departmentList: { value: string; label: string; labelTh: string }[];
   selectedAppointment: Activity;
   setSelectedAppointment: React.Dispatch<
     React.SetStateAction<Activity | undefined>
@@ -164,22 +164,28 @@ export default function ActivityDialog({
               {currentUser?.role === "patient" ? (
                 <span>
                   {!!selectedAppointment.department.length
-                    ? selectedAppointment.department
+                    ? lng === "th"
+                      ? selectedAppointment.departmentTh
+                      : selectedAppointment.department
                     : `${t("wait-for-confirm")}`}
                 </span>
               ) : (
                 <Select
-                  value={
-                    selectedAppointment.department.length
-                      ? selectedAppointment.department
-                      : ""
-                  }
-                  onValueChange={(value) =>
-                    setSelectedAppointment({
-                      ...selectedAppointment,
-                      department: value,
-                    })
-                  }
+                  defaultValue={selectedAppointment.department}
+                  onValueChange={(value) => {
+                    // find th of the selected dept
+                    const thDept = departmentList.find(
+                      (dept) => dept.value === value
+                    )?.labelTh;
+                    // to pass undefined check
+                    if (thDept) {
+                      setSelectedAppointment({
+                        ...selectedAppointment,
+                        department: value,
+                        departmentTh: thDept,
+                      });
+                    }
+                  }}
                 >
                   <SelectTrigger className="w-[180px]">
                     <SelectValue />
@@ -187,7 +193,7 @@ export default function ActivityDialog({
                   <SelectContent>
                     {departmentList.map((dept) => (
                       <SelectItem key={dept.value} value={dept.value}>
-                        {dept.label}
+                        {lng === "th" ? dept.labelTh : dept.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

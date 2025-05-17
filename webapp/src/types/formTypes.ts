@@ -15,6 +15,7 @@ export interface FormData {
   allergies: string;
 
   department: string;
+  departmentTh: string;
   dateTime: Date | undefined;
   status: string | null;
 

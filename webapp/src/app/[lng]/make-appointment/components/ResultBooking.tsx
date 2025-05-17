@@ -16,9 +16,9 @@ import {
 import { cn } from "@/lib/utils";
 import { DepartmentFull } from "@/types/dataTypes";
 import { StepProps } from "@/types/formTypes";
-import { generateTimeOptions, valueToLabel } from "@/utils/utils";
+import { convertToSelect, generateTimeOptions } from "@/utils/utils";
 import { TimeSlot } from "@prisma/client";
-import { format, getDay, getHours, getMinutes } from "date-fns";
+import { format, getDay} from "date-fns";
 import { enUS, th } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -38,6 +38,7 @@ export default function ResultBooking({
     {
       value: string;
       label: string;
+      labelTh: string;
     }[]
   >([]);
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
@@ -72,7 +73,7 @@ export default function ResultBooking({
       const timeSlots: TimeSlot[] = responseData.timeSlots;
 
       // need to transform label format
-      setDepartmentList(valueToLabel(departmentData));
+      setDepartmentList(convertToSelect(departmentData));
 
       setTimeSlots(timeSlots);
 
@@ -117,7 +118,10 @@ export default function ResultBooking({
   };
 
   const handleDepartmentChange = (value: string) => {
-    setFormData({ ...formData, department: value });
+    const thDept = departmentList.find((dept) => dept.value === value)?.labelTh;
+    if (thDept) {
+      setFormData({ ...formData, department: value, departmentTh: thDept });
+    }
   };
 
   const handleDateChange = (date: Date | undefined) => {
@@ -196,7 +200,7 @@ export default function ResultBooking({
                 <SelectContent>
                   {departmentList.map((dept, index) => (
                     <SelectItem key={index} value={dept.value}>
-                      {dept.label}
+                      {lng === "th" ? dept.labelTh : dept.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
