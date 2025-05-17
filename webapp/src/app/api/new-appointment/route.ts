@@ -1,8 +1,6 @@
 import getCurrentUser from "@/lib/db/getCurrentUser";
 import { prisma } from "@/lib/prisma";
 import { AppointmentSymptoms } from "@prisma/client";
-import { format } from "date-fns";
-import { th } from "date-fns/locale";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -23,13 +21,14 @@ export async function POST(request: Request) {
       phone,
       chronicDiseases,
       allergies,
+      careType,
       department,
       dateTime,
       status,
-      chiefComplaint,
-      presentIllness,
       inquiries,
+      predicted,
       prediction,
+      predictionTh,
       notes,
     } = body;
 
@@ -51,12 +50,15 @@ export async function POST(request: Request) {
         phone,
         chronicDisease: chronicDiseases,
         allergies,
+        careType,
         department,
         dateTime,
         dateOnly,
         notes,
         status: status || "pending",
+        predicted,
         prediction,
+        predictionTh,
         symptoms: {
           createMany: {
             data: [
@@ -66,6 +68,7 @@ export async function POST(request: Request) {
                 ) => ({
                   type: illness.type,
                   symptom: illness.symptom,
+                  symptomTh: illness.symptomTh,
                   duration: illness.duration,
                   unit: illness.unit,
                   hasSymptom: illness.hasSymptom,

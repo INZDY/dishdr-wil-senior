@@ -43,8 +43,10 @@ export default function ResultBooking({
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
 
   const [showFullResults, setShowFullResults] = useState(false);
-  const predictionResults = formData.prediction.split(",");
-  const topPrediction = predictionResults[0];
+  const predictionResults =
+    lng === "th"
+      ? formData.predictionTh.split(",")
+      : formData.prediction.split(",");
 
   const [timeList, setTimeList] = useState<string[]>([]);
   const [unavailableDates, setUnavailableDates] = useState<
@@ -159,7 +161,8 @@ export default function ResultBooking({
         <div className="bg-gray-100 p-4 rounded shadow">
           <h3 className="text-lg font-semibold">{t("prediction-result")}</h3>
           <p>
-            {t("top-prediction")} {topPrediction}{" "}
+            <span className="mr-2">{t("top-prediction")}:</span>
+            {predictionResults}
           </p>
           <Button onClick={handleExpandResults} className="mt-2">
             {showFullResults ? t("hide-full") : t("show-full")}

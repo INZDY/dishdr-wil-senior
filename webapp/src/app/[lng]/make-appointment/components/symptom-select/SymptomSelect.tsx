@@ -28,10 +28,11 @@ interface SymptomSelectProps {
   setPresentOpen: React.Dispatch<React.SetStateAction<boolean>>;
   presentValue: string;
   setPresentValue: React.Dispatch<React.SetStateAction<string>>;
-  symptomList: { value: string; label: string }[];
+  symptomList: { value: string; label: string; labelTh: string }[];
   handleDropdownSelect: (
     code: string,
     name: string,
+    nameTh: string,
     type: "chief" | "present"
   ) => void;
   handleDeletePresentIllness: (index: number) => void;
@@ -54,6 +55,23 @@ export default function SymptomSelect({
   formData,
 }: SymptomSelectProps) {
   const { t } = useTranslation(lng, "make-appointment");
+  const showLabel = (symptomValue: string) => {
+    if (lng === "th") {
+      return symptomList.find((symptom) => symptom.value === symptomValue)
+        ?.labelTh;
+    } else {
+      return symptomList.find((symptom) => symptom.value === symptomValue)
+        ?.label;
+    }
+  };
+  const findSelectedSymptom = (currentValue: string) => {
+    if (lng === "th") {
+      return symptomList.find((s) => s.labelTh === currentValue);
+    } else {
+      return symptomList.find((s) => s.label === currentValue);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       {/* Chief complaint */}
@@ -76,8 +94,7 @@ export default function SymptomSelect({
               {chiefValue
                 ? chiefValue == "other"
                   ? t("other")
-                  : symptomList.find((symptom) => symptom.value === chiefValue)
-                      ?.label
+                  : showLabel(chiefValue)
                 : t("select-symptom")}
               <FaChevronDown className="opacity-50" />
             </Button>
@@ -96,7 +113,12 @@ export default function SymptomSelect({
                       setChiefValue(
                         currentValue === chiefValue ? "" : currentValue
                       );
-                      handleDropdownSelect(currentValue, currentValue, "chief");
+                      handleDropdownSelect(
+                        currentValue,
+                        currentValue,
+                        currentValue,
+                        "chief"
+                      );
                     }}
                   >
                     {t("other")}
@@ -111,11 +133,10 @@ export default function SymptomSelect({
                   {symptomList.map((symptom) => (
                     <CommandItem
                       key={symptom.value}
-                      value={symptom.label} // Use label for filtering
+                      value={lng === "th" ? symptom.labelTh : symptom.label} // Use label for filtering
                       onSelect={(currentValue: string) => {
-                        const selectedSymptom = symptomList.find(
-                          (s) => s.label === currentValue
-                        );
+                        const selectedSymptom =
+                          findSelectedSymptom(currentValue);
                         if (selectedSymptom) {
                           setChiefValue(
                             selectedSymptom.value === chiefValue
@@ -124,13 +145,14 @@ export default function SymptomSelect({
                           );
                           handleDropdownSelect(
                             selectedSymptom.value, // Pass code
-                            selectedSymptom.label, // Pass label
+                            selectedSymptom.label,
+                            selectedSymptom.labelTh, // Pass label
                             "chief"
                           );
                         }
                       }}
                     >
-                      {symptom.label}
+                      {lng === "th" ? symptom.labelTh : symptom.label}
                       <FaCheck
                         className={cn(
                           "ml-auto",
@@ -147,13 +169,19 @@ export default function SymptomSelect({
           </PopoverContent>
         </Popover>
 
+        {/* Selected symptom list */}
         <div className="flex">
           {formData.chiefComplaint.unit !== "" ? (
             <div className="flex gap-2 h-10 p-2 items-center rounded-md bg-red-200 shadow-sm">
               <p className="flex gap-2">
-                <span>{formData.chiefComplaint?.symptom}:</span>
+                <span>
+                  {lng === "th"
+                    ? formData.chiefComplaint?.symptomTh
+                    : formData.chiefComplaint?.symptom}
+                  :
+                </span>
                 <span>{formData.chiefComplaint?.duration}</span>
-                <span>{formData.chiefComplaint?.unit}</span>
+                <span>{t(`${formData.chiefComplaint?.unit}`)}</span>
               </p>
             </div>
           ) : null}
@@ -176,9 +204,7 @@ export default function SymptomSelect({
               {presentValue
                 ? presentValue == "other"
                   ? t("other")
-                  : symptomList.find(
-                      (symptom) => symptom.value === presentValue
-                    )?.label
+                  : showLabel(presentValue)
                 : t("select-symptom")}
               <FaChevronDown className="opacity-50" />
             </Button>
@@ -200,6 +226,7 @@ export default function SymptomSelect({
                       handleDropdownSelect(
                         currentValue,
                         currentValue,
+                        currentValue,
                         "present"
                       );
                     }}
@@ -216,11 +243,10 @@ export default function SymptomSelect({
                   {symptomList.map((symptom) => (
                     <CommandItem
                       key={symptom.value}
-                      value={symptom.label} // Use label for filtering
+                      value={lng === "th" ? symptom.labelTh : symptom.label} // Use label for filtering
                       onSelect={(currentValue: string) => {
-                        const selectedSymptom = symptomList.find(
-                          (s) => s.label === currentValue
-                        );
+                        const selectedSymptom =
+                          findSelectedSymptom(currentValue);
                         if (selectedSymptom) {
                           setPresentValue(
                             selectedSymptom.value === presentValue
@@ -230,12 +256,13 @@ export default function SymptomSelect({
                           handleDropdownSelect(
                             selectedSymptom.value, // Pass code
                             selectedSymptom.label, // Pass label
+                            selectedSymptom.labelTh, // Pass label
                             "present"
                           );
                         }
                       }}
                     >
-                      {symptom.label}
+                      {lng === "th" ? symptom.labelTh : symptom.label}
                       <FaCheck
                         className={cn(
                           "ml-auto",
@@ -252,6 +279,7 @@ export default function SymptomSelect({
           </PopoverContent>
         </Popover>
 
+        {/* Selected symptom list */}
         <div className="flex">
           <div className="flex flex-col gap-2 justify-center">
             {formData.presentIllness.map((symptom, index) => (
@@ -260,9 +288,11 @@ export default function SymptomSelect({
                 className="flex gap-2 h-10 p-2 items-center justify-between rounded-md bg-green-200 shadow-sm"
               >
                 <p className="flex gap-2">
-                  <span>{symptom.symptom}:</span>
+                  <span>
+                    {lng === "th" ? symptom.symptomTh : symptom.symptom}:
+                  </span>
                   <span>{symptom.duration}</span>
-                  <span>{symptom.unit}</span>
+                  <span>{t(`${symptom.unit}`)}</span>
                 </p>
                 <Button
                   onClick={() => handleDeletePresentIllness(index)}

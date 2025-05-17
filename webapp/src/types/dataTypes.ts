@@ -9,6 +9,7 @@ export type SymptomAnswer = {
   type: string;
   code: string;
   symptom: string;
+  symptomTh: string;
   duration: number;
   unit: string;
   hasSymptom: boolean;

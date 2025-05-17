@@ -26,6 +26,7 @@ export interface FormData {
   })[];
   predicted: boolean;
   prediction: string;
+  predictionTh: string;
 
   notes: string;
 }

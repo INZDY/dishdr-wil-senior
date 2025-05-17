@@ -14,6 +14,7 @@ interface SymptomInquiryProps extends StepProps {
 type Inquiry = {
   code: string;
   question: string;
+  questionTh: string;
   answer: boolean | null;
 };
 
@@ -78,7 +79,8 @@ export default function SymptomInquiry({
             ...inquiryQuestions,
             {
               code: qData.code,
-              question: lng === "th" ? qData.th : qData.en,
+              question: qData.en,
+              questionTh: qData.th,
               answer: null,
             },
           ]);
@@ -87,14 +89,16 @@ export default function SymptomInquiry({
           const dData = data.department;
           setFormData({
             ...formData,
-            prediction: lng === "th" ? dData.th : dData.en,
+            prediction: dData.en,
+            predictionTh: dData.th,
           });
           setQuestionsUpdated(true);
         } else {
           // default suggestion for UX
           setFormData({
             ...formData,
-            prediction: lng === "th" ? "อายุรกรรมทั่วไป" : "General Medicine",
+            prediction: "GP",
+            predictionTh: "โรคทั่วไป",
           });
           setQuestionsUpdated(true);
         }
@@ -181,21 +185,19 @@ export default function SymptomInquiry({
           ...inquiryQuestions,
           {
             code: qData.code,
-            question: lng === "th" ? qData.th : qData.en,
+            question: qData.en,
+            questionTh: qData.th,
             answer: null,
           },
         ]);
         setQuestionsUpdated(true);
       } else if ("department" in data) {
         const dData = data.department;
-        const prediction = lng === "th" ? dData.th : dData.en;
-        saveInquiryAnswers(inquiryQuestions, prediction, true);
+        saveInquiryAnswers(inquiryQuestions, dData.en, dData.th, true);
         setQuestionsUpdated(true);
       } else {
         // default suggestion for UX
-        const prediction =
-          lng === "th" ? "อายุรกรรมทั่วไป" : "General Medicine";
-        saveInquiryAnswers(inquiryQuestions, prediction, true);
+        saveInquiryAnswers(inquiryQuestions, "GP", "โรคทั่วไป", true);
         setQuestionsUpdated(true);
       }
     } catch (error) {
@@ -208,6 +210,7 @@ export default function SymptomInquiry({
   const saveInquiryAnswers = (
     inquiryQAList: Inquiry[],
     prediction: string,
+    predictionTh: string,
     predicted: boolean
   ) => {
     const mappedQAList = inquiryQAList.map((item) => {
@@ -215,6 +218,7 @@ export default function SymptomInquiry({
         type: "inquiry",
         code: item.code,
         symptom: item.question,
+        symptomTh: item.questionTh,
         duration: 0,
         unit: "-",
         hasSymptom: item.answer === null ? false : item.answer,
@@ -229,6 +233,7 @@ export default function SymptomInquiry({
       ...formData,
       inquiries: updatedInquiries,
       prediction: prediction,
+      predictionTh: predictionTh,
       predicted: predicted,
     });
   };
@@ -306,7 +311,9 @@ export default function SymptomInquiry({
         <Button
           onClick={handleNextQuestion}
           className="px-4 py-2 text-base"
-          disabled={loading}
+          disabled={
+            loading || !!inquiryQuestions.find((q) => q.answer === null)
+          }
         >
           Next
         </Button>

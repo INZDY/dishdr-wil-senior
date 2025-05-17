@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { FormData } from "@/types/formTypes";
@@ -9,12 +9,10 @@ import SymptomSelection from "./components/SymptomSelection";
 import SymptomInquiry from "./components/SymptomInquiry";
 import ResultBooking from "./components/ResultBooking";
 import Summary from "./components/Summary";
-
 import { useTranslation } from "@/app/i18n/client";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
-import { th } from "date-fns/locale";
 
 export default function MakeAppointment({ params }: { params: any }) {
   const { data: session } = useSession();
@@ -46,6 +44,7 @@ export default function MakeAppointment({ params }: { params: any }) {
       type: "",
       code: "",
       symptom: "",
+      symptomTh: "",
       duration: 0,
       unit: "",
       hasSymptom: false,
@@ -55,6 +54,7 @@ export default function MakeAppointment({ params }: { params: any }) {
     inquiries: [],
     predicted: false,
     prediction: "",
+    predictionTh: "",
 
     notes: "",
   });
@@ -88,6 +88,7 @@ export default function MakeAppointment({ params }: { params: any }) {
               type: "chief",
               code: formData.chiefComplaint.code,
               symptom: formData.chiefComplaint.symptom,
+              symptomTh: formData.chiefComplaint.symptomTh,
               duration: formData.chiefComplaint.duration,
               unit: formData.chiefComplaint.unit,
               hasSymptom: true,
@@ -98,6 +99,7 @@ export default function MakeAppointment({ params }: { params: any }) {
                 type: "present",
                 code: illness.code,
                 symptom: illness.symptom,
+                symptomTh: illness.symptomTh,
                 duration: illness.duration,
                 unit: illness.unit,
                 hasSymptom: true,
@@ -142,12 +144,15 @@ export default function MakeAppointment({ params }: { params: any }) {
       const appointmentName = `${formData.name} | ${appointmentDateTime}`;
       const dateOnly = format(dateObj, "yyyy-MM-dd");
 
+      // data to send to server, trimmed out unnecessary data
+      const { chiefComplaint, presentIllness, ...trimmedFormData } = formData;
+
       const response = await fetch("/api/new-appointment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...formData, appointmentName, dateOnly }),
+        body: JSON.stringify({ ...trimmedFormData, appointmentName, dateOnly }),
       });
 
       if (!response.ok) {

@@ -76,7 +76,8 @@ export default function ActivityDialog({
                 if (s.type === "chief") {
                   return (
                     <span key={index}>
-                      {s.symptom}, {s.duration} {t(`${s.unit}`)}
+                      {lng === "th" ? s.symptomTh : s.symptom}, {s.duration}{" "}
+                      {t(`${s.unit}`)}
                     </span>
                   );
                 }
@@ -89,7 +90,8 @@ export default function ActivityDialog({
                   if (s.type === "present") {
                     return (
                       <p key={index}>
-                        {s.symptom}, {s.duration} {t(`${s.unit}`)}
+                        {lng === "th" ? s.symptomTh : s.symptom}, {s.duration}{" "}
+                        {t(`${s.unit}`)}
                       </p>
                     );
                   }
@@ -242,7 +244,7 @@ export default function ActivityDialog({
                               <span className="font-semibold mr-2">
                                 {t("question")}:
                               </span>
-                              {s.symptom}
+                              {lng === "th" ? s.symptomTh : s.symptom}
                             </p>
                             <p>
                               <span className="font-semibold mr-2">
@@ -259,7 +261,11 @@ export default function ActivityDialog({
                     <span className="font-semibold text-base mr-2">
                       {t("predicted-dept")}:
                     </span>
-                    <p>{selectedAppointment.prediction}</p>
+                    <p>
+                      {lng === "th"
+                        ? selectedAppointment.predictionTh
+                        : selectedAppointment.prediction}
+                    </p>
                   </div>
                 </div>
               )}

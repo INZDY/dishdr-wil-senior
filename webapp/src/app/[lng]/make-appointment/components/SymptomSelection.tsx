@@ -30,7 +30,7 @@ export default function SymptomSelection({
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const [symptomList, setSymptomList] = useState<
-    { value: string; label: string }[]
+    { value: string; label: string; labelTh: string }[]
   >([]);
 
   const [symptomDetails, setSymptomDetails] = useState<SymptomAnswer>();
@@ -56,7 +56,8 @@ export default function SymptomSelection({
     return symptoms.map((symptom) => {
       return {
         value: symptom.code,
-        label: lng === "th" ? symptom.th : symptom.en,
+        label: symptom.en,
+        labelTh: symptom.th,
       };
     });
   };
@@ -68,6 +69,7 @@ export default function SymptomSelection({
   const handleDropdownSelect = (
     code: string,
     symptom: string,
+    symptomTh: string,
     type: "chief" | "present"
   ) => {
     setSelectionType(type);
@@ -76,6 +78,7 @@ export default function SymptomSelection({
       type: type,
       code: code,
       symptom: symptom,
+      symptomTh: symptomTh,
       duration: 0,
       unit: "day",
       hasSymptom: true,
