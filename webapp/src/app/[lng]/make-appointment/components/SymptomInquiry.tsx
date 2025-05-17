@@ -268,9 +268,11 @@ export default function SymptomInquiry({
           <p
             className={cn(formData.predicted ? "text-gray-500" : "text-black")}
           >
-            {/* <span>{t("q-begin")}</span> */}
-            <span>{inquiryQuestions[currentQuestion].question}</span>
-            {/* <span>{t("q-end")}</span> */}
+            <span>
+              {lng === "th"
+                ? inquiryQuestions[currentQuestion].questionTh
+                : inquiryQuestions[currentQuestion].question}
+            </span>
           </p>
 
           <RadioGroup
