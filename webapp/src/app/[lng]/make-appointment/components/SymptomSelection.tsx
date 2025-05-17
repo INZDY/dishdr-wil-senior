@@ -46,13 +46,13 @@ export default function SymptomSelection({
       const data: Symptom[] = await response.json();
 
       // need to transform label format
-      const symptoms = convertToSelect(data, lng);
+      const symptoms = convertToSelect(data);
       setSymptomList(symptoms);
     }
     fetchSymptoms();
   }, [lng]);
 
-  const convertToSelect = (symptoms: Symptom[], lng: string) => {
+  const convertToSelect = (symptoms: Symptom[]) => {
     return symptoms.map((symptom) => {
       return {
         value: symptom.code,

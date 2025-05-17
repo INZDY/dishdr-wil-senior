@@ -17,9 +17,8 @@ import { User } from "@prisma/client";
 import toast from "react-hot-toast";
 import { useTranslation } from "@/app/i18n/client";
 import ActivityDialog from "./components/ActivityDialog";
-import { valueToLabel } from "@/utils/utils";
 import { format } from "date-fns";
-import { th } from "date-fns/locale";
+import { convertToSelect } from "@/utils/utils";
 
 export default function Activity({ params }: { params: any }) {
   const { lng } = React.use<{ lng: string }>(params);
@@ -33,6 +32,7 @@ export default function Activity({ params }: { params: any }) {
     {
       value: string;
       label: string;
+      labelTh: string;
     }[]
   >([]);
 
@@ -72,7 +72,7 @@ export default function Activity({ params }: { params: any }) {
           throw new Error("Failed to fetch departments");
         }
         const deptData: DepartmentFull[] = (await deptRes.json()).departments;
-        setDepartmentList(valueToLabel(deptData));
+        setDepartmentList(convertToSelect(deptData));
       } catch (error) {
         console.error("Error fetching data: ", error);
       } finally {
@@ -161,6 +161,7 @@ export default function Activity({ params }: { params: any }) {
         appointmentId: selectedAppointment.id,
         appointmentName: appointmentName,
         department: selectedAppointment.department,
+        departmentTh: selectedAppointment.departmentTh,
         dateTime: selectedAppointment.dateTime,
         status: selectedAppointment.status,
       };
@@ -256,7 +257,9 @@ export default function Activity({ params }: { params: any }) {
                   <div className="text-sm text-gray-500">
                     <span className="font-semibold mr-1">{t("dept")}:</span>
                     {!!appointment.department.length
-                      ? appointment.department
+                      ? lng === "th"
+                        ? appointment.departmentTh
+                        : appointment.department
                       : `${t("wait-for-confirm")}`}
                   </div>
                   <div
