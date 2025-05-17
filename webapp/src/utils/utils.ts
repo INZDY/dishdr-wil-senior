@@ -16,8 +16,13 @@ export const sortPresentIllness = (
   a: { code: string; symptom: string; duration: number; unit: string },
   b: { code: string; symptom: string; duration: number; unit: string }
 ) => {
-  // const order = { day: 1, hour: 2, minute: 3 };
-  return a.unit.localeCompare(b.unit) || b.duration - a.duration;
+  const unitOrder = ["week", "day", "hour", "minute"];
+  const aIndex = unitOrder.indexOf(a.unit);
+  const bIndex = unitOrder.indexOf(b.unit);
+  if (aIndex !== bIndex) {
+    return aIndex - bIndex;
+  }
+  return b.duration - a.duration;
 };
 
 export const generateTimeOptions = (start: string, end: string) => {
