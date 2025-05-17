@@ -134,9 +134,11 @@ model Appointment {
   dateTime        DateTime
   dateOnly        String                @default("")
   notes           String?
-  // type            String?
+  careType        String
   status          String
+  predicted       Boolean
   prediction      String?
+  predictionTh    String?
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
   symptoms        AppointmentSymptoms[]
@@ -148,6 +150,7 @@ model AppointmentSymptoms {
   appointmentId String
   type          String
   symptom       String
+  symptomTh     String
   duration      Int?
   unit          String?
   hasSymptom    Boolean     @default(true)
