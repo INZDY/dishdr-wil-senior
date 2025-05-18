@@ -31,6 +31,7 @@
   "allergy": "Allergy",
   "chief": "Chief Complaint",
   "illness": "Present Illness",
+  "notes": "Additional Notes",
   "app-date": "Appointment Date",
   "dept": "Department",
   "date": "Date",

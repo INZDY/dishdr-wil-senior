@@ -108,6 +108,12 @@ export default function ActivityDialog({
                   : "-"}
               </div>
             </div>
+            <p className="col-span-2 font-semibold">{t("notes")}:</p>
+            <p className="col-span-3">
+              {!!selectedAppointment.notes?.length
+                ? selectedAppointment.notes
+                : "-"}
+            </p>
             <p className="col-span-2 font-semibold">{t("app-date")}:</p>
             <div className="col-span-3">
               {currentUser?.role === "patient" ? (
