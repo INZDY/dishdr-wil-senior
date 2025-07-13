@@ -1,50 +1,31 @@
-# React + TypeScript + Vite
+# Dynamic Inquiry System for Hospital Department Recommendation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A hospital appointment management web application, integrated with dynamic symptom inquiry system using machine learning.
+The goal is to provide maximum efficiency by minimizing number of questions needed to determine appropriate hospital department, accelerating patient visit process.
 
-Currently, two official plugins are available:
+## Stucture
+The project mainly separated into two components inquiry system and web application.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Server
+Includes Flask to run API server housing the ML inquiry system and compiled ML model.
 
-## Expanding the ESLint configuration
+### Webapp
+Next.js folder housing all web application code.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Development
+For web application, cd into 'webapp' folder and run:
+```
+npm install
+npx prisma generate
+```
+Then add .env files for database and authentication API.
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+Run web application development server
+```
+npm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+For inquiry system, cd into '/server/model' and run:
+```
+python -m flask app run flask-XGB
 ```
